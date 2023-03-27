@@ -1,49 +1,50 @@
 package activitytracker.server;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ServerListenerThread extends Thread {
 
-    private Socket socket;
+    private ServerSocket serverSocket;
 
-    private BufferedWriter bufferedWriter;
-    private BufferedReader bufferedReader;
+    private ArrayList<ClientData> clientData;
 
-    public ServerListenerThread(Socket socket) {
-        try {
-            this.socket = socket;
-            this.bufferedWriter = new BufferedWriter(
-                    new OutputStreamWriter(
-                            this.socket.getOutputStream()));
+    private int clientID;
 
-            this.bufferedReader = new BufferedReader(
-                    new InputStreamReader(
-                            socket.getInputStream()
-                    )
-            );
-
-        } catch(IOException e) {
-
-        }
+    public ServerListenerThread(ServerSocket server_socket, ArrayList<ClientData> client_data, int client_id) 
+    {
+        this.clientID = client_id;
+        this.serverSocket = server_socket;
+        this.clientData = client_data;
     }
 
     @Override
     public void run() {
+        
         try {
-            this.bufferedWriter.flush();
-            this.bufferedWriter.write("Connected to server");
+            while (true)
+            {
+                Socket socket = this.serverSocket.accept();
+                this.clientData.add(new ClientData(this.clientID));
+                System.out.println("** Client#" + this.clientID + ": Connected");
+    
+                ServerWorkerThread worker_td = new ServerWorkerThread(socket, this.clientData.get(this.clientID));
+                worker_td.start();
+
+                this.clientID++;
+            } 
+
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-
+        
     }
-
-
-
-
+    
+    
+    
+    
 
 }
