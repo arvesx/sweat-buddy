@@ -1,21 +1,18 @@
 package activitytracker.server;
 
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 
 import org.alternativevision.gpx.GPXParser;
 import org.alternativevision.gpx.beans.GPX;
 import org.alternativevision.gpx.beans.Waypoint;
 
-public class GpxFile {
+public class GpxFile implements Serializable{
 
     private HashMap<Integer, Character> wpNames;
-    private GPXParser p;
-    private GPX gpx;
 
-    private HashMap<Character, Waypoint> wps;
-    private HashMap<Character, Long> wpTime; // = new HashMap<Character, Long>();
-
+    private HashMap<Character, activitytracker.Waypoint> wps;
 
     public GpxFile(String file_name) {
         this.initVariables();
@@ -24,11 +21,8 @@ public class GpxFile {
     }
 
     private void initVariables() {
-        this.wps = new HashMap<Character, Waypoint>();
-        this.wpTime = new HashMap<Character, Long>();
+        this.wps = new HashMap<Character, activitytracker.Waypoint>();
         this.wpNames = new HashMap<Integer, Character>();
-        this.p = null;
-        this.gpx = null;
     }
 
 
@@ -36,7 +30,8 @@ public class GpxFile {
     private void initGpxObject(String file_name) {
         FileInputStream in = null;
 
-        this.p = new GPXParser();
+        GPXParser p = new GPXParser();
+        GPX gpx = null;
 
         try {
             in = new FileInputStream(file_name);
@@ -45,15 +40,15 @@ public class GpxFile {
         }
 
         try {
-            this.gpx = p.parseGPX(in);
+            gpx = p.parseGPX(in);
         } catch (Exception e) {
             System.err.println("ERROR: GPX_Parse");
         }
 
         int i = 0;
-        for (Waypoint wp : this.gpx.getWaypoints()) {
-            this.wps.put(this.wpNames.get(i), wp);
-            this.wpTime.put(this.wpNames.get(i), wp.getTime().getTime());
+        for (Waypoint wp : gpx.getWaypoints()) {
+            
+            this.wps.put(this.wpNames.get(i), new activitytracker.Waypoint(wp.getLongitude(), wp.getLatitude(), wp.getElevation(), wp.getTime().getTime()));
 
             ++i;
         }
@@ -68,25 +63,9 @@ public class GpxFile {
         }
     }
 
-
-
-    public GPX getGPX() {
-        return this.gpx;
-    }
-
-
-
-    public HashMap<Character, Waypoint> getWps() {
+    public HashMap<Character, activitytracker.Waypoint> getWps() {
         return this.wps;
     }
-
-
-
-    public HashMap<Character, Long> getWpTime() {
-        return this.wpTime;
-    }
-
-
 
     @Override
     public String toString() {
@@ -96,7 +75,7 @@ public class GpxFile {
             str += "Latitude: " + this.wps.get(ch).getLatitude() + "\n";
             str += "Longitude: " + this.wps.get(ch).getLongitude() + "\n";
             str += "Elevation: " + this.wps.get(ch).getElevation() + "\n";
-            str += "Time: " + this.wpTime.get(ch) + "\n";
+            str += "Time: " + this.wps.get(ch).getTime() + "\n";
             str += "-----------------------------------------------------" + "\n";
 
         }

@@ -5,30 +5,53 @@ import java.net.Socket;
 
 public class Client {
 
-    private Socket socket;
-    private BufferedReader bufferedReader;
-    private BufferedWriter bufferedWriter;
+    private String username;
+    private GpxFile gpxFile;
 
-    public Client(String host_address, int port)
+    private Socket socket;
+    private ObjectOutputStream out;
+    private ObjectInputStream is;
+
+    public Client(String username, String host_address, int port)
     {
+        this.username = username;
+        this.gpxFile = new GpxFile("src/activitytracker/server/gpxfile.xml");
+
         try {
             this.socket = new Socket(host_address, port);
 
-            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            this.bufferedReader = new BufferedReader( new InputStreamReader(socket.getInputStream()));
+            this.out = new ObjectOutputStream(socket.getOutputStream());
+
+            this.is = new ObjectInputStream(socket.getInputStream());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public void sendClientInfo()
+    {
+        try {
+
+            System.out.println("username: " + this.username);
+
+            this.out.writeObject(this.username);
+            this.out.flush();
+
+            this.out.writeObject(this.gpxFile);
+            this.out.flush();
+            
+
+        } catch (IOException e) {
+            System.out.println("error");
+        }
+        
+    }
+
     public static void main(String[] args) {
-        Client cl = new Client("127.0.0.1", 1234);
+        Client cl = new Client("Dim", "127.0.0.1", 1234);
 
-        GpxFile gpxFile = new GpxFile("src/activitytracker/server/gpxfile.xml");
-        System.out.println(gpxFile);
-
-
+        cl.sendClientInfo();
 
         while (true)
         {

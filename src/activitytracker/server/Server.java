@@ -1,40 +1,81 @@
 package activitytracker.server;
 
+import activitytracker.Node;
+
+
 import java.io.IOException;
-import java.io.InputStream;
+
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Server {
+public class Server extends Node{
 
+    private ArrayList<ClientData> clientData;
+    private int usersServed;
+    
     private ServerSocket serverSocket;
 
-    public Server(int port) {
+    @Override
+    protected void init()
+    {
         try {
-            this.serverSocket = new ServerSocket(port);
+            this.serverSocket = new ServerSocket(this.port);
+            System.out.println("Starting Server...");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void connect()
+    {
+        try {
+
+            ServerListenerThread listener_td = new ServerListenerThread(this.serverSocket, this.clientData, this.usersServed);
+            listener_td.start();
+
+
+            listener_td.join();
+
+            // Test Server Data
+            for (ClientData cd : this.clientData)
+            {
+                System.out.println("Server Data: " + cd);
+            }
+
+                
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void disconnect()
+    {
+        
+    }
+
+
+    public Server(int port)
+    {
+        super(port);
+
+        this.usersServed = 0;
+        this.clientData = new ArrayList<ClientData>(); // ClientData -> keep ID, username, GpxFile
+        this.init(); //Initialize server socket  
 
     }
 
-    public void startServer() {
-        try {
-            while (true) {
-                Socket socket = serverSocket.accept();
-                ServerListenerThread listener_td = new ServerListenerThread(socket);
-                listener_td.start();
-
-                System.out.println("A new client has connected");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void startServer() 
+    {
+        this.connect();    
 
     }
 
     public static void main(String[] args) {
-        System.out.println("Starting Server...");
 
         Server server = new Server(1234);
         server.startServer();
