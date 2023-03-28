@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="GPXParser_20200512">
+  <library name="GPXParser_202005121">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../GPXParser_20200512.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/GPXParser_20200512.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
