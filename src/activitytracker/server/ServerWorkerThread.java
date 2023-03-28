@@ -43,7 +43,7 @@ public class ServerWorkerThread extends Thread{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("exit work thread");
+            // System.out.println("exit work thread");
     
             out.close();
             is.close();

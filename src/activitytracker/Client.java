@@ -1,7 +1,9 @@
-package activitytracker.server;
+package activitytracker;
 
 import java.io.*;
 import java.net.Socket;
+
+import activitytracker.server.GpxFile;
 
 public class Client {
 
