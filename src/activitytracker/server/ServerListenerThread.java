@@ -9,7 +9,7 @@ public class ServerListenerThread extends Thread {
 
     private ServerSocket serverSocket;
 
-    private ArrayList<ClientData> clientData;
+    private ArrayList<ClientData> clientDataArray;
 
     private int clientID;
 
@@ -17,7 +17,7 @@ public class ServerListenerThread extends Thread {
     {
         this.clientID = client_id;
         this.serverSocket = server_socket;
-        this.clientData = client_data;
+        this.clientDataArray = client_data;
     }
 
     @Override
@@ -27,14 +27,15 @@ public class ServerListenerThread extends Thread {
             while (true)
             {
                 Socket socket = this.serverSocket.accept();
-                this.clientData.add(new ClientData(this.clientID));
+
+                this.clientDataArray.add(new ClientData(this.clientID));
                 System.out.println("** Client#" + this.clientID + ": Connected");
-    
-                ServerWorkerThread worker_td = new ServerWorkerThread(socket, this.clientData.get(this.clientID));
+
+                ServerWorkerThread worker_td = new ServerWorkerThread(socket, this.clientDataArray.get(this.clientID));
                 worker_td.start();
 
                 this.clientID++;
-            } 
+            }
 
             
         } catch (IOException e) {

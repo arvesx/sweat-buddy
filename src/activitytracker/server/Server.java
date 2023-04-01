@@ -2,7 +2,6 @@ package activitytracker.server;
 
 import activitytracker.Node;
 
-
 import java.io.IOException;
 
 import java.net.ServerSocket;
@@ -32,24 +31,18 @@ public class Server extends Node{
     @Override
     protected void connect()
     {
-        try {
 
-            ServerListenerThread listener_td = new ServerListenerThread(this.serverSocket, this.clientData, this.usersServed);
-            listener_td.start();
+        ServerListenerThread client_listener_td = new ServerListenerThread(this.serverSocket, this.clientData, this.usersServed);
+        client_listener_td.start();
 
+        WorkerListenerThread worker_listener_td = new WorkerListenerThread();
+        worker_listener_td.start();
+        // // Test Server Data
+        // for (ClientData cd : this.clientData)
+        // {
+        //     System.out.println("Server Data: " + cd);
+        // }
 
-            listener_td.join();
-
-            // Test Server Data
-            for (ClientData cd : this.clientData)
-            {
-                System.out.println("Server Data: " + cd);
-            }
-
-                
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
