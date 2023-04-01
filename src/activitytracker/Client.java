@@ -11,43 +11,41 @@ public class Client {
     private GpxFile gpxFile;
 
     private Socket socket;
-    private ObjectOutputStream out;
-    private ObjectInputStream is;
+    private ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
 
-    public Client(String username, String host_address, int port)
-    {
+    public Client(String username, String host_address, int port) {
         this.username = username;
         this.gpxFile = new GpxFile("src/activitytracker/server/gpxfile.xml");
 
         try {
             this.socket = new Socket(host_address, port);
 
-            this.out = new ObjectOutputStream(socket.getOutputStream());
+            this.outputStream = new ObjectOutputStream(socket.getOutputStream());
 
-            this.is = new ObjectInputStream(socket.getInputStream());
+            this.inputStream = new ObjectInputStream(socket.getInputStream());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void sendClientInfo()
-    {
+    public void sendClientInfo() {
         try {
 
             System.out.println("username: " + this.username);
 
-            this.out.writeObject(this.username);
-            this.out.flush();
+            this.outputStream.writeObject(this.username);
+            this.outputStream.flush();
 
-            this.out.writeObject(this.gpxFile);
-            this.out.flush();
-            
+            this.outputStream.writeObject(this.gpxFile);
+            this.outputStream.flush();
+
 
         } catch (IOException e) {
             System.out.println("error");
         }
-        
+
     }
 
     public static void main(String[] args) {
@@ -55,8 +53,7 @@ public class Client {
 
         cl.sendClientInfo();
 
-        while (true)
-        {
+        while (true) {
 
         }
     }

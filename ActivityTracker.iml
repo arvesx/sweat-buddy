@@ -16,5 +16,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="GPXParser_20200512" level="project" />
   </component>
 </module>

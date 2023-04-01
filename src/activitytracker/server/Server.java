@@ -5,72 +5,69 @@ import activitytracker.Node;
 import java.io.IOException;
 
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
 
-public class Server extends Node{
+public class Server {
 
-    private ArrayList<ClientData> clientData;
-    private int usersServed;
-    
-    private ServerSocket serverSocket;
+    private ServerSocket clientServerSocket;
+    private ServerSocket workerServerSocket;
 
-    @Override
-    protected void init()
-    {
+    private int clientListenerPort;
+    private int workerListenerPort;
+
+    ClientListener clientListener;
+    WorkerListener workerListener;
+
+    boolean listensForClients;
+    boolean listensForWorkers;
+
+    protected void init() {
         try {
-            this.serverSocket = new ServerSocket(this.port);
-            System.out.println("Starting Server...");
+            this.clientServerSocket = new ServerSocket(this.clientListenerPort);
+            this.workerServerSocket = new ServerSocket(this.workerListenerPort);
+            System.out.println("[Server] Starting Server...");
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    protected void connect()
-    {
+    protected void connect() {
+        System.out.println("[Server] Listening for new clients on port " + this.clientListenerPort);
+        this.clientListener = new ClientListener(this.clientServerSocket);
+        clientListener.start();
+        this.listensForClients = true;
 
-        ServerListenerThread client_listener_td = new ServerListenerThread(this.serverSocket, this.clientData, this.usersServed);
-        client_listener_td.start();
+        System.out.println("[Server] Listening for new workers on port " + this.workerListenerPort);
+        this.workerListener = new WorkerListener(this.workerServerSocket);
+        workerListener.start();
+        this.listensForWorkers = true;
 
-        WorkerListenerThread worker_listener_td = new WorkerListenerThread();
-        worker_listener_td.start();
-        // // Test Server Data
-        // for (ClientData cd : this.clientData)
-        // {
-        //     System.out.println("Server Data: " + cd);
-        // }
 
     }
 
-    @Override
-    protected void disconnect()
-    {
-        
-    }
+    protected void disconnect() {
 
+        if (listensForClients) this.clientListener.stopListening();
 
-    public Server(int port)
-    {
-        super(port);
-
-        this.usersServed = 0;
-        this.clientData = new ArrayList<ClientData>(); // ClientData -> keep ID, username, GpxFile
-        this.init(); //Initialize server socket  
+        if (listensForWorkers) this.workerListener.stopListening();
 
     }
 
-    public void startServer() 
-    {
-        this.connect();    
+
+    public Server() {
+        this.clientListenerPort = 1234;
+        this.workerListenerPort = 2345;
+        this.init(); //Initialize server socket
+    }
+
+    public void startServer() {
+        this.connect();
 
     }
 
     public static void main(String[] args) {
 
-        Server server = new Server(1234);
+        Server server = new Server();
         server.startServer();
     }
 }
