@@ -42,6 +42,7 @@ public class Worker extends Node {
         
         Worker worker = new Worker("127.0.0.1", 1000);
 
+        System.out.println("Worker " + worker.ipAddress + "connected to server ");
     }
 
 }
