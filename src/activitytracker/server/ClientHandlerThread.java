@@ -47,7 +47,7 @@ public class ClientHandlerThread extends Thread {
             gpx_file = (GpxFile) this.inputStream.readObject();
             this.clientData.setGpxFile(gpx_file);
             System.out.println("[Server] Client#" + this.clientData.getID() + ": Received GPX File");
-            // System.out.println(gpx_file.toString());
+            System.out.println(gpx_file.toString());
 
             // simulate work
             try {

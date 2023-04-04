@@ -28,7 +28,7 @@ public class ClientListener extends Thread {
      * between the server and some client. Each of these objects has useful information such as client data. If we want
      * to access these threads from the Server class we can utilize this method.
      */
-    public ArrayList<ClientHandlerThread> getClientThreads() {
+    public synchronized ArrayList<ClientHandlerThread> getClientThreads() {
         return clientThreads;
     }
 
@@ -55,7 +55,9 @@ public class ClientListener extends Thread {
                 // Handle this client
                 ClientHandlerThread clientThread = new ClientHandlerThread(clientSocket, this.clientID);
                 clientThread.start();
-                clientThreads.add(clientThread);
+                synchronized (clientThreads) {
+                    clientThreads.add(clientThread);
+                }
 
                 this.clientID++;
             }

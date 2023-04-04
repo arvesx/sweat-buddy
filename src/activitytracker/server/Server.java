@@ -31,7 +31,7 @@ public class Server {
         }
     }
 
-    protected void connect() {
+    protected void connect() throws InterruptedException {
         System.out.println("[Server] Listening for new clients on port " + this.clientListenerPort);
         this.clientListener = new ClientListener(this.clientServerSocket);
         clientListener.start();
@@ -42,6 +42,14 @@ public class Server {
         workerListener.start();
         this.listensForWorkers = true;
 
+        try {
+            Thread.sleep(10000);
+            for (var i : clientListener.getClientThreads()) {
+                System.out.println(i.getClientData().getGpxFile());
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -60,12 +68,12 @@ public class Server {
         this.init(); //Initialize server socket
     }
 
-    public void startServer() {
+    public void startServer() throws InterruptedException {
         this.connect();
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         Server server = new Server();
         server.startServer();

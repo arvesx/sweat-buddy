@@ -16,7 +16,7 @@ public class Client {
 
     public Client(String username, String host_address, int port) {
         this.username = username;
-        this.gpxFile = new GpxFile("src/activitytracker/gpxs/route1.gpx");
+        this.gpxFile = new GpxFile("src/activitytracker/gpxs/route1.xml");
 
         try {
             this.socket = new Socket(host_address, port);
