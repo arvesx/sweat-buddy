@@ -1,4 +1,7 @@
-package activitytracker.server;
+package main.java.activitytracker.server;
+
+import main.java.activitytracker.server.fileprocessing.ClientData;
+import main.java.activitytracker.server.fileprocessing.GpxFile;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

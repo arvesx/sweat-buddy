@@ -1,4 +1,4 @@
-package activitytracker;
+package main.java.activitytracker;
 
 public abstract class Node {
     

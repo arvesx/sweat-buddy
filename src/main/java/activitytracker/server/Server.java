@@ -1,6 +1,4 @@
-package activitytracker.server;
-
-import activitytracker.Node;
+package main.java.activitytracker.server;
 
 import java.io.IOException;
 
@@ -11,8 +9,8 @@ public class Server {
     private ServerSocket clientServerSocket;
     private ServerSocket workerServerSocket;
 
-    private int clientListenerPort;
-    private int workerListenerPort;
+    private final int clientListenerPort;
+    private final int workerListenerPort;
 
     private ClientListener clientListener;
     private WorkerListener workerListener;

@@ -1,17 +1,17 @@
-package activitytracker.server;
+package main.java.activitytracker.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import static main.java.activitytracker.server.Utilities.WORKERS_LIST_LOCK;
+
 public class WorkerListener extends Thread {
 
-    private ServerSocket serverSocket;
-    private ArrayList<WorkerHandlerThread> workerThreads;
-    private int workerID;
+    private final ServerSocket serverSocket;
+    private final ArrayList<WorkerHandlerThread> workerThreads;
     private boolean running;
-    private final Object workerThreadsListLock = new Object();
 
     public WorkerListener(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
@@ -19,7 +19,7 @@ public class WorkerListener extends Thread {
     }
 
     public ArrayList<WorkerHandlerThread> getWorkerThreads() {
-        synchronized (workerThreadsListLock) {
+        synchronized (WORKERS_LIST_LOCK) {
             return workerThreads;
         }
     }
@@ -36,7 +36,7 @@ public class WorkerListener extends Thread {
                 // Handle the new connection
                 WorkerHandlerThread workerThread = new WorkerHandlerThread(workerSocket);
                 workerThread.start();
-                synchronized (workerThreadsListLock) {
+                synchronized (WORKERS_LIST_LOCK) {
                     workerThreads.add(workerThread);
                 }
             }

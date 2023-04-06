@@ -1,9 +1,11 @@
-package activitytracker.server;
+package main.java.activitytracker.server;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+
+import static main.java.activitytracker.server.Utilities.CLIENTS_LIST_LOCK;
 
 /**
  * This class is responsible for listening to incoming clients. It's instantiated only once, by the server.
@@ -14,7 +16,6 @@ public class ClientListener extends Thread {
 
     private final ServerSocket serverSocket;
     private final ArrayList<ClientHandlerThread> clientThreads;
-    private final Object clientThreadListLock = new Object();
     private int clientID;
     private boolean running;
 
@@ -30,7 +31,7 @@ public class ClientListener extends Thread {
      * to access these threads from the Server class we can utilize this method.
      */
     public ArrayList<ClientHandlerThread> getClientThreads() {
-        synchronized (clientThreadListLock) {
+        synchronized (CLIENTS_LIST_LOCK) {
             return clientThreads;
         }
     }
@@ -58,7 +59,7 @@ public class ClientListener extends Thread {
                 // Handle this client
                 ClientHandlerThread clientThread = new ClientHandlerThread(clientSocket, this.clientID);
                 clientThread.start();
-                synchronized (clientThreadListLock) {
+                synchronized (CLIENTS_LIST_LOCK) {
                     clientThreads.add(clientThread);
                 }
 

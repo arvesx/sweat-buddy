@@ -1,11 +1,9 @@
-package activitytracker.server;
+package main.java.activitytracker;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-
-import activitytracker.Node;
 
 public class Worker extends Node {
 

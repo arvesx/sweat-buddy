@@ -1,4 +1,4 @@
-package activitytracker;
+package main.java.activitytracker;
 
 import java.io.Serializable;
 

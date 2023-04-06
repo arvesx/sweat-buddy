@@ -1,4 +1,4 @@
-package activitytracker.server;
+package main.java.activitytracker.server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

@@ -1,9 +1,9 @@
-package activitytracker;
+package main.java.activitytracker;
 
 import java.io.*;
 import java.net.Socket;
 
-import activitytracker.server.GpxFile;
+import main.java.activitytracker.server.fileprocessing.GpxFile;
 
 public class Client {
 
@@ -16,7 +16,7 @@ public class Client {
 
     public Client(String username, String host_address, int port) {
         this.username = username;
-        this.gpxFile = new GpxFile("src/activitytracker/gpxs/route1.xml");
+        this.gpxFile = new GpxFile("src/main.java.activitytracker/gpxs/route1.xml");
 
         try {
             this.socket = new Socket(host_address, port);
