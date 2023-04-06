@@ -35,6 +35,7 @@ public class Server {
         clientListener.start();
         this.listensForClients = true;
 
+
         System.out.println("[Server] Listening for new workers on port " + this.workerListenerPort);
         this.workerListener = new WorkerListener(this.workerServerSocket);
         workerListener.start();
@@ -93,5 +94,7 @@ public class Server {
 
         Server server = new Server();
         server.startServer();
+
+
     }
 }

@@ -1,4 +1,4 @@
-package activitytracker.server;
+package main.java.activitytracker.server.fileprocessing;
 
 import java.io.FileInputStream;
 import java.io.Serializable;
@@ -10,19 +10,15 @@ import org.alternativevision.gpx.beans.Waypoint;
 
 public class GpxFile implements Serializable{
 
-    private HashMap<Integer, Character> wpNames;
-
-    private HashMap<Character, activitytracker.Waypoint> wps;
+    private HashMap<Integer, main.java.activitytracker.Waypoint> wps;
 
     public GpxFile(String file_name) {
         this.initVariables();
-        this.initWpNames(); // Waypoint A, Waypoint B, ...., Waypoint Z
         this.initGpxObject(file_name);
     }
 
     private void initVariables() {
-        this.wps = new HashMap<Character, activitytracker.Waypoint>();
-        this.wpNames = new HashMap<Integer, Character>();
+        this.wps = new HashMap<Integer, main.java.activitytracker.Waypoint>();
     }
 
 
@@ -48,34 +44,26 @@ public class GpxFile implements Serializable{
         int i = 0;
         for (Waypoint wp : gpx.getWaypoints()) {
             
-            this.wps.put(this.wpNames.get(i), new activitytracker.Waypoint(wp.getLongitude(), wp.getLatitude(), wp.getElevation(), wp.getTime().getTime()));
+            this.wps.put(i, new main.java.activitytracker.Waypoint(wp.getLongitude(), wp.getLatitude(), wp.getElevation(), wp.getTime().getTime()));
 
             ++i;
         }
     }
 
 
-
-    private void initWpNames() {
-        wpNames = new HashMap<Integer, Character>();
-        for (int i = 0; i < 26; i++) {
-            wpNames.put(i, (char) (i + 'A'));
-        }
-    }
-
-    public HashMap<Character, activitytracker.Waypoint> getWps() {
+    public HashMap<Integer, main.java.activitytracker.Waypoint> getWps() {
         return this.wps;
     }
 
     @Override
     public String toString() {
         String str = "";
-        for (Character ch : this.wps.keySet()) {
-            str += "Waypoint " + ch + "\n";
-            str += "Latitude: " + this.wps.get(ch).getLatitude() + "\n";
-            str += "Longitude: " + this.wps.get(ch).getLongitude() + "\n";
-            str += "Elevation: " + this.wps.get(ch).getElevation() + "\n";
-            str += "Time: " + this.wps.get(ch).getTime() + "\n";
+        for (Integer i : this.wps.keySet()) {
+            str += "Waypoint " + i + "\n";
+            str += "Latitude: " + this.wps.get(i).getLatitude() + "\n";
+            str += "Longitude: " + this.wps.get(i).getLongitude() + "\n";
+            str += "Elevation: " + this.wps.get(i).getElevation() + "\n";
+            str += "Time: " + this.wps.get(i).getTime() + "\n";
             str += "-----------------------------------------------------" + "\n";
 
         }
