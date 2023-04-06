@@ -7,8 +7,8 @@ import activitytracker.server.GpxFile;
 
 public class Client {
 
-    private String username;
-    private GpxFile gpxFile;
+    private final String username;
+    private final GpxFile gpxFile;
 
     private Socket socket;
     private ObjectOutputStream outputStream;

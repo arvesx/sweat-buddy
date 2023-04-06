@@ -14,11 +14,11 @@ public class Server {
     private int clientListenerPort;
     private int workerListenerPort;
 
-    ClientListener clientListener;
-    WorkerListener workerListener;
+    private ClientListener clientListener;
+    private WorkerListener workerListener;
 
-    boolean listensForClients;
-    boolean listensForWorkers;
+    private boolean listensForClients;
+    private boolean listensForWorkers;
 
     protected void init() {
         try {
@@ -42,22 +42,40 @@ public class Server {
         workerListener.start();
         this.listensForWorkers = true;
 
-        try {
-            Thread.sleep(10000);
-            for (var i : clientListener.getClientThreads()) {
-                System.out.println(i.getClientData().getGpxFile());
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(10000);
+//            for (var i : clientListener.getClientThreads()) {
+//                System.out.println(i.getClientData().getGpxFile());
+//            }
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
     protected void disconnect() {
 
-        if (listensForClients) this.clientListener.stopListening();
+        if (listensForClients)
+            this.clientListener.stopListening();
 
-        if (listensForWorkers) this.workerListener.stopListening();
+        if (!this.clientServerSocket.isClosed()) {
+            try {
+                this.clientServerSocket.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if (listensForWorkers)
+            this.workerListener.stopListening();
+
+        if (!this.workerServerSocket.isClosed()) {
+            try {
+                this.workerServerSocket.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
     }
 

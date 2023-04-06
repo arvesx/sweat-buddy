@@ -12,8 +12,9 @@ import java.util.ArrayList;
  */
 public class ClientListener extends Thread {
 
-    private ServerSocket serverSocket;
-    private ArrayList<ClientHandlerThread> clientThreads;
+    private final ServerSocket serverSocket;
+    private final ArrayList<ClientHandlerThread> clientThreads;
+    private final Object clientThreadListLock = new Object();
     private int clientID;
     private boolean running;
 
@@ -28,8 +29,10 @@ public class ClientListener extends Thread {
      * between the server and some client. Each of these objects has useful information such as client data. If we want
      * to access these threads from the Server class we can utilize this method.
      */
-    public synchronized ArrayList<ClientHandlerThread> getClientThreads() {
-        return clientThreads;
+    public ArrayList<ClientHandlerThread> getClientThreads() {
+        synchronized (clientThreadListLock) {
+            return clientThreads;
+        }
     }
 
     private void startListening() {
@@ -55,7 +58,7 @@ public class ClientListener extends Thread {
                 // Handle this client
                 ClientHandlerThread clientThread = new ClientHandlerThread(clientSocket, this.clientID);
                 clientThread.start();
-                synchronized (clientThreads) {
+                synchronized (clientThreadListLock) {
                     clientThreads.add(clientThread);
                 }
 

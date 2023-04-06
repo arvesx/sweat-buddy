@@ -1,5 +1,6 @@
 package activitytracker.server;
 
+import java.io.PrintStream;
 import java.util.NoSuchElementException;
 
 public class RingBuffer<T> {
@@ -42,6 +43,54 @@ public class RingBuffer<T> {
         return dataToReturn;
     }
 
+    public void remove(T obj) {
+        if (head == null) {
+            throw new NoSuchElementException("List is empty");
+        }
+
+        if (head.getData() == obj) {
+
+            if (temp == head)
+                temp = temp.getNext();
+
+            head = head.getNext();
+            if (head != null)
+                head.setPrev(null);
+            return;
+        }
+
+        if (tail.getData() == obj) {
+            if (temp == tail)
+                temp = head;
+
+            tail = tail.getPrev();
+            tail.setNext(null);
+
+            return;
+        }
+
+        Node<T> n = head;
+        while (n != null) {
+            if (n.getData() == obj) {
+                Node<T> prevNode = n.getPrev();
+                Node<T> nextNode = n.getNext();
+                if (temp == n)
+                    temp = nextNode;
+
+                prevNode.setNext(nextNode);
+                nextNode.setPrev(prevNode);
+            }
+            n = n.getNext();
+        }
+
+
+    }
+
+    /**
+     * Get the next object in a round-robin fashion.
+     *
+     * @return
+     */
     public T next() {
         if (head == null) {
             throw new NoSuchElementException("List is empty");
@@ -58,11 +107,23 @@ public class RingBuffer<T> {
 
     }
 
+    public void printBuffer(PrintStream stream) {
+        if (head == null) {
+            System.out.println("Ring Buffer is empty");
+        }
+
+        Node<T> t = head;
+        while (t != null) {
+            stream.println(t.getData());
+            t = t.getNext();
+        }
+    }
+
     class Node<T> {
 
         private Node<T> next;
         private Node<T> prev;
-        private T data;
+        private final T data;
 
         public Node(T data) {
             this.data = data;
@@ -87,6 +148,5 @@ public class RingBuffer<T> {
         public T getData() {
             return data;
         }
-
     }
 }

@@ -1,14 +1,18 @@
 package activitytracker.server;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import activitytracker.Node;
 
 public class Worker extends Node {
 
     Socket socket;
+
+    private ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
 
     public Worker(String ip_address, int port) {
         super(ip_address, port);
@@ -19,6 +23,9 @@ public class Worker extends Node {
     public void init() {
         try {
             this.socket = new Socket(this.ipAddress, this.port);
+            this.outputStream = new ObjectOutputStream(socket.getOutputStream());
+
+            this.inputStream = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -34,9 +41,13 @@ public class Worker extends Node {
 
     public static void main(String[] args) {
 
-        Worker worker = new Worker("127.0.0.1", 1000);
+        Worker worker = new Worker("127.0.0.1", 2345);
 
-        System.out.println("Worker " + worker.ipAddress + "connected to server ");
+        System.out.println("Worker " + worker.ipAddress + " connected to server ");
+
+        while (true) {
+
+        }
     }
 
 }
