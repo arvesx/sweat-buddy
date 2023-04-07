@@ -8,8 +8,9 @@ import org.alternativevision.gpx.GPXParser;
 import org.alternativevision.gpx.beans.GPX;
 import org.alternativevision.gpx.beans.Waypoint;
 
-public class GpxFile implements Serializable{
+public class GpxFile implements Serializable {
 
+    private int gpxFileId;
     private HashMap<Integer, main.java.activitytracker.Waypoint> wps;
 
     public GpxFile(String file_name) {
@@ -43,7 +44,7 @@ public class GpxFile implements Serializable{
 
         int i = 0;
         for (Waypoint wp : gpx.getWaypoints()) {
-            
+
             this.wps.put(i, new main.java.activitytracker.Waypoint(wp.getLongitude(), wp.getLatitude(), wp.getElevation(), wp.getTime().getTime()));
 
             ++i;

@@ -2,6 +2,7 @@ package main.java.activitytracker;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Scanner;
 
 import main.java.activitytracker.server.fileprocessing.GpxFile;
 
@@ -16,7 +17,7 @@ public class Client {
 
     public Client(String username, String host_address, int port) {
         this.username = username;
-        this.gpxFile = new GpxFile("src/main.java.activitytracker/gpxs/route1.xml");
+        this.gpxFile = new GpxFile("src/main/resources/gpxfiles/route1.xml");
 
         try {
             this.socket = new Socket(host_address, port);
@@ -49,13 +50,16 @@ public class Client {
     }
 
     public static void main(String[] args) {
-        Client cl = new Client("Dim", "127.0.0.1", 1234);
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Pick a username: ");
+        String username = scanner.nextLine();
+
+        Client cl = new Client(username, "127.0.0.1", 1234);
 
         cl.sendClientInfo();
 
-        while (true) {
-
-        }
+        scanner.close();
+        while (true) { }
     }
 
 

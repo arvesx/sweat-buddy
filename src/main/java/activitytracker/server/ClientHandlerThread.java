@@ -1,5 +1,6 @@
 package main.java.activitytracker.server;
 
+import main.java.activitytracker.server.fileprocessing.Chunk;
 import main.java.activitytracker.server.fileprocessing.ClientData;
 import main.java.activitytracker.server.fileprocessing.GpxFile;
 
@@ -7,6 +8,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+
+import static main.java.activitytracker.server.Utilities.*;
+
 
 /**
  * This class is responsible to handle the connection between one client and the server. It gets instantiated from the
@@ -51,6 +56,18 @@ public class ClientHandlerThread extends Thread {
             this.clientData.setGpxFile(gpx_file);
             System.out.println("[Server] Client#" + this.clientData.getID() + ": Received GPX File");
 //            System.out.println(gpx_file.toString());
+
+            synchronized (GXP_FILE_ID_LOCK) {
+                gpxFileId++;
+                gpx_file.setGpxFileId(gpxFileId);
+            }
+
+            gpx_file.makeChunks();
+            for (var chunk : gpx_file.getChunks()) {
+                synchronized (MESSAGE_Q_LOCK) {
+                    messageQueue.enqueue(chunk);
+                }
+            }
 
             // simulate work
             try {

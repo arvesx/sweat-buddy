@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import static main.java.activitytracker.server.Utilities.WORKERS_LIST_LOCK;
+import static main.java.activitytracker.server.Utilities.*;
 
 public class WorkerListener extends Thread {
 
@@ -38,6 +38,10 @@ public class WorkerListener extends Thread {
                 workerThread.start();
                 synchronized (WORKERS_LIST_LOCK) {
                     workerThreads.add(workerThread);
+                }
+
+                synchronized (WORKERS_RING_BUFFER_LOCK) {
+                    workersRingBuffer.add(workerThread);
                 }
             }
         } catch (IOException e) {
