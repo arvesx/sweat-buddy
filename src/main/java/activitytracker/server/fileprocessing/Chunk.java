@@ -12,8 +12,7 @@ public class Chunk {
     private HashMap<Integer, Waypoint> wps;
 
 
-    public Chunk()
-    {
+    public Chunk(int id, int gpxFileId) {
         this.wps = new HashMap<Integer, Waypoint>();
         this.chunkId = id;
         this.gpxFileId = gpxFileId;

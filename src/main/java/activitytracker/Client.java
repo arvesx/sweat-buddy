@@ -61,6 +61,4 @@ public class Client {
         scanner.close();
         while (true) { }
     }
-
-
 }
