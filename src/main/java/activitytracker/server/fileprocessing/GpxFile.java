@@ -13,9 +13,14 @@ public class GpxFile implements Serializable {
     private int gpxFileId;
     private HashMap<Integer, main.java.activitytracker.Waypoint> wps;
 
+
+
+    private ArrayList<Chunk> chunks;
+
     public GpxFile(String file_name) {
         this.initVariables();
         this.initGpxObject(file_name);
+        this.chunks = new ArrayList<Chunk>();
     }
 
     private void initVariables() {
@@ -51,9 +56,20 @@ public class GpxFile implements Serializable {
         }
     }
 
+    public ArrayList<Chunk> getChunks() {
+        return this.chunks;
+    }
 
     public HashMap<Integer, main.java.activitytracker.Waypoint> getWps() {
         return this.wps;
+    }
+
+    public int getGpxFileId() {
+        return gpxFileId;
+    }
+
+    public void setGpxFileId(int gpxFileId) {
+        this.gpxFileId = gpxFileId;
     }
 
     @Override
