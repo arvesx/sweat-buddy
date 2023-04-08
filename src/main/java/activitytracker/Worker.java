@@ -54,16 +54,6 @@ public class Worker extends Node {
 
     }
 
-    public static void main(String[] args) {
-
-        Worker worker = new Worker("127.0.0.1", 2345);
-
-        System.out.println("Worker " + worker.ipAddress + " connected to server ");
-
-        while (true) {
-
-        }
-    }
 
     private class ChunkProcessor extends Thread {
         @Override
