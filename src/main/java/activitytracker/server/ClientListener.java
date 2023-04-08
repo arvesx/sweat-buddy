@@ -3,6 +3,7 @@ package main.java.activitytracker.server;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 import static main.java.activitytracker.server.Utilities.CLIENTS_LIST_LOCK;
@@ -17,7 +18,7 @@ public class ClientListener extends Thread {
     private final ServerSocket serverSocket;
     private final ArrayList<ClientHandlerThread> clientThreads;
     private int clientID;
-    private boolean running;
+    private volatile boolean running;
 
     public ClientListener(ServerSocket serverSocket) {
         this.clientID = 0;
@@ -43,18 +44,24 @@ public class ClientListener extends Thread {
     public void stopListening() {
         // gets called when Server shuts down
         System.out.println("[Server] Shutting down client listener");
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         this.running = false;
     }
 
     @Override
     public void run() {
 
-        try {
-            startListening();
-            while (running) {
-                // Accept client incoming connection
+
+        startListening();
+        while (running) {
+            // Accept client incoming connection
+            try {
                 Socket clientSocket = this.serverSocket.accept();
-                System.out.println("[Server] Client#" + this.clientID + ": Connected");
+                System.out.println("\n[Server] Client#" + this.clientID + ": Connected");
 
                 // Handle this client
                 ClientHandlerThread clientThread = new ClientHandlerThread(clientSocket, this.clientID);
@@ -64,12 +71,14 @@ public class ClientListener extends Thread {
                 }
 
                 this.clientID++;
+            } catch (SocketException e) {
+                System.out.println("[Server] Stopped accepting clients");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
 
     }
 

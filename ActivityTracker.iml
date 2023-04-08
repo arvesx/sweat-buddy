@@ -17,5 +17,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="GPXParser_20200512" level="project" />
+    <orderEntry type="library" name="jline-3.21.0" level="project" />
   </component>
 </module>

@@ -1,11 +1,13 @@
 package main.java.activitytracker.server;
 
-import java.io.IOException;
+import static main.java.activitytracker.server.Utilities.*;
 
+import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Scanner;
 
 public class Server {
-
+    private volatile boolean serverRunning;
     private ServerSocket clientServerSocket;
     private ServerSocket workerServerSocket;
 
@@ -22,6 +24,7 @@ public class Server {
         try {
             this.clientServerSocket = new ServerSocket(this.clientListenerPort);
             this.workerServerSocket = new ServerSocket(this.workerListenerPort);
+            serverRunning = true;
             System.out.println("[Server] Starting Server...");
 
         } catch (IOException e) {
@@ -41,14 +44,19 @@ public class Server {
         workerListener.start();
         this.listensForWorkers = true;
 
-//        try {
-//            Thread.sleep(10000);
-//            for (var i : clientListener.getClientThreads()) {
-//                System.out.println(i.getClientData().getGpxFile());
-//            }
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        Scanner scanner = new Scanner(System.in);
+        while (serverRunning) {
+            System.out.print(">>> ");
+            String command = scanner.nextLine();
+            if (command.equals("?disconnect")) {
+                serverRunning = false;
+                disconnect();
+            }
+        }
+
+    }
+
+    private void handleCommand(String command) {
 
     }
 
@@ -91,10 +99,8 @@ public class Server {
     }
 
     public static void main(String[] args) throws InterruptedException {
-
         Server server = new Server();
         server.startServer();
-
-
     }
+
 }

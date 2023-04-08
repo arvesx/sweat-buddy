@@ -3,6 +3,7 @@ package main.java.activitytracker.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 import static main.java.activitytracker.server.Utilities.*;
@@ -11,7 +12,7 @@ public class WorkerListener extends Thread {
 
     private final ServerSocket serverSocket;
     private final ArrayList<WorkerHandlerThread> workerThreads;
-    private boolean running;
+    private volatile boolean running;
 
     public WorkerListener(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
@@ -26,9 +27,10 @@ public class WorkerListener extends Thread {
 
     @Override
     public void run() {
-        try {
-            startListening();
-            while (running) {
+
+        startListening();
+        while (running) {
+            try {
                 // Accept worker connection
                 Socket workerSocket = this.serverSocket.accept();
                 System.out.println("[Server] Worker node added");
@@ -43,10 +45,14 @@ public class WorkerListener extends Thread {
                 synchronized (WORKERS_RING_BUFFER_LOCK) {
                     workersRingBuffer.add(workerThread);
                 }
+            } catch (SocketException e) {
+                System.out.println("[Server] Stopped accepting workers");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
         }
+
     }
 
     public void startListening() {
@@ -55,6 +61,13 @@ public class WorkerListener extends Thread {
 
     public void stopListening() {
         System.out.println("[Server] Shutting down worker listener");
+
+        try {
+            this.serverSocket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         this.running = false;
     }
 
