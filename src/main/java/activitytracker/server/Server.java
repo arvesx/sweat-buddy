@@ -1,5 +1,7 @@
 package main.java.activitytracker.server;
 
+import main.java.activitytracker.server.fileprocessing.Chunk;
+
 import static main.java.activitytracker.server.Utilities.*;
 
 import java.io.IOException;
@@ -8,6 +10,7 @@ import java.util.Scanner;
 
 public class Server {
     private volatile boolean serverRunning;
+    private volatile boolean distributing;
     private ServerSocket clientServerSocket;
     private ServerSocket workerServerSocket;
 
@@ -25,6 +28,7 @@ public class Server {
             this.clientServerSocket = new ServerSocket(this.clientListenerPort);
             this.workerServerSocket = new ServerSocket(this.workerListenerPort);
             serverRunning = true;
+            distributing = true;
             System.out.println("[Server] Starting Server...");
 
         } catch (IOException e) {
@@ -44,12 +48,15 @@ public class Server {
         workerListener.start();
         this.listensForWorkers = true;
 
+        this.startDistributing();
+
         Scanner scanner = new Scanner(System.in);
         while (serverRunning) {
             System.out.print(">>> ");
             String command = scanner.nextLine();
             if (command.equals("?disconnect")) {
                 serverRunning = false;
+                distributing = false;
                 disconnect();
             }
         }
@@ -58,6 +65,31 @@ public class Server {
 
     private void handleCommand(String command) {
 
+    }
+
+    private void startDistributing() throws InterruptedException {
+
+        while (distributing) {
+            Chunk chunk = getNextChunk();
+            WorkerHandlerThread thread;
+            synchronized (WORKERS_RING_BUFFER_LOCK) {
+                while (workersRingBuffer.isEmpty()) {
+                    WORKERS_RING_BUFFER_LOCK.wait();
+                }
+                thread = workersRingBuffer.next();
+            }
+            thread.assign(chunk);
+        }
+
+    }
+
+    private Chunk getNextChunk() throws InterruptedException {
+        synchronized (MESSAGE_Q_LOCK) {
+            while (messageQueue.isEmpty()) {
+                MESSAGE_Q_LOCK.wait();
+            }
+            return messageQueue.dequeue();
+        }
     }
 
     protected void disconnect() {

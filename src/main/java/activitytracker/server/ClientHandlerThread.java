@@ -68,6 +68,7 @@ public class ClientHandlerThread extends Thread {
             for (var chunk : gpx_file.getChunks()) {
                 synchronized (MESSAGE_Q_LOCK) {
                     messageQueue.enqueue(chunk);
+                    MESSAGE_Q_LOCK.notify();
                 }
             }
 

@@ -44,6 +44,7 @@ public class WorkerListener extends Thread {
 
                 synchronized (WORKERS_RING_BUFFER_LOCK) {
                     workersRingBuffer.add(workerThread);
+                    WORKERS_RING_BUFFER_LOCK.notify();
                 }
             } catch (SocketException e) {
                 System.out.println("[Server] Stopped accepting workers");

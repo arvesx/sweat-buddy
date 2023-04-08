@@ -2,9 +2,10 @@ package main.java.activitytracker.server.fileprocessing;
 
 import main.java.activitytracker.Waypoint;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class Chunk {
+public class Chunk implements Serializable {
 
     private int gpxFileId;
     private int fileId;

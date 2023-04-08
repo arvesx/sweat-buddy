@@ -107,6 +107,11 @@ public class RingBuffer<T> {
 
     }
 
+    public boolean isEmpty() {
+        return (head == null && tail == null);
+    }
+
+
     public void printBuffer(PrintStream stream) {
         if (head == null) {
             System.out.println("Ring Buffer is empty");

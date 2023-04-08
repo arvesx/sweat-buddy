@@ -17,7 +17,6 @@ public class GpxFile implements Serializable {
     private HashMap<Integer, main.java.activitytracker.Waypoint> wps;
 
 
-
     private ArrayList<Chunk> chunks;
 
     public GpxFile(String file_name) {
@@ -37,7 +36,9 @@ public class GpxFile implements Serializable {
         for (int i = 0; i < wps.size(); i += CHUNK_SIZE) {
             Chunk chunk = new Chunk(chunkId, this.gpxFileId);
             for (int j = 0; j < CHUNK_SIZE; j++) {
-                if (i + j > wps.size() - 1) { break; }
+                if (i + j > wps.size() - 1) {
+                    break;
+                }
 
                 chunk.addData(i + j, this.wps.get(i + j));
             }
