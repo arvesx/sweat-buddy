@@ -3,7 +3,7 @@ package main.java.activitytracker.server.fileprocessing;
 import main.java.activitytracker.Waypoint;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class Chunk implements Serializable {
 
@@ -14,13 +14,13 @@ public class Chunk implements Serializable {
 
 
     public Chunk(int id, int gpxFileId) {
-        this.wps = new HashMap<Integer, Waypoint>();
+        this.wps = new ArrayList<Waypoint>();
         this.chunkId = id;
         this.gpxFileId = gpxFileId;
     }
 
-    public void addData(int i, Waypoint wp) {
-        this.wps.put(i, wp);
+    public void addData(Waypoint wp) {
+        this.wps.add(wp);
     }
 
     public void setFileId(int id) {

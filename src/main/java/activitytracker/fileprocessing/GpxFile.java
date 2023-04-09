@@ -14,7 +14,7 @@ import static main.java.activitytracker.server.Utilities.CHUNK_SIZE;
 public class GpxFile implements Serializable {
 
     private int gpxFileId;
-    private HashMap<Integer, main.java.activitytracker.Waypoint> wps;
+    private ArrayList<main.java.activitytracker.Waypoint> wps;
 
 
     private ArrayList<Chunk> chunks;
@@ -26,7 +26,7 @@ public class GpxFile implements Serializable {
     }
 
     private void initVariables() {
-        this.wps = new HashMap<Integer, main.java.activitytracker.Waypoint>();
+        this.wps = new ArrayList<>();
     }
 
 
@@ -92,14 +92,15 @@ public class GpxFile implements Serializable {
 
     @Override
     public String toString() {
-        String str = "";
-        for (Integer i : this.wps.keySet()) {
-            str += "Waypoint " + i + "\n";
-            str += "Latitude: " + this.wps.get(i).getLatitude() + "\n";
-            str += "Longitude: " + this.wps.get(i).getLongitude() + "\n";
-            str += "Elevation: " + this.wps.get(i).getElevation() + "\n";
-            str += "Time: " + this.wps.get(i).getTime() + "\n";
-            str += "-----------------------------------------------------" + "\n";
+
+        StringBuilder strBuilder = new StringBuilder();
+        for (main.java.activitytracker.Waypoint wp : this.wps) {
+            strBuilder.append("Waypoint ").append(wp.getID()).append("\n")
+                    .append("Latitude: ").append(wp.getLatitude()).append("\n")
+                    .append("Longitude: ").append(wp.getLongitude()).append("\n")
+                    .append("Elevation: ").append(wp.getElevation()).append("\n")
+                    .append("Time: ").append(wp.getTime()).append("\n")
+                    .append("-----------------------------------------------------" + "\n");
 
         }
 
