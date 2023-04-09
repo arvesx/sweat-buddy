@@ -34,13 +34,13 @@ public class GpxFile implements Serializable {
 
         int chunkId = 0;
         for (int i = 0; i < wps.size(); i += CHUNK_SIZE) {
+
             Chunk chunk = new Chunk(chunkId, this.gpxFileId);
             for (int j = 0; j < CHUNK_SIZE; j++) {
                 if (i + j > wps.size() - 1) {
                     break;
                 }
-
-                chunk.addData(i + j, this.wps.get(i + j));
+                chunk.addData(this.wps.get(i + j));
             }
             this.chunks.add(chunk);
             chunkId++;
@@ -68,7 +68,7 @@ public class GpxFile implements Serializable {
         int i = 0;
         for (Waypoint wp : gpx.getWaypoints()) {
 
-            this.wps.put(i, new main.java.activitytracker.Waypoint(wp.getLongitude(), wp.getLatitude(), wp.getElevation(), wp.getTime().getTime()));
+            this.wps.add(i, new main.java.activitytracker.Waypoint(i, wp.getLongitude(), wp.getLatitude(), wp.getElevation(), wp.getTime().getTime()));
 
             ++i;
         }

@@ -18,6 +18,7 @@ public class Worker extends Node {
 
     private final Object MSG_Q_LOCK = new Object();
 
+
     public Worker(String ip_address, int port) {
         super(ip_address, port);
         this.init();

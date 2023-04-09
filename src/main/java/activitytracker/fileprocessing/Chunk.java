@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Chunk implements Serializable {
 
-    private int gpxFileId;
+    private final int gpxFileId;
     private int fileId;
     private int chunkId;
     private HashMap<Integer, Waypoint> wps;
@@ -42,18 +42,18 @@ public class Chunk implements Serializable {
 
     @Override
     public String toString() {
-        String str = "";
-        str += "Chunk ID: " + this.chunkId + "\n";
-        for (Integer i : this.wps.keySet()) {
-            str += "Waypoint " + i + "\n";
-            str += "Latitude: " + this.wps.get(i).getLatitude() + "\n";
-            str += "Longitude: " + this.wps.get(i).getLongitude() + "\n";
-            str += "Elevation: " + this.wps.get(i).getElevation() + "\n";
-            str += "Time: " + this.wps.get(i).getTime() + "\n";
-            str += "-----------------------------------------------------" + "\n";
 
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append("Chunk ID: ").append(this.chunkId).append("\n\n");
+        for (main.java.activitytracker.Waypoint wp : this.wps) {
+            strBuilder.append("Waypoint ").append(wp.getID()).append("\n")
+                    .append("Latitude: ").append(wp.getLatitude()).append("\n")
+                    .append("Longitude: ").append(wp.getLongitude()).append("\n")
+                    .append("Elevation: ").append(wp.getElevation()).append("\n")
+                    .append("Time: ").append(wp.getTime()).append("\n")
+                    .append("-----------------------------------------------------" + "\n");
         }
 
-        return str;
+        return strBuilder.toString();
     }
 }

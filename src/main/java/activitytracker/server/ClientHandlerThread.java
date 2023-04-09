@@ -57,7 +57,6 @@ public class ClientHandlerThread extends Thread {
             System.out.println();
             System.out.println("[Server] Client#" + this.clientData.getID() + ": Received GPX File");
             System.out.print(">>> ");
-//            System.out.println(gpx_file.toString());
 
             synchronized (GXP_FILE_ID_LOCK) {
                 gpxFileId++;

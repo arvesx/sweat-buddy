@@ -13,7 +13,7 @@ public class WorkerHandlerThread extends Thread {
     private final Socket workerSocket;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
-    private boolean running;
+    private final boolean running;
     private final FifoQueue<Chunk> messageQueue;
 
     public WorkerHandlerThread(Socket workerSocket) {
