@@ -1,6 +1,6 @@
 package main.java.activitytracker.server;
 
-import main.java.activitytracker.server.fileprocessing.Chunk;
+import main.java.activitytracker.fileprocessing.Chunk;
 
 import static main.java.activitytracker.server.Utilities.*;
 

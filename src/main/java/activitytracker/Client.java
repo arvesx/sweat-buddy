@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
-import main.java.activitytracker.server.fileprocessing.GpxFile;
+import main.java.activitytracker.fileprocessing.GpxFile;
 
 public class Client {
 

@@ -1,4 +1,4 @@
-package main.java.activitytracker.server.structures;
+package main.java.activitytracker.structures;
 
 import java.io.PrintStream;
 import java.util.NoSuchElementException;

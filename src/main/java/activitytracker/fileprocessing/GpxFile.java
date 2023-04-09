@@ -1,9 +1,8 @@
-package main.java.activitytracker.server.fileprocessing;
+package main.java.activitytracker.fileprocessing;
 
 import java.io.FileInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.alternativevision.gpx.GPXParser;
 import org.alternativevision.gpx.beans.GPX;
@@ -17,12 +16,12 @@ public class GpxFile implements Serializable {
     private ArrayList<main.java.activitytracker.Waypoint> wps;
 
 
-    private ArrayList<Chunk> chunks;
+    private final ArrayList<Chunk> chunks;
 
     public GpxFile(String file_name) {
         this.initVariables();
         this.initGpxObject(file_name);
-        this.chunks = new ArrayList<Chunk>();
+        this.chunks = new ArrayList<>();
     }
 
     private void initVariables() {
@@ -66,6 +65,7 @@ public class GpxFile implements Serializable {
         }
 
         int i = 0;
+        assert gpx != null;
         for (Waypoint wp : gpx.getWaypoints()) {
 
             this.wps.add(i, new main.java.activitytracker.Waypoint(i, wp.getLongitude(), wp.getLatitude(), wp.getElevation(), wp.getTime().getTime()));
@@ -78,7 +78,7 @@ public class GpxFile implements Serializable {
         return this.chunks;
     }
 
-    public HashMap<Integer, main.java.activitytracker.Waypoint> getWps() {
+    public ArrayList<main.java.activitytracker.Waypoint> getWps() {
         return this.wps;
     }
 
@@ -104,7 +104,7 @@ public class GpxFile implements Serializable {
 
         }
 
-        return str;
+        return strBuilder.toString();
     }
 
 

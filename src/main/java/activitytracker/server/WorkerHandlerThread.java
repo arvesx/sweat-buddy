@@ -1,7 +1,7 @@
 package main.java.activitytracker.server;
 
-import main.java.activitytracker.server.fileprocessing.Chunk;
-import main.java.activitytracker.server.structures.FifoQueue;
+import main.java.activitytracker.fileprocessing.Chunk;
+import main.java.activitytracker.structures.FifoQueue;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

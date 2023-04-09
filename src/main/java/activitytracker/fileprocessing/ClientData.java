@@ -1,4 +1,4 @@
-package main.java.activitytracker.server.fileprocessing;
+package main.java.activitytracker.fileprocessing;
 
 public class ClientData {
     

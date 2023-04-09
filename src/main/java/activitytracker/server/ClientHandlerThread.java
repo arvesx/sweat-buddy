@@ -1,14 +1,12 @@
 package main.java.activitytracker.server;
 
-import main.java.activitytracker.server.fileprocessing.Chunk;
-import main.java.activitytracker.server.fileprocessing.ClientData;
-import main.java.activitytracker.server.fileprocessing.GpxFile;
+import main.java.activitytracker.fileprocessing.ClientData;
+import main.java.activitytracker.fileprocessing.GpxFile;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import static main.java.activitytracker.server.Utilities.*;
 

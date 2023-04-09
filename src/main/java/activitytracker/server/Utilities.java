@@ -1,8 +1,8 @@
 package main.java.activitytracker.server;
 
-import main.java.activitytracker.server.fileprocessing.Chunk;
-import main.java.activitytracker.server.structures.FifoQueue;
-import main.java.activitytracker.server.structures.RingBuffer;
+import main.java.activitytracker.fileprocessing.Chunk;
+import main.java.activitytracker.structures.FifoQueue;
+import main.java.activitytracker.structures.RingBuffer;
 
 public class Utilities {
     public static final Object WORKERS_LIST_LOCK = new Object();
