@@ -2,6 +2,8 @@ package main.java.activitytracker.server;
 
 import main.java.activitytracker.fileprocessing.ClientData;
 import main.java.activitytracker.fileprocessing.GpxFile;
+import main.java.activitytracker.fileprocessing.Mapper;
+import main.java.activitytracker.fileprocessing.Reducer;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -74,11 +76,31 @@ public class ClientHandlerThread extends Thread {
                 }
             }
 
+            int gpxFileId = gpx_file.getGpxFileId();
             // Waiting to receive all intermediate results to perform aggregation and calculate the final result.
+            ArrayList<Mapper.WorkerResult> processedResults;
+            synchronized (INTERMEDIATE_RESULTS_LOCK) {
+                int intermediateResultsListLength = intermediateResults.get(gpxFileId).size();
+                int numberOfChunksInGpx = gpx_file.getChunks().size();
+                while (intermediateResultsListLength != numberOfChunksInGpx) {
+                    INTERMEDIATE_RESULTS_LOCK.wait();
+                    intermediateResultsListLength = intermediateResults.get(gpx_file.getGpxFileId()).size();
+                    numberOfChunksInGpx = gpx_file.getChunks().size();
+                }
+                processedResults = intermediateResults.get(gpxFileId);
+            }
 
+            Reducer.ReducedResult finalResults = Reducer.reduce(processedResults);
+            System.out.println("GPX File ID: " + finalResults.key());
+            System.out.println("Total Distance: " + finalResults.value().totalDistance());
+            System.out.println("Total Ascent: " + finalResults.value().totalAscent());
+            System.out.println("Total Time: " + finalResults.value().totalTime());
+            System.out.println("Average Speed: " + finalResults.value().averageSpeed());
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }

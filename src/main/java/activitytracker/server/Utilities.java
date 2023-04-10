@@ -13,7 +13,7 @@ public class Utilities {
     public static final Object CLIENTS_LIST_LOCK = new Object();
 
 
-    public static final int CHUNK_SIZE = 5;
+    public static final int CHUNK_SIZE = 6;
 
     public static int gpxFileId = 0;
     public static final Object GXP_FILE_ID_LOCK = new Object();

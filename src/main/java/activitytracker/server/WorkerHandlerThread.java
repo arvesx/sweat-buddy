@@ -38,6 +38,9 @@ public class WorkerHandlerThread extends Thread {
             SenderThread sender = new SenderThread();
             sender.start();
 
+            ResultReceiverThread receiverThread = new ResultReceiverThread();
+            receiverThread.start();
+
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -54,6 +57,7 @@ public class WorkerHandlerThread extends Thread {
                     int comingFromGpxFileId = workerResult.key().gpxFileId();
                     synchronized (INTERMEDIATE_RESULTS_LOCK) {
                         intermediateResults.get(comingFromGpxFileId).add(workerResult);
+                        INTERMEDIATE_RESULTS_LOCK.notifyAll();
                     }
 
                 } catch (IOException | ClassNotFoundException e) {

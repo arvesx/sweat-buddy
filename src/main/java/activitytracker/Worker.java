@@ -89,8 +89,8 @@ public class Worker extends Node {
                 }
 
                 // process the chunk
-                System.out.println(chunkToProcess);
                 WorkerResult result = Mapper.map(chunkToProcess);
+                System.out.println(result);
                 synchronized (MSG_Q_OUT_LOCK) {
                     messageQueueOut.enqueue(result);
                     MSG_Q_OUT_LOCK.notify();
@@ -130,8 +130,8 @@ public class Worker extends Node {
                         }
                     }
 
-                    WorkerResult resultToSendBack = messageQueueOut.dequeue();
                     try {
+                        WorkerResult resultToSendBack = messageQueueOut.dequeue();
                         outputStream.writeObject(resultToSendBack);
                     } catch (IOException e) {
                         throw new RuntimeException(e);

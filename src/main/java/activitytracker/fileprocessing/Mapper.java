@@ -4,6 +4,7 @@ import main.java.activitytracker.Waypoint;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Mapper {
 
@@ -20,6 +21,14 @@ public class Mapper {
 
 
     public record WorkerResult(Key key, Value value) implements Serializable {
+    }
+
+    public static class WorkerResultComparator implements Comparator<WorkerResult> {
+
+        @Override
+        public int compare(WorkerResult o1, WorkerResult o2) {
+            return Integer.compare(o1.key().chunkId(), o2.key().chunkId());
+        }
     }
 
     public record Key(int gpxFileId, int chunkId) implements Serializable {
@@ -55,7 +64,7 @@ public class Mapper {
                     waypoints.get(i).getLongitude());
         }
 
-        return new ChunkDistanceData(distance * 1000,
+        return new ChunkDistanceData(distance,
                 waypoints.get(0).getLongitude(),
                 waypoints.get(0).getLatitude(),
                 waypoints.get(waypoints.size() - 1).getLongitude(),
@@ -101,6 +110,6 @@ public class Mapper {
             totalTime += waypoints.get(i).getTime() - waypoints.get(i - 1).getTime();
         }
 
-        return new ChunkTimeData(totalTime / 1000, waypoints.get(0).getTime(), waypoints.get(waypoints.size() - 1).getTime());
+        return new ChunkTimeData(totalTime, waypoints.get(0).getTime(), waypoints.get(waypoints.size() - 1).getTime());
     }
 }
