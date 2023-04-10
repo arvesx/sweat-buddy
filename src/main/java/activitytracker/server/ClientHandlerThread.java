@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import static main.java.activitytracker.server.Utilities.*;
 
@@ -59,6 +60,10 @@ public class ClientHandlerThread extends Thread {
             synchronized (GXP_FILE_ID_LOCK) {
                 gpxFileId++;
                 gpx_file.setGpxFileId(gpxFileId);
+
+                synchronized (INTERMEDIATE_RESULTS_LOCK) {
+                    intermediateResults.put(gpxFileId, new ArrayList<>());
+                }
             }
 
             gpx_file.makeChunks();
@@ -69,16 +74,8 @@ public class ClientHandlerThread extends Thread {
                 }
             }
 
-            // simulate work
-            try {
-                sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            // System.out.println("exit work thread");
+            // Waiting to receive all intermediate results to perform aggregation and calculate the final result.
 
-            outputStream.close();
-            inputStream.close();
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

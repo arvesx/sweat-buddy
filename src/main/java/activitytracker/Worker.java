@@ -107,7 +107,7 @@ public class Worker extends Node {
                     Chunk chunk = (Chunk) inputStream.readObject();
                     synchronized (MSG_Q_IN_LOCK) {
                         messageQueueIn.enqueue(chunk);
-                        MSG_Q_IN_LOCK.notify();
+                        MSG_Q_IN_LOCK.notifyAll();
                     }
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
