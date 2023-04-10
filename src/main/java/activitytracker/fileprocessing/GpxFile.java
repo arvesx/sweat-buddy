@@ -3,6 +3,7 @@ package main.java.activitytracker.fileprocessing;
 import java.io.FileInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.alternativevision.gpx.GPXParser;
 import org.alternativevision.gpx.beans.GPX;
@@ -64,14 +65,25 @@ public class GpxFile implements Serializable {
             System.err.println("ERROR: GPX_Parse");
         }
 
+        ArrayList<main.java.activitytracker.Waypoint> temporaryList = new ArrayList<>();
+
         int i = 0;
         assert gpx != null;
         for (Waypoint wp : gpx.getWaypoints()) {
 
-            this.wps.add(i, new main.java.activitytracker.Waypoint(i, wp.getLongitude(), wp.getLatitude(), wp.getElevation(), wp.getTime().getTime()));
+            temporaryList.add(new main.java.activitytracker.Waypoint(wp.getLongitude(), wp.getLatitude(), wp.getElevation(), wp.getTime().getTime()));
 
             ++i;
         }
+
+        temporaryList.sort(new WaypointTimeComparator());
+        int id = 0;
+        for (var wp : temporaryList) {
+            wp.setID(id);
+            id++;
+        }
+
+        this.wps = temporaryList;
     }
 
     public ArrayList<Chunk> getChunks() {

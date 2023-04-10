@@ -4,18 +4,21 @@ import java.io.Serializable;
 
 public class Waypoint implements Serializable {
 
-    private final int id;
+    private int id;
     private final double longitude;
     private final double latitude;
     private final double elevation;
     private final long time;
 
-    public Waypoint(int id, double longitude, double latitude, double elevation, long time) {
-        this.id = id;
+    public Waypoint(double longitude, double latitude, double elevation, long time) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.elevation = elevation;
         this.time = time;
+    }
+
+    public void setID(int id) {
+        this.id = id;
     }
 
     public int getID() {

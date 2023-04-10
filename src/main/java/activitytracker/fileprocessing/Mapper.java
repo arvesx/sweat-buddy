@@ -18,19 +18,20 @@ public class Mapper {
         );
     }
 
+
     public record WorkerResult(Key key, Value value) implements Serializable {
     }
 
-    public record Key(int gpxFileId, int chunkId) {
+    public record Key(int gpxFileId, int chunkId) implements Serializable {
     }
 
     public record Value(ChunkDistanceData chunkDistanceData,
                         ChunkAscentData chunkAscentData,
-                        ChunkTimeData chunkTimeData) {
+                        ChunkTimeData chunkTimeData) implements Serializable {
     }
 
     public record ChunkDistanceData(double distance, double firstWaypointLong, double firstWaypointLat,
-                                    double lastWaypointLong, double lastWaypointLat) {
+                                    double lastWaypointLong, double lastWaypointLat) implements Serializable {
     }
 
 
@@ -62,7 +63,8 @@ public class Mapper {
     }
 
 
-    public record ChunkAscentData(double ascent, double firstWaypointElevation, double lastWaypointElevation) {
+    public record ChunkAscentData(double ascent, double firstWaypointElevation,
+                                  double lastWaypointElevation) implements Serializable {
     }
 
     public static ChunkAscentData calculateAscent(Chunk chunk) {
@@ -83,7 +85,7 @@ public class Mapper {
     }
 
 
-    public record ChunkTimeData(long chunkTime, long firstWaypointTime, long lastWaypointTime) {
+    public record ChunkTimeData(long chunkTime, long firstWaypointTime, long lastWaypointTime) implements Serializable {
     }
 
     public static ChunkTimeData calculateTime(Chunk chunk) {
