@@ -26,6 +26,10 @@ public class Chunk implements Serializable {
         return wps;
     }
 
+    public int getGpxFileId() {
+        return gpxFileId;
+    }
+
     public void setFileId(int id) {
         this.fileId = id;
     }
