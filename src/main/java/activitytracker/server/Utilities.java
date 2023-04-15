@@ -1,7 +1,7 @@
 package main.java.activitytracker.server;
 
-import main.java.activitytracker.fileprocessing.Chunk;
-import main.java.activitytracker.fileprocessing.Mapper;
+import main.java.activitytracker.fileprocessing.gpx.Chunk;
+import main.java.activitytracker.worker.Map;
 import main.java.activitytracker.structures.FifoQueue;
 import main.java.activitytracker.structures.RingBuffer;
 
@@ -19,7 +19,7 @@ public class Utilities {
     public static final Object GXP_FILE_ID_LOCK = new Object();
 
 
-    public static final HashMap<Integer, ArrayList<Mapper.WorkerResult>> intermediateResults = new HashMap<>();
+    public static final HashMap<Integer, ArrayList<Map.WorkerResult>> intermediateResults = new HashMap<>();
     public static final Object INTERMEDIATE_RESULTS_LOCK = new Object();
 
 

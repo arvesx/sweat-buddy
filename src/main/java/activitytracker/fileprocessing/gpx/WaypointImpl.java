@@ -1,8 +1,8 @@
-package main.java.activitytracker;
+package main.java.activitytracker.fileprocessing.gpx;
 
 import java.io.Serializable;
 
-public class Waypoint implements Serializable {
+public class WaypointImpl implements Serializable {
 
     private int id;
     private final double longitude;
@@ -10,7 +10,7 @@ public class Waypoint implements Serializable {
     private final double elevation;
     private final long time;
 
-    public Waypoint(double longitude, double latitude, double elevation, long time) {
+    public WaypointImpl(double longitude, double latitude, double elevation, long time) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.elevation = elevation;

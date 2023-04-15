@@ -1,7 +1,7 @@
 package main.java.activitytracker.server;
 
-import main.java.activitytracker.fileprocessing.Chunk;
-import main.java.activitytracker.fileprocessing.Mapper;
+import main.java.activitytracker.fileprocessing.gpx.Chunk;
+import main.java.activitytracker.worker.Map;
 import main.java.activitytracker.structures.FifoQueue;
 
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class WorkerHandlerThread extends Thread {
         public void run() {
             while (receivingResults) {
                 try {
-                    Mapper.WorkerResult workerResult = (Mapper.WorkerResult) inputStream.readObject();
+                    Map.WorkerResult workerResult = (Map.WorkerResult) inputStream.readObject();
                     int comingFromGpxFileId = workerResult.key().gpxFileId();
                     synchronized (INTERMEDIATE_RESULTS_LOCK) {
                         intermediateResults.get(comingFromGpxFileId).add(workerResult);

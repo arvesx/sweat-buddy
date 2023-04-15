@@ -1,9 +1,8 @@
-package main.java.activitytracker.fileprocessing;
+package main.java.activitytracker.fileprocessing.gpx;
 
 import java.io.FileInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import org.alternativevision.gpx.GPXParser;
 import org.alternativevision.gpx.beans.GPX;
@@ -14,7 +13,7 @@ import static main.java.activitytracker.server.Utilities.CHUNK_SIZE;
 public class GpxFile implements Serializable {
 
     private int gpxFileId;
-    private ArrayList<main.java.activitytracker.Waypoint> wps;
+    private ArrayList<WaypointImpl> wps;
 
 
     private final ArrayList<Chunk> chunks;
@@ -65,18 +64,18 @@ public class GpxFile implements Serializable {
             System.err.println("ERROR: GPX_Parse");
         }
 
-        ArrayList<main.java.activitytracker.Waypoint> temporaryList = new ArrayList<>();
+        ArrayList<WaypointImpl> temporaryList = new ArrayList<>();
 
         int i = 0;
         assert gpx != null;
         for (Waypoint wp : gpx.getWaypoints()) {
 
-            temporaryList.add(new main.java.activitytracker.Waypoint(wp.getLongitude(), wp.getLatitude(), wp.getElevation(), wp.getTime().getTime()));
+            temporaryList.add(new WaypointImpl(wp.getLongitude(), wp.getLatitude(), wp.getElevation(), wp.getTime().getTime()));
 
             ++i;
         }
 
-        temporaryList.sort(new WaypointTimeComparator());
+        temporaryList.sort(new WaypointImplTimeComparator());
         int id = 0;
         for (var wp : temporaryList) {
             wp.setID(id);
@@ -90,7 +89,7 @@ public class GpxFile implements Serializable {
         return this.chunks;
     }
 
-    public ArrayList<main.java.activitytracker.Waypoint> getWps() {
+    public ArrayList<WaypointImpl> getWps() {
         return this.wps;
     }
 
@@ -106,7 +105,7 @@ public class GpxFile implements Serializable {
     public String toString() {
 
         StringBuilder strBuilder = new StringBuilder();
-        for (main.java.activitytracker.Waypoint wp : this.wps) {
+        for (WaypointImpl wp : this.wps) {
             strBuilder.append("Waypoint ").append(wp.getID()).append("\n")
                     .append("Latitude: ").append(wp.getLatitude()).append("\n")
                     .append("Longitude: ").append(wp.getLongitude()).append("\n")

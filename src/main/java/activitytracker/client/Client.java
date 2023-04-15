@@ -1,10 +1,10 @@
-package main.java.activitytracker;
+package main.java.activitytracker.client;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
-import main.java.activitytracker.fileprocessing.GpxFile;
+import main.java.activitytracker.fileprocessing.gpx.GpxFile;
 
 public class Client {
 

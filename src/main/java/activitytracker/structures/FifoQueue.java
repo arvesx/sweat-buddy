@@ -7,7 +7,7 @@ public class FifoQueue<T> {
     private final Queue<T> queue;
 
     public FifoQueue() {
-        queue = new LinkedList<T>();
+        queue = new LinkedList<>();
     }
 
     public void enqueue(T item) {

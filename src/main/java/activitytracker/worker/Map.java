@@ -1,12 +1,14 @@
-package main.java.activitytracker.fileprocessing;
+package main.java.activitytracker.worker;
 
-import main.java.activitytracker.Waypoint;
+import main.java.activitytracker.fileprocessing.gpx.Chunk;
+import main.java.activitytracker.fileprocessing.Haversine;
+import main.java.activitytracker.fileprocessing.gpx.WaypointImpl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Mapper {
+public class Map {
 
     public static WorkerResult map(Chunk chunk) {
         return new WorkerResult(
@@ -46,7 +48,7 @@ public class Mapper {
 
     public static ChunkDistanceData calculateDistance(Chunk chunk) {
 
-        ArrayList<Waypoint> waypoints = chunk.getWaypoints();
+        ArrayList<WaypointImpl> waypoints = chunk.getWaypoints();
 
         if (waypoints.size() <= 1) {
             return new ChunkDistanceData(0,
@@ -79,7 +81,7 @@ public class Mapper {
     public static ChunkAscentData calculateAscent(Chunk chunk) {
 
         // Total ascent = Σ(max(0, Elevation[i] - Elevation[i-1]))
-        ArrayList<Waypoint> waypoints = chunk.getWaypoints();
+        ArrayList<WaypointImpl> waypoints = chunk.getWaypoints();
 
         if (waypoints.size() < 2) {
             return new ChunkAscentData(0, waypoints.get(0).getElevation(), Double.MIN_VALUE);
@@ -99,7 +101,7 @@ public class Mapper {
 
     public static ChunkTimeData calculateTime(Chunk chunk) {
 
-        ArrayList<Waypoint> waypoints = chunk.getWaypoints();
+        ArrayList<WaypointImpl> waypoints = chunk.getWaypoints();
 
         if (waypoints.size() <= 1) {
             return new ChunkTimeData(0, waypoints.get(0).getTime(), Long.MIN_VALUE);

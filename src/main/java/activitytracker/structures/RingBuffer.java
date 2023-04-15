@@ -88,8 +88,6 @@ public class RingBuffer<T> {
 
     /**
      * Get the next object in a round-robin fashion.
-     *
-     * @return
      */
     public T next() {
         if (head == null) {
@@ -124,7 +122,7 @@ public class RingBuffer<T> {
         }
     }
 
-    class Node<T> {
+    static class Node<T> {
 
         private Node<T> next;
         private Node<T> prev;

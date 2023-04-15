@@ -1,6 +1,4 @@
-package main.java.activitytracker.fileprocessing;
-
-import main.java.activitytracker.Waypoint;
+package main.java.activitytracker.fileprocessing.gpx;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,19 +8,19 @@ public class Chunk implements Serializable {
     private final int gpxFileId;
     private int fileId;
     private int chunkId;
-    private final ArrayList<Waypoint> wps;
+    private final ArrayList<WaypointImpl> wps;
 
     public Chunk(int id, int gpxFileId) {
-        this.wps = new ArrayList<Waypoint>();
+        this.wps = new ArrayList<WaypointImpl>();
         this.chunkId = id;
         this.gpxFileId = gpxFileId;
     }
 
-    public void addData(Waypoint wp) {
+    public void addData(WaypointImpl wp) {
         this.wps.add(wp);
     }
 
-    public ArrayList<Waypoint> getWaypoints() {
+    public ArrayList<WaypointImpl> getWaypoints() {
         return wps;
     }
 
@@ -52,7 +50,7 @@ public class Chunk implements Serializable {
 
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append("Chunk ID: ").append(this.chunkId).append("\n\n");
-        for (main.java.activitytracker.Waypoint wp : this.wps) {
+        for (WaypointImpl wp : this.wps) {
             strBuilder.append("Waypoint ").append(wp.getID()).append("\n")
                     .append("Latitude: ").append(wp.getLatitude()).append("\n")
                     .append("Longitude: ").append(wp.getLongitude()).append("\n")

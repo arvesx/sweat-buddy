@@ -1,5 +1,7 @@
 package main.java.activitytracker.fileprocessing;
 
+import main.java.activitytracker.fileprocessing.gpx.GpxFile;
+
 public class ClientData {
     
     private int ID;

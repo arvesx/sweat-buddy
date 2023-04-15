@@ -1,15 +1,18 @@
-package main.java.activitytracker.fileprocessing;
+package main.java.activitytracker.server;
+
+import main.java.activitytracker.fileprocessing.Haversine;
+import main.java.activitytracker.worker.Map;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Reducer {
+public class Reduce {
 
-    public static ReducedResult reduce(ArrayList<Mapper.WorkerResult> workerResults) {
+    public static ReducedResult reduce(ArrayList<Map.WorkerResult> workerResults) {
 
-        workerResults.sort(new Mapper.WorkerResultComparator());
-        Mapper.WorkerResult currentChunkResults;
-        Mapper.WorkerResult nextChunkResults;
+        workerResults.sort(new Map.WorkerResultComparator());
+        Map.WorkerResult currentChunkResults;
+        Map.WorkerResult nextChunkResults;
 
         long totalTime = 0;
         double totalAscent = 0;
@@ -19,14 +22,14 @@ public class Reducer {
             currentChunkResults = workerResults.get(i - 1);
             nextChunkResults = workerResults.get(i);
 
-            Mapper.ChunkTimeData currentChunkTimeData = currentChunkResults.value().chunkTimeData();
-            Mapper.ChunkTimeData nextChunkTimeData = nextChunkResults.value().chunkTimeData();
+            Map.ChunkTimeData currentChunkTimeData = currentChunkResults.value().chunkTimeData();
+            Map.ChunkTimeData nextChunkTimeData = nextChunkResults.value().chunkTimeData();
 
-            Mapper.ChunkAscentData currentChunkAscentData = currentChunkResults.value().chunkAscentData();
-            Mapper.ChunkAscentData nextChunkAscentData = nextChunkResults.value().chunkAscentData();
+            Map.ChunkAscentData currentChunkAscentData = currentChunkResults.value().chunkAscentData();
+            Map.ChunkAscentData nextChunkAscentData = nextChunkResults.value().chunkAscentData();
 
-            Mapper.ChunkDistanceData currentChunkDistanceData = currentChunkResults.value().chunkDistanceData();
-            Mapper.ChunkDistanceData nextChunkDistanceData = nextChunkResults.value().chunkDistanceData();
+            Map.ChunkDistanceData currentChunkDistanceData = currentChunkResults.value().chunkDistanceData();
+            Map.ChunkDistanceData nextChunkDistanceData = nextChunkResults.value().chunkDistanceData();
 
             totalTime += currentChunkTimeData.chunkTime();
             totalTime += nextChunkTimeData.chunkTime();
