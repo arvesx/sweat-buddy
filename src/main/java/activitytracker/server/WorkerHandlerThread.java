@@ -19,12 +19,12 @@ public class WorkerHandlerThread extends Thread {
     private ObjectInputStream inputStream;
     private boolean running;
     private boolean receivingResults;
-    private final FifoQueue<Chunk> messageQueue;
+    private final FifoQueue<Chunk> workerMessageQueue;
     private final Object MSG_Q_LOCK = new Object();
 
     public WorkerHandlerThread(Socket workerSocket) {
         this.workerSocket = workerSocket;
-        messageQueue = new FifoQueue<>();
+        workerMessageQueue = new FifoQueue<>();
         running = true;
         receivingResults = true;
     }
@@ -74,14 +74,14 @@ public class WorkerHandlerThread extends Thread {
             while (running) {
 
                 synchronized (MSG_Q_LOCK) {
-                    while (messageQueue.isEmpty()) {
+                    while (workerMessageQueue.isEmpty()) {
                         try {
                             MSG_Q_LOCK.wait();
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
                     }
-                    Chunk nextChunk = messageQueue.dequeue();
+                    Chunk nextChunk = workerMessageQueue.dequeue();
                     try {
                         outputStream.writeObject(nextChunk);
                         outputStream.flush();
@@ -96,7 +96,7 @@ public class WorkerHandlerThread extends Thread {
 
     public void assign(Chunk chunk) {
         synchronized (MSG_Q_LOCK) {
-            messageQueue.enqueue(chunk);
+            workerMessageQueue.enqueue(chunk);
             MSG_Q_LOCK.notify();
         }
 

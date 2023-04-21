@@ -18,35 +18,45 @@ public class Reduce {
         double totalAscent = 0;
         double totalDistance = 0;
 
-        for (int i = 1; i < workerResults.size(); i++) {
+        for (int i = 1; i <= workerResults.size(); i++) {
+            
             currentChunkResults = workerResults.get(i - 1);
-            nextChunkResults = workerResults.get(i);
-
+            
             Map.ChunkTimeData currentChunkTimeData = currentChunkResults.value().chunkTimeData();
-            Map.ChunkTimeData nextChunkTimeData = nextChunkResults.value().chunkTimeData();
 
             Map.ChunkAscentData currentChunkAscentData = currentChunkResults.value().chunkAscentData();
-            Map.ChunkAscentData nextChunkAscentData = nextChunkResults.value().chunkAscentData();
 
             Map.ChunkDistanceData currentChunkDistanceData = currentChunkResults.value().chunkDistanceData();
-            Map.ChunkDistanceData nextChunkDistanceData = nextChunkResults.value().chunkDistanceData();
 
             totalTime += currentChunkTimeData.chunkTime();
-            totalTime += nextChunkTimeData.chunkTime();
-            totalTime += (nextChunkTimeData.firstWaypointTime() - currentChunkTimeData.lastWaypointTime());
 
             totalAscent += currentChunkAscentData.ascent();
-            totalAscent += nextChunkAscentData.ascent();
-            totalAscent += Math.max(0, (nextChunkAscentData.firstWaypointElevation() - currentChunkAscentData.lastWaypointElevation()));
 
             totalDistance += currentChunkDistanceData.distance();
-            totalDistance += nextChunkDistanceData.distance();
-            totalDistance += Haversine.distance(
-                    nextChunkDistanceData.firstWaypointLat(),
-                    nextChunkDistanceData.firstWaypointLong(),
-                    currentChunkDistanceData.lastWaypointLat(),
-                    currentChunkDistanceData.lastWaypointLong()
-            );
+
+            if (i < workerResults.size())
+            {
+                nextChunkResults = workerResults.get(i);
+
+                Map.ChunkTimeData nextChunkTimeData = nextChunkResults.value().chunkTimeData();
+
+                Map.ChunkAscentData nextChunkAscentData = nextChunkResults.value().chunkAscentData();
+
+                Map.ChunkDistanceData nextChunkDistanceData = nextChunkResults.value().chunkDistanceData();
+
+                totalTime += (nextChunkTimeData.firstWaypointTime() - currentChunkTimeData.lastWaypointTime());
+
+                totalAscent += Math.max(0, (nextChunkAscentData.firstWaypointElevation() - currentChunkAscentData.lastWaypointElevation()));
+
+                totalDistance += Haversine.distance(
+                        nextChunkDistanceData.firstWaypointLat(),
+                        nextChunkDistanceData.firstWaypointLong(),
+                        currentChunkDistanceData.lastWaypointLat(),
+                        currentChunkDistanceData.lastWaypointLong()
+                );
+            }
+
+     
         }
 
         double averageSpeed = totalDistance / totalTime;
