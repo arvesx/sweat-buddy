@@ -29,7 +29,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'sweat_buddy_client'
+    mainClass = 'Client'
 }
 
 tasks.named('test') {

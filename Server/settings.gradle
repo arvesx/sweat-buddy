@@ -7,5 +7,5 @@
  * in the user manual at https://docs.gradle.org/8.0.2/userguide/multi_project_builds.html
  */
 
-rootProject.name = 'sweat_buddy_server'
+rootProject.name = 'Server'
 include('app')

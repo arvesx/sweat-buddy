@@ -28,7 +28,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'sweat_buddy_server.App'
+    mainClass = 'Server.App'
 }
 
 tasks.named('test') {
