@@ -33,7 +33,7 @@ public class WorkerListener extends Thread {
             try {
                 // Accept worker connection
                 Socket workerSocket = this.serverSocket.accept();
-                System.out.println("[Server] Worker node added");
+                LOGGER.info("Worker node added");
 
                 // Handle the new connection
                 WorkerHandlerThread workerThread = new WorkerHandlerThread(workerSocket);
@@ -47,7 +47,7 @@ public class WorkerListener extends Thread {
                     WORKERS_RING_BUFFER_LOCK.notify();
                 }
             } catch (SocketException e) {
-                System.out.println("[Server] Stopped accepting workers");
+                LOGGER.info("Stopped accepting workers");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -61,7 +61,8 @@ public class WorkerListener extends Thread {
     }
 
     public void stopListening() {
-        System.out.println("[Server] Shutting down worker listener");
+        
+        LOGGER.info("Shutting down worker listener");
 
         try {
             this.serverSocket.close();

@@ -4,9 +4,14 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 import dependencies.fileprocessing.gpx.GpxFile;
 
 public class Client {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Client.class);
 
     private final String username;
     private final GpxFile gpxFile;
@@ -16,8 +21,16 @@ public class Client {
     private ObjectInputStream inputStream;
 
     public Client(String username, String host_address, int port) {
+        
         this.username = username;
-        this.gpxFile = new GpxFile("F:\\Distributed Systems\\Sweat_Buddy_App\\sweat_buddy_client\\app\\src\\main\\resources\\gpxfiles\\route1.xml");
+        String file_path = "F:\\Distributed Systems\\sweat-buddy\\Client\\app\\src\\main\\resources\\gpxfiles\\route1.xml";
+        
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("File Sent to Server: " + file_path);
+        }
+
+        this.gpxFile = new GpxFile(file_path);
 
         try {
             this.socket = new Socket(host_address, port);
@@ -34,7 +47,10 @@ public class Client {
     public void sendClientInfo() {
         try {
 
-            System.out.println("username: " + this.username);
+            if (LOGGER.isDebugEnabled())
+            {
+                LOGGER.debug("Username: " + this.username);
+            }
 
             this.outputStream.writeObject(this.username);
             this.outputStream.flush();

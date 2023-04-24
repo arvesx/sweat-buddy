@@ -8,8 +8,13 @@ import dependencies.structures.RingBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 public class Utils {
     
+    public static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
+
     public static final Object WORKERS_LIST_LOCK = new Object();
     public static final Object CLIENTS_LIST_LOCK = new Object();
 

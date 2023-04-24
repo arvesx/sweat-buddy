@@ -9,7 +9,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Worker {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(Worker.class);
 
     private final String ipAddress;
 
@@ -68,7 +73,7 @@ public class Worker {
 
         Worker worker = new Worker("127.0.0.1", 2345);
 
-        System.out.println("Worker " + worker.ipAddress + " connected to server ");
+        LOGGER.info("Worker " + worker.ipAddress + " connected to server");
 
     }
 }

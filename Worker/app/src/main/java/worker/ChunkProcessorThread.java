@@ -38,7 +38,6 @@ class ChunkProcessorThread extends Thread {
 
             // process the chunk
             Map.WorkerResult result = Map.map(chunkToProcess);
-            System.out.println(result + "\n");
             synchronized (MSG_Q_OUT_LOCK) {
                 messageQueueOut.enqueue(result);
                 MSG_Q_OUT_LOCK.notify();

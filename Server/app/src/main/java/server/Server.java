@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Scanner;
 
+
 public class Server {
+
     private volatile boolean serverRunning;
     private volatile boolean distributing;
     private ServerSocket clientServerSocket;
@@ -29,7 +31,8 @@ public class Server {
             this.workerServerSocket = new ServerSocket(this.workerListenerPort);
             serverRunning = true;
             distributing = true;
-            System.out.println("[Server] Starting Server...");
+            
+            LOGGER.info("Starting Server...");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -37,13 +40,14 @@ public class Server {
     }
 
     protected void connect() throws InterruptedException {
-        System.out.println("[Server] Listening for new clients on port " + this.clientListenerPort);
+        
+        LOGGER.info("Listening for new clients on port " + this.clientListenerPort);
         this.clientListener = new ClientListener(this.clientServerSocket);
         clientListener.start();
         this.listensForClients = true;
 
 
-        System.out.println("[Server] Listening for new workers on port " + this.workerListenerPort);
+        LOGGER.info("Listening for new workers on port " + this.workerListenerPort);
         this.workerListener = new WorkerListener(this.workerServerSocket);
         workerListener.start();
         this.listensForWorkers = true;

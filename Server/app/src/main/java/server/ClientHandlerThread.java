@@ -54,9 +54,8 @@ public class ClientHandlerThread extends Thread {
 
             gpxFile = (GpxFile) this.inputStream.readObject();
             this.clientData.setGpxFile(gpxFile);
-            System.out.println();
-            System.out.println("[Server] Client#" + this.clientData.getID() + ": Received GPX File");
-            System.out.print(">>> ");
+
+            LOGGER.info("Client#" + this.clientData.getID() + ": Received GPX File");
 
             synchronized (GXP_FILE_ID_LOCK) {
                 gpxFileId++;
@@ -90,11 +89,12 @@ public class ClientHandlerThread extends Thread {
             }
 
             Reduce.ReducedResult finalResults = Reduce.reduce(processedResults);
-            System.out.println("GPX File ID: " + finalResults.key());
-            System.out.println("Total Distance: " + finalResults.value().totalDistance());
-            System.out.println("Total Ascent: " + finalResults.value().totalAscent());
-            System.out.println("Total Time: " + finalResults.value().totalTime());
-            System.out.println("Average Speed: " + finalResults.value().averageSpeed());
+
+            LOGGER.debug("GPX File ID: " + finalResults.key() +  
+                        ", Total Distance: " + finalResults.value().totalDistance() +
+                        ", Total Ascent: " + finalResults.value().totalAscent() + 
+                        ", Total Time: " + finalResults.value().totalTime() + 
+                        ", Average Speed: " + finalResults.value().averageSpeed() + "\n");
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

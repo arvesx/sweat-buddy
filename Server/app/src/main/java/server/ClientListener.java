@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 
-import static server.Utils.CLIENTS_LIST_LOCK;
+import static server.Utils.*;
 
 /**
  * This class is responsible for listening to incoming clients. It's instantiated only once, by the server.
@@ -43,7 +43,7 @@ public class ClientListener extends Thread {
 
     public void stopListening() {
         // gets called when Server shuts down
-        System.out.println("[Server] Shutting down client listener");
+        LOGGER.info("Shutting down client listener");
         try {
             serverSocket.close();
         } catch (IOException e) {
@@ -61,7 +61,7 @@ public class ClientListener extends Thread {
             // Accept client incoming connection
             try {
                 Socket clientSocket = this.serverSocket.accept();
-                System.out.println("\n[Server] Client#" + this.clientID + ": Connected");
+                LOGGER.info("Client#" + this.clientID + ": Connected");
 
                 // Handle this client
                 ClientHandlerThread clientThread = new ClientHandlerThread(clientSocket, this.clientID);
@@ -72,7 +72,7 @@ public class ClientListener extends Thread {
 
                 this.clientID++;
             } catch (SocketException e) {
-                System.out.println("[Server] Stopped accepting clients");
+                LOGGER.info("Stopped accepting clients");
             } catch (IOException e) {
                 e.printStackTrace();
             }
