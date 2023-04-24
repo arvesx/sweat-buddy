@@ -1,7 +1,0 @@
-{
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "f:\\Distributed Systems\\Project_2023\\GPXParser_20200512.jar",
-        "d:\\CS Studies\\Κατανεμημένα Συστήματα\\GPXParser_20200512.jar"
-    ]
-}
