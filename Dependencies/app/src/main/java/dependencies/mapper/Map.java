@@ -2,7 +2,7 @@ package dependencies.mapper;
 
 import dependencies.fileprocessing.gpx.Chunk;
 import dependencies.fileprocessing.gpx.WaypointImpl;
-import dependencies.fileprocessing.Haversine;
+import dependencies.fileprocessing.distance.Haversine;
 
 import java.io.Serializable;
 import java.util.ArrayList;

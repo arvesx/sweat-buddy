@@ -21,12 +21,11 @@ public class Client {
     private ObjectInputStream inputStream;
 
     public Client(String username, String host_address, int port) {
-        
+
         this.username = username;
-        String file_path = "F:\\Distributed Systems\\sweat-buddy\\Client\\app\\src\\main\\resources\\gpxfiles\\route1.xml";
-        
-        if (LOGGER.isDebugEnabled())
-        {
+        String file_path = "Client/app/src/main/resources/gpxfiles/route1.xml";
+
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("File Sent to Server: " + file_path);
         }
 
@@ -47,8 +46,7 @@ public class Client {
     public void sendClientInfo() {
         try {
 
-            if (LOGGER.isDebugEnabled())
-            {
+            if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Username: " + this.username);
             }
 
@@ -75,6 +73,7 @@ public class Client {
         cl.sendClientInfo();
 
         scanner.close();
-        while (true) { }
+        while (true) {
+        }
     }
 }

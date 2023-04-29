@@ -19,9 +19,9 @@ public class Reduce {
         double totalDistance = 0;
 
         for (int i = 1; i <= workerResults.size(); i++) {
-            
+
             currentChunkResults = workerResults.get(i - 1);
-            
+
             Map.ChunkTimeData currentChunkTimeData = currentChunkResults.value().chunkTimeData();
 
             Map.ChunkAscentData currentChunkAscentData = currentChunkResults.value().chunkAscentData();
@@ -34,8 +34,7 @@ public class Reduce {
 
             totalDistance += currentChunkDistanceData.distance();
 
-            if (i < workerResults.size())
-            {
+            if (i < workerResults.size()) {
                 nextChunkResults = workerResults.get(i);
 
                 Map.ChunkTimeData nextChunkTimeData = nextChunkResults.value().chunkTimeData();
@@ -56,14 +55,16 @@ public class Reduce {
                 );
             }
 
-     
+
         }
 
-        double averageSpeed = totalDistance / totalTime;
+        double totalTimeInHours = (totalTime / 1000.0) / 3600.0;
+        double totalTimeInMinutes = (totalTime / 1000.0) / 60.0;
+        double averageSpeed = totalDistance / totalTimeInHours;
 
         return new ReducedResult(
                 new Key(workerResults.get(0).key().gpxFileId()),
-                new Value(totalDistance, totalAscent, totalTime, averageSpeed)
+                new Value(totalDistance, totalAscent, totalTimeInMinutes, averageSpeed)
         );
     }
 
@@ -74,7 +75,7 @@ public class Reduce {
     public record Key(int gpxFileId) implements Serializable {
     }
 
-    public record Value(double totalDistance, double totalAscent, long totalTime,
-                        double averageSpeed) implements Serializable {
+    public record Value(double totalDistanceInKilometers, double totalAscentInMeters, double totalTimeInMinutes,
+                        double averageSpeedKilometerPerHour) implements Serializable {
     }
 }

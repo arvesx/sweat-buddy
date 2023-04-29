@@ -1,8 +1,9 @@
 package server;
 
+import dependencies.fileprocessing.gpx.GpxFile;
+//import dependencies.fileprocessing.gpx.GpxResults;
 import dependencies.mapper.Map;
 import fileprocessing.ClientData;
-import dependencies.fileprocessing.gpx.GpxFile;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -90,11 +91,18 @@ public class ClientHandlerThread extends Thread {
 
             Reduce.ReducedResult finalResults = Reduce.reduce(processedResults);
 
-            LOGGER.debug("GPX File ID: " + finalResults.key() +  
-                        ", Total Distance: " + finalResults.value().totalDistance() +
-                        ", Total Ascent: " + finalResults.value().totalAscent() + 
-                        ", Total Time: " + finalResults.value().totalTime() + 
-                        ", Average Speed: " + finalResults.value().averageSpeed() + "\n");
+            double totalDistanceInKilometers = finalResults.value().totalDistanceInKilometers();
+            double totalAscentInMeters = finalResults.value().totalAscentInMeters();
+            double totalTimeInMinutes =  finalResults.value().totalTimeInMinutes();
+            double averageSpeedInKilometersPerHour = finalResults.value().averageSpeedKilometerPerHour();
+
+            LOGGER.debug("GPX File ID: " + finalResults.key() +
+                    ", Total Distance: " + totalDistanceInKilometers +
+                    ", Total Ascent: " + totalAscentInMeters +
+                    ", Total Time: " + totalTimeInMinutes +
+                    ", Average Speed: " + averageSpeedInKilometersPerHour + "\n");
+
+//            GpxResults gpxResults = new GpxResults();
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

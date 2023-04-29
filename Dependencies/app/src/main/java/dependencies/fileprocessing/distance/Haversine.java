@@ -1,4 +1,4 @@
-package dependencies.fileprocessing;
+package dependencies.fileprocessing.distance;
 
 public class Haversine {
     public static double distance(double startLat, double startLong, double endLat, double endLong) {
