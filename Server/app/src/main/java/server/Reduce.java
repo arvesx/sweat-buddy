@@ -64,7 +64,7 @@ public class Reduce {
 
         return new ReducedResult(
                 new Key(workerResults.get(0).key().gpxFileId()),
-                new Value(totalDistance, totalAscent, totalTimeInMinutes, averageSpeed)
+                new Value(totalDistance, totalAscent, totalTimeInMinutes, averageSpeed, totalTime)
         );
     }
 
@@ -76,6 +76,6 @@ public class Reduce {
     }
 
     public record Value(double totalDistanceInKilometers, double totalAscentInMeters, double totalTimeInMinutes,
-                        double averageSpeedKilometerPerHour) implements Serializable {
+                        double averageSpeedKilometerPerHour, long totalTimeInMillis) implements Serializable {
     }
 }

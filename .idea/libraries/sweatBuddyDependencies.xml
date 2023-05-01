@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="sweatBuddyDependencies">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Server/app/libs/sweatBuddyDependencies.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
