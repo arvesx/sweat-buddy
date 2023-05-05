@@ -1,7 +1,7 @@
 package server;
 
 import dependencies.fileprocessing.gpx.GpxFile;
-//import dependencies.fileprocessing.gpx.GpxResults;
+import dependencies.fileprocessing.gpx.GpxResults;
 import dependencies.mapper.Map;
 import fileprocessing.ClientData;
 
@@ -93,8 +93,11 @@ public class ClientHandlerThread extends Thread {
 
             double totalDistanceInKilometers = finalResults.value().totalDistanceInKilometers();
             double totalAscentInMeters = finalResults.value().totalAscentInMeters();
-            double totalTimeInMinutes =  finalResults.value().totalTimeInMinutes();
+            double totalTimeInMinutes = finalResults.value().totalTimeInMinutes();
             double averageSpeedInKilometersPerHour = finalResults.value().averageSpeedKilometerPerHour();
+            double totalTimeInMillis = finalResults.value().totalTimeInMillis();
+
+
 
             LOGGER.debug("GPX File ID: " + finalResults.key() +
                     ", Total Distance: " + totalDistanceInKilometers +
@@ -102,7 +105,14 @@ public class ClientHandlerThread extends Thread {
                     ", Total Time: " + totalTimeInMinutes +
                     ", Average Speed: " + averageSpeedInKilometersPerHour + "\n");
 
-//            GpxResults gpxResults = new GpxResults();
+            GpxResults gpxResults = new GpxResults(
+                    totalDistanceInKilometers,
+                    totalAscentInMeters,
+                    totalTimeInMinutes,
+                    averageSpeedInKilometersPerHour
+            );
+
+            outputStream.writeObject(gpxResults);
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

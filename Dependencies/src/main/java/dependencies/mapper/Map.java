@@ -1,4 +1,4 @@
- package dependencies.mapper;
+package dependencies.mapper;
 
 import dependencies.fileprocessing.gpx.Chunk;
 import dependencies.fileprocessing.gpx.WaypointImpl;

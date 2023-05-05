@@ -1,7 +1,6 @@
 package server;
 
 import dependencies.fileprocessing.gpx.Chunk;
-//import dependencies.;
 import dependencies.mapper.Map;
 import dependencies.structures.FifoQueue;
 import dependencies.structures.RingBuffer;

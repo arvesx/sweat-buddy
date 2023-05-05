@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
+import dependencies.fileprocessing.gpx.GpxResults;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
@@ -72,8 +73,14 @@ public class Client {
 
         cl.sendClientInfo();
 
+        GpxResults results;
         scanner.close();
-        while (true) {
+        try {
+            results = (GpxResults) cl.inputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
+
+        System.out.println(results);
     }
 }
