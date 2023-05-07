@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    
+    // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+    implementation 'ch.qos.logback:logback-classic:1.4.7'
+
+    // https://mvnrepository.com/artifact/ch.qos.logback/logback-core
+    implementation 'ch.qos.logback:logback-core:1.4.7'
+
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+
+    implementation fileTree(dir: 'libs', include: '*.jar')
+
+}
+
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'worker.Worker'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it).matching{exclude{it.path.contains('META-INF/INDEX.LIST')}} }
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+ }
