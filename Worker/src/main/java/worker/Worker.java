@@ -1,5 +1,6 @@
 package worker;
 
+import dependencies.Utilities;
 import dependencies.fileprocessing.gpx.Chunk;
 import dependencies.structures.FifoQueue;
 import dependencies.mapper.Map.WorkerResult;
@@ -71,7 +72,7 @@ public class Worker {
 
     public static void main(String[] args) {
 
-        Worker worker = new Worker("127.0.0.1", 2345);
+        Worker worker = new Worker(Utilities.HOST_ADDRESS, Utilities.WORKERS_PORT);
 
         LOGGER.info("Worker " + worker.ipAddress + " connected to server");
 

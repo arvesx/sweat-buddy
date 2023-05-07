@@ -15,6 +15,10 @@ public class Utils {
     
     public static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
+    public static final int MAX_WORKERS = 5;
+    public static int NUM_OF_WORKERS = 0;
+    public static final Object NUM_OF_WORKERS_LOCK = new Object();
+
     public static final Object WORKERS_LIST_LOCK = new Object();
     public static final Object CLIENTS_LIST_LOCK = new Object();
 
@@ -31,5 +35,7 @@ public class Utils {
 
     public static final RingBuffer<WorkerHandlerThread> workersRingBuffer = new RingBuffer<>();
     public static final Object WORKERS_RING_BUFFER_LOCK = new Object();
+    
+
 
 }

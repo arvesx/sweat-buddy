@@ -30,10 +30,26 @@ public class WorkerListener extends Thread {
 
         startListening();
         while (running) {
+
+            while (Utils.NUM_OF_WORKERS >= Utils.MAX_WORKERS)
+            {
+                synchronized (NUM_OF_WORKERS_LOCK)
+                {
+                    try {
+                        Utils.NUM_OF_WORKERS_LOCK.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                
+            }
+                
             try {
                 // Accept worker connection
                 Socket workerSocket = this.serverSocket.accept();
                 LOGGER.info("Worker node added");
+                Utils.NUM_OF_WORKERS++;
+                System.out.println("NumOfWorkers: " + Utils.NUM_OF_WORKERS);
 
                 // Handle the new connection
                 WorkerHandlerThread workerThread = new WorkerHandlerThread(workerSocket);

@@ -23,9 +23,11 @@ class ChunksListenerThread extends Thread {
 
     @Override
     public void run() {
+
         while (listeningForIncomingChunks) {
             try {
                 Chunk chunk = (Chunk) inputStream.readObject();
+                System.out.print(chunk.getChunkId() + " ");
                 synchronized (MSG_Q_IN_LOCK) {
                     messageQueueIn.enqueue(chunk);
                     MSG_Q_IN_LOCK.notifyAll();

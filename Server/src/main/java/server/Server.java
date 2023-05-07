@@ -1,5 +1,6 @@
 package server;
 
+import dependencies.Utilities;
 import dependencies.fileprocessing.gpx.Chunk;
 
 import static server.Utils.*;
@@ -64,10 +65,7 @@ public class Server {
                 disconnect();
             }
         }
-
-    }
-
-    private void handleCommand(String command) {
+        scanner.close();
 
     }
 
@@ -124,8 +122,8 @@ public class Server {
 
 
     public Server() {
-        this.clientListenerPort = 1234;
-        this.workerListenerPort = 2345;
+        this.clientListenerPort = Utilities.CLIENTS_PORT;
+        this.workerListenerPort = Utilities.WORKERS_PORT;
         this.init(); //Initialize server socket
     }
 

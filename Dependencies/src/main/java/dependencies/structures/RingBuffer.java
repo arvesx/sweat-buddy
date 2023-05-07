@@ -9,8 +9,10 @@ public class RingBuffer<T> {
     private Node<T> tail;
     private Node<T> temp;
 
-    public RingBuffer() {
+    private int size;
 
+    public RingBuffer() {
+        this.size = 0;
     }
 
     public void add(T obj) {
@@ -21,11 +23,13 @@ public class RingBuffer<T> {
             head = node;
             tail = node;
             temp = node;
+            this.size++;
             return;
         }
         tail.setNext(node);
         node.setPrev(tail);
         tail = node;
+        this.size++;
     }
 
     public T pop() {
@@ -40,6 +44,7 @@ public class RingBuffer<T> {
         }
         tail = tail.getPrev();
         tail.setNext(null);
+        this.size--;
         return dataToReturn;
     }
 
@@ -56,6 +61,8 @@ public class RingBuffer<T> {
             head = head.getNext();
             if (head != null)
                 head.setPrev(null);
+
+            this.size--;
             return;
         }
 
@@ -66,8 +73,11 @@ public class RingBuffer<T> {
             tail = tail.getPrev();
             tail.setNext(null);
 
+            this.size--;
             return;
         }
+
+
 
         Node<T> n = head;
         while (n != null) {
@@ -82,6 +92,7 @@ public class RingBuffer<T> {
             }
             n = n.getNext();
         }
+        this.size--;
 
 
     }
@@ -109,6 +120,10 @@ public class RingBuffer<T> {
         return (head == null && tail == null);
     }
 
+    public int size()
+    {
+        return this.size;
+    }
 
     public void printBuffer(PrintStream stream) {
         if (head == null) {

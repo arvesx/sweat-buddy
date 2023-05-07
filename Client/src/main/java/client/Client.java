@@ -8,6 +8,7 @@ import dependencies.fileprocessing.gpx.GpxResults;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
+import dependencies.Utilities;
 import dependencies.fileprocessing.gpx.GpxFile;
 
 public class Client {
@@ -21,10 +22,10 @@ public class Client {
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
 
-    public Client(String username, String host_address, int port) {
+    public Client(String username, String host_address, int port, String gpxFile) {
 
         this.username = username;
-        String file_path = "src\\main\\resources\\gpxfiles\\route1.xml";
+        String file_path = "src\\main\\resources\\gpxfiles\\" + gpxFile;
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("File Sent to Server: " + file_path);
@@ -65,11 +66,13 @@ public class Client {
     }
 
     public static void main(String[] args) {
+
+        String gpxfile = args[0];
         Scanner scanner = new Scanner(System.in);
         System.out.print("Pick a username: ");
         String username = scanner.nextLine();
 
-        Client cl = new Client(username, "127.0.0.1", 1234);
+        Client cl = new Client(username, Utilities.HOST_ADDRESS, Utilities.CLIENTS_PORT, gpxfile);
 
         cl.sendClientInfo();
 

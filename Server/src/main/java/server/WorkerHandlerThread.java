@@ -61,7 +61,15 @@ public class WorkerHandlerThread extends Thread {
                     }
 
                 } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                    removeServerWorkerConnection();
+                    synchronized(Utils.NUM_OF_WORKERS_LOCK)
+                    {
+                        Utils.NUM_OF_WORKERS_LOCK.notifyAll();   
+                    }
+                    
+                    Utils.NUM_OF_WORKERS--;
+                    System.out.println("NumOfWorkers: " + Utils.NUM_OF_WORKERS);
+                    break;
                 }
             }
         }
@@ -92,6 +100,12 @@ public class WorkerHandlerThread extends Thread {
             }
         }
 
+    }
+
+    public void removeServerWorkerConnection() {
+        synchronized(Utils.WORKERS_RING_BUFFER_LOCK) {
+            Utils.workersRingBuffer.remove(this);
+        }
     }
 
     public void assign(Chunk chunk) {
