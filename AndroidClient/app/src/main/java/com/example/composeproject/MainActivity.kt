@@ -2,38 +2,47 @@ package com.example.composeproject
 
 import android.graphics.Paint.Align
 import android.os.Bundle
-import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.animation.core.Easing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.InspectableModifier
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composeproject.ui.theme.*
 import java.time.MonthDay
 import java.time.Year
+import kotlin.math.absoluteValue
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            RoutesScreen()
+            HomeScreen()
+
         }
     }
 }
@@ -260,7 +269,7 @@ fun GoalsCard()
     Card(
         modifier = Modifier
             .fillMaxWidth(0.88f)
-            .height(207.dp)
+            .height(217.dp)
             .offset(x = 0.dp, y = (-50).dp),
         shape = RoundedCornerShape(25.dp),
         colors = CardDefaults.cardColors(Color.White),
@@ -316,37 +325,40 @@ fun GoalsCard()
 
             Spacer(
                 modifier = Modifier
-                    .height(6.dp)
+                    .height(16.dp)
             )
 
-            Row (
+            Box (
                 modifier = Modifier
                     .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                contentAlignment = Alignment.CenterEnd
             )
             {
-                /*
-                Text(
-                    text = "Most Recent",
-                    fontFamily = ManropeFamily,
-                    fontSize = 16.sp,
-                    color = Color(0, 0, 0, 0xBF)
+                CircularProgressBar (
+                    curNumber = 500,
+                    goalNumber = 600,
+                    animDelay = 300,
+                    unit = "cal"
                 )
+            }
 
+            Spacer(
+                modifier = Modifier
+                    .height(22.dp)
+            )
 
-                Spacer (
-                    modifier = Modifier
-                        .width(5.dp)
+            Box (
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.CenterEnd
+            )
+            {
+                CircularProgressBar (
+                    curNumber = 3,
+                    goalNumber = 10,
+                    animDelay = 800,
+                    unit = "km"
                 )
-
-                Text(
-                    text = "18km",
-                    fontFamily = ManropeFamily,
-                    fontSize = 12.sp,
-                    color = Color(0, 0, 0, 0x66)
-                )
-                */
-
             }
 
 
@@ -428,24 +440,24 @@ fun LeaderBoardCard()
                 verticalAlignment = Alignment.CenterVertically
             )
             {
-                Text(
-                    text = "Most Recent",
-                    fontFamily = ManropeFamily,
-                    fontSize = 16.sp,
-                    color = Color(0, 0, 0, 0xBF)
-                )
-
-                Spacer (
-                    modifier = Modifier
-                        .width(5.dp)
-                )
-
-                Text(
-                    text = "18km",
-                    fontFamily = ManropeFamily,
-                    fontSize = 12.sp,
-                    color = Color(0, 0, 0, 0x66)
-                )
+//                Text(
+//                    text = "Most Recent",
+//                    fontFamily = ManropeFamily,
+//                    fontSize = 16.sp,
+//                    color = Color(0, 0, 0, 0xBF)
+//                )
+//
+//                Spacer (
+//                    modifier = Modifier
+//                        .width(5.dp)
+//                )
+//
+//                Text(
+//                    text = "18km",
+//                    fontFamily = ManropeFamily,
+//                    fontSize = 12.sp,
+//                    color = Color(0, 0, 0, 0x66)
+//                )
 
             }
         }
@@ -459,7 +471,7 @@ fun SegmentsCard()
     Card(
         modifier = Modifier
             .fillMaxWidth(0.88f)
-            .height(62.dp)
+            .height(53.dp)
             .offset(x = 0.dp, y = (-50).dp),
         shape = RoundedCornerShape(25.dp),
         /*
@@ -491,7 +503,7 @@ fun SegmentsCard()
         {
             Column(
                 modifier = Modifier
-                    .padding(17.dp),
+                    .padding(15.dp),
                 //.padding(top = 4.dp)
                 //horizontalAlignment = Alignment.CenterHorizontally
             )
@@ -537,7 +549,7 @@ fun SegmentsCard()
 fun HomeScreen() {
     Column (
         modifier = Modifier
-            .fillMaxHeight()
+            .fillMaxSize()
             .background(
                 Brush.verticalGradient(
                     colorStops = arrayOf(
@@ -560,35 +572,105 @@ fun HomeScreen() {
                         ),
                     )
                 ),
-            //modifier = Modifier
-            //.clip(shape = RoundedCornerShape(0.dp, 0.dp, 20.dp, 20.dp))
         )
         {
-            Box(
+            Box (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(x = 60.dp, y = (-100).dp),
-                contentAlignment = Alignment.BottomEnd,
+                    .wrapContentSize(Alignment.BottomStart)
+                    .offset(x = 6.dp, y = 180.dp)
             )
             {
-                Surface(
+                Canvas(
                     modifier = Modifier
-                        .size(225.dp),
-                    shape = CircleShape,
-                    color = Color(255, 255, 255, 0x12)
-                ) {}
+                        .size(60.dp),
+                    onDraw = {
+                        drawCircle(
+                            color = Color(255, 255, 255),
+                            alpha = 0.05f
+                        )
+                    }
+                )
             }
 
-            Box(
+            Box (
                 modifier = Modifier
-                    //.fillMaxWidth()
-                    //.offset(x = 110.dp, y = (-110).dp)
-                    .clip(CircleShape)
-                    .size(310.dp)
-                    .border(width = 2.dp, color = Color(255, 255, 255, 0x00))
-                    .background(Color(255, 255, 255, 0x00)),
-                contentAlignment = Alignment.BottomEnd,
-            ) {}
+                    .fillMaxWidth()
+                    .wrapContentSize(Alignment.BottomStart)
+                    .offset(x = 140.dp, y = 80.dp)
+            )
+            {
+                Canvas(
+                    modifier = Modifier
+                        .size(40.dp),
+                    onDraw = {
+                        drawCircle(
+                            color = Color(255, 255, 255),
+                            alpha = 0.05f
+                        )
+                    }
+                )
+            }
+
+            Box (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentSize(Alignment.BottomStart)
+                    .offset(x = 248.dp, y = 165.dp)
+            )
+            {
+                Canvas(
+                    modifier = Modifier
+                        .size(30.dp),
+                    onDraw = {
+                        drawCircle(
+                            color = Color(255, 255, 255),
+                            alpha = 0.05f
+                        )
+                    }
+                )
+            }
+
+            Box (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentSize(Alignment.TopEnd)
+                    .offset(x = 55.dp, y = (-75).dp)
+            )
+            {
+                Canvas(
+                    modifier = Modifier
+                        .size(200.dp),
+                    onDraw = {
+                        drawCircle(
+                            color = Color(255, 255, 255),
+                            alpha = 0.05f
+                        )
+                    }
+                )
+            }
+
+            Box (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentSize(Alignment.TopEnd)
+                    .offset(x = 148.dp, y = (-110).dp),
+            )
+            {
+                Canvas(
+                    modifier = Modifier
+                        .size(400.dp),
+                        //.border(2.dp, Color.Black),
+                    onDraw = {
+                        drawCircle(
+                            color = Color(255, 255, 255),
+                            alpha = 0.05f,
+                            style = Stroke(width = 3.dp.toPx())
+                        )
+                    }
+                )
+            }
+
 
             Column {
                 Row (
@@ -624,13 +706,175 @@ fun HomeScreen() {
             }
         }
 
+        // Bar Chart
+
 
     }
 
 
-
-
-
     //Text("Hello Bro!", style = TextStyle(color=Color.Red));
 }
+
+@Composable
+fun BarChart(
+
+)
+{
+
+}
+
+
+
+
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun CircularProgressBar(
+    modifier: Modifier = Modifier,
+    curNumber: Int,
+    goalNumber: Int,
+    unit: String,
+    fontSize: TextUnit = 22.sp,
+    percentFontSize: TextUnit = 9.sp,
+    inactiveBarColor: Color = White2,
+    activeBarColor: Brush = Brush.verticalGradient(
+        colorStops = arrayOf(
+            0.0f to Pink1,
+            0.3f to Pink2,
+            0.6f to Aqua3,
+            0.9f to Aqua1
+        )
+    ),
+    radius: Dp = 28.dp,
+    strokeWidth: Dp = 8.dp,
+    animDuration: Int = 1000,
+    animDelay: Int = 0
+)
+{
+    var animationPlayed by remember {
+        mutableStateOf(false)
+    }
+
+    val percentage = remember {
+        mutableStateOf(curNumber.toFloat() / goalNumber)
+    }
+
+    val curPercentage = animateFloatAsState(
+        targetValue = if (animationPlayed) percentage.value else 0f,
+        animationSpec = tween(
+            durationMillis = animDuration,
+            delayMillis =  animDelay,
+            //easing = FastOutSlowInEasing
+        )
+    )
+
+    LaunchedEffect(key1 = true)
+    {
+        animationPlayed = true
+    }
+
+    Row(
+        modifier = Modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    )
+    {
+        Text(
+            text = "$curNumber  $unit",
+            fontFamily = ManropeFamily,
+            fontSize = 16.sp,
+            color = Color(0, 0, 0, 0xBF)
+        )
+        Spacer(modifier = Modifier.width(18.dp))
+        Box (
+            modifier = Modifier
+                .size(radius * 2f),
+            contentAlignment = Alignment.Center
+        )
+        {
+            Canvas (
+                modifier = Modifier
+                    .fillMaxSize(),
+                onDraw = {
+                    drawArc(
+                        startAngle = -90f,
+                        sweepAngle = -360f,
+                        color = inactiveBarColor,
+                        useCenter = false,
+                        style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+                    )
+                }
+            )
+
+            Canvas(
+                modifier = Modifier
+                    .fillMaxSize(),
+                onDraw = {
+                    drawArc(
+                        startAngle = -90f,
+                        sweepAngle = 360 * curPercentage.value,
+                        brush = activeBarColor,
+                        useCenter = false,
+                        style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+                    )
+                }
+            )
+
+            Row (
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.Top,
+            )
+            {
+                Text(
+                    text = (curPercentage.value*100).toInt().toString(),
+                    style = TextStyle(
+                        brush = activeBarColor,
+                    ),
+                    fontFamily = ManropeFamily,
+                    fontSize = fontSize,
+                    fontWeight = FontWeight.ExtraBold,
+                )
+
+                Text(
+                    modifier = Modifier
+                        .padding(start = 2.dp, top = 10.dp),
+                    text = "%",
+                    style = TextStyle(
+                        brush = activeBarColor
+                    ),
+                    fontFamily = ManropeFamily,
+                    fontSize = percentFontSize,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            }
+
+        }
+
+
+
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
