@@ -1,7 +1,9 @@
 package com.example.composeproject
 
+import android.graphics.Paint
 import android.graphics.Paint.Align
 import android.os.Bundle
+import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.Easing
@@ -21,6 +23,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -28,10 +32,7 @@ import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.*
 import com.example.composeproject.ui.theme.*
 import java.time.MonthDay
 import java.time.Year
@@ -42,10 +43,143 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             HomeScreen()
-
+            //Temp()
         }
     }
 }
+
+data class Bar(val value: Float, var perc: Float = 1f)
+
+val weekDays = listOf(
+    "Mon", "Tue", "Wen", "Thu", "Fri", "Sat", "Sun"
+)
+
+val weekWorkoutStats = listOf(
+    Bar(1f),
+    Bar(1f),
+    Bar(2f),
+    Bar(2f),
+    Bar(1f),
+    Bar(2f),
+    Bar(1f)
+)
+
+@Composable
+fun BarChart(
+    modifier: Modifier = Modifier,
+    maxBarSize: Dp = 160.dp,
+    animDuration: Int,
+    animDelay: Int,
+    data: List<Bar>
+)
+{
+
+    // calculate percentages
+    val dataMaxValue = data.maxOf { it.value }
+    data.forEach {
+        it.perc = it.value / dataMaxValue
+    }
+
+    var animationPlayed by remember {
+        mutableStateOf(false)
+    }
+
+    val list = mutableListOf<State<Float>>()
+    data.forEach {
+        list.add(
+            animateFloatAsState(
+                targetValue = if (animationPlayed) it.perc else 0f,
+                animationSpec = tween(
+                    durationMillis = animDuration,
+                    delayMillis = animDelay
+                )
+            )
+        )
+    }
+
+    val states = remember {
+        mutableStateListOf<State<Float>>().apply {
+            addAll(list)
+        }
+    }
+
+    LaunchedEffect(key1 = true)
+    {
+        animationPlayed = true
+    }
+
+    val paint = Paint()
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.8f)
+            .offset(x = 10.dp, y = (-25).dp),
+        contentAlignment = Alignment.BottomCenter
+    )
+    {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom
+        )
+        {
+            var day = 0
+            states.forEach{
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                )
+                {
+                    Text(
+                        text = "${data[day].value.toInt()}km",
+                        fontFamily = ManropeFamily,
+                        fontSize = 12.sp,
+                        color = Color(0, 0, 0, 0xBF)
+                    )
+
+                    Canvas(
+                        modifier = Modifier
+                            .size(35.dp, it.value * maxBarSize)
+                            .clip(RoundedCornerShape(8.dp)),
+                        onDraw = {
+                            drawRect(
+                                brush = Brush.verticalGradient(
+                                    colorStops = arrayOf(
+                                        0f to Purple1,
+                                        0.5f to Blue5,
+                                    )
+                                )
+                            )
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+                    
+                    Text(
+                        text = weekDays[day],
+                        fontFamily = ManropeFamily,
+                        fontSize = 16.sp,
+                        color = Color(0, 0, 0, 0xBF)
+                    )
+
+                    day++
+                }
+
+                Spacer(modifier = Modifier.width(20.dp))
+            }
+        }
+
+    }
+
+
+
+
+
+
+}
+
+
+
 
 @Composable
 fun UserAvatar(avatar: String) {
@@ -557,7 +691,7 @@ fun HomeScreen() {
                         1f to WhiteBlue1,
                     ),
                 )
-            )
+            ),
     )
     {
         Box (
@@ -707,6 +841,14 @@ fun HomeScreen() {
         }
 
         // Bar Chart
+        BarChart(
+            maxBarSize = 180.dp,
+            animDuration = 1000,
+            animDelay = 20,
+            data = weekWorkoutStats
+        )
+        
+        Spacer(modifier = Modifier.height(30.dp))
 
 
     }
@@ -714,15 +856,6 @@ fun HomeScreen() {
 
     //Text("Hello Bro!", style = TextStyle(color=Color.Red));
 }
-
-@Composable
-fun BarChart(
-
-)
-{
-
-}
-
 
 
 
