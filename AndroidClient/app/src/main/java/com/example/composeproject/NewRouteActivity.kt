@@ -17,13 +17,22 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -31,18 +40,23 @@ import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composeproject.ui.theme.Blue1
 import com.example.composeproject.ui.theme.Blue2
 import com.example.composeproject.ui.theme.ManropeFamily
+import com.example.composeproject.ui.theme.MapStyle
 import com.example.composeproject.ui.theme.White1
 import com.example.composeproject.ui.theme.WhiteBlue1
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
@@ -131,16 +145,46 @@ fun NewRouteScreen() {
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 5.dp,
                         hoveredElevation = 10.dp
-                    ), modifier = Modifier
+                    ),
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .height(180.dp)
+                        .height(180.dp),
+                    shape = RoundedCornerShape(25.dp),
                 ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize().background(Color.White)
+                            .padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        RouteNameTextField()
+                        Text("yooo")
+                        Text("yooo")
+                    }
+
                 }
             }
 
         }
     }
 
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RouteNameTextField() {
+    var text by remember { mutableStateOf(TextFieldValue("")) }
+    OutlinedTextField(
+        value = text,
+        label = { Text(text = "Give your route a name") },
+        onValueChange = {
+            text = it
+        },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = Blue2
+        )
+    )
 }
 
 @Composable
@@ -153,7 +197,11 @@ fun MapScreen() {
 
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState
+        cameraPositionState = cameraPositionState,
+        uiSettings = MapUiSettings(zoomControlsEnabled = false),
+        properties = MapProperties(
+            mapStyleOptions = MapStyleOptions(MapStyle.json1)
+        )
     ) {
         Marker(
             state = singaporeState,
@@ -164,4 +212,5 @@ fun MapScreen() {
             title = "Marker in Singapore"
         )
     }
+
 }
