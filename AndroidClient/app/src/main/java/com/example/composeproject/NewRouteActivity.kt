@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,28 +14,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,17 +46,16 @@ import com.example.composeproject.ui.theme.Blue1
 import com.example.composeproject.ui.theme.Blue2
 import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.MapStyle
-import com.example.composeproject.ui.theme.White1
-import com.example.composeproject.ui.theme.WhiteBlue1
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.Marker
+import com.google.gson.JsonParser
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 
 
@@ -77,6 +74,9 @@ fun NewRouteScreen() {
                 )
             )
     ) {
+        val coordinates = remember {
+            mutableStateListOf<LatLng>(LatLng(1.35, 103.85), LatLng(1.35, 103.89))
+        }
         Column(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
@@ -127,7 +127,7 @@ fun NewRouteScreen() {
 
             ) {
 
-                MapScreen()
+                MapScreen(coordinates)
             }
         }
         Box(
@@ -153,13 +153,13 @@ fun NewRouteScreen() {
                 ) {
                     Column(
                         modifier = Modifier
-                            .fillMaxSize().background(Color.White)
+                            .fillMaxSize()
+                            .background(Color.White)
                             .padding(20.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceEvenly
                     ) {
                         RouteNameTextField()
-                        Text("yooo")
                         Text("yooo")
                     }
 
@@ -187,22 +187,30 @@ fun RouteNameTextField() {
     )
 }
 
+
 @Composable
-fun MapScreen() {
+fun MapScreen(coordinates: SnapshotStateList<LatLng>) {
+
     val singapore = LatLng(1.35, 103.87)
     val singaporeState = MarkerState(position = singapore)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(singapore, 10f)
     }
 
+
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState,
-        uiSettings = MapUiSettings(zoomControlsEnabled = false),
+        uiSettings = MapUiSettings(zoomControlsEnabled = true),
         properties = MapProperties(
             mapStyleOptions = MapStyleOptions(MapStyle.json1)
         )
     ) {
+
+        Polyline(
+            points = coordinates
+        )
+
         Marker(
             state = singaporeState,
             title = "Marker in Singapore"
