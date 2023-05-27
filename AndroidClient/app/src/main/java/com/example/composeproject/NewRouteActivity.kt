@@ -45,11 +45,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.darkrockstudios.libraries.mpfilepicker.FilePicker
-import com.example.composeproject.data.DataProvider
 import com.example.composeproject.ui.theme.Blue1
 import com.example.composeproject.ui.theme.Blue2
 import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.MapStyle
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
@@ -58,10 +58,9 @@ import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.coroutines.coroutineScope
 
 
 @Composable
@@ -80,12 +79,12 @@ fun NewRouteScreen() {
             )
     ) {
         var coordinates by remember {
-            mutableStateOf(DataProvider.routeWaypoints1) //emptyList<LatLng>()
+            mutableStateOf(emptyList<LatLng>()) //emptyList<LatLng>()
         }
+
         val cameraPositionState = rememberCameraPositionState {
             position = CameraPosition.fromLatLngZoom(LatLng(1.35, 103.87), 10f)
         }
-
         // File picker
         var showFilePicker by remember { mutableStateOf(false) }
         var pathChosen by remember { mutableStateOf("") }
@@ -95,13 +94,16 @@ fun NewRouteScreen() {
             showFilePicker = false
             if (path != null) {
                 pathChosen = path.path
-                getGpxWaypoints(pathChosen, context) { newList ->
+                getGpxWaypoints(pathChosen, context) { newList, cameraNewLatLng, cameraNewZoom ->
                     coordinates = newList
+
+                    cameraPositionState.position =
+                        CameraPosition.fromLatLngZoom(cameraNewLatLng, cameraNewZoom)
+
+                    println(coordinates)
+                    println(cameraPositionState.position)
                 }
-                cameraPositionState.position = CameraPosition.fromLatLngZoom(
-                    calculateCameraPosition(coordinates),
-                    15f
-                )
+
             }
             showFilePicker = false
         }
@@ -166,7 +168,7 @@ fun NewRouteScreen() {
 
             ) {
 
-                MapScreen(coordinates, cameraPositionState)
+//                MapScreen(coordinates, cameraPositionState)
             }
         }
         Box(
@@ -241,11 +243,6 @@ fun RouteNameTextField(title: String) {
 
 @Composable
 fun MapScreen(coordinates: List<LatLng>, cameraPositionState: CameraPositionState) {
-
-    val singapore = LatLng(1.35, 103.87)
-    val singaporeState = MarkerState(position = singapore)
-
-
 
     GoogleMap(
         modifier = Modifier.fillMaxSize(),

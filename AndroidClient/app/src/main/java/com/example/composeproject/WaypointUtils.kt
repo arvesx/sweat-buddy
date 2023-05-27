@@ -1,7 +1,9 @@
 package com.example.composeproject
 
 import android.content.Context
+import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 import io.ticofab.androidgpxparser.parser.GPXParser
 import io.ticofab.androidgpxparser.parser.domain.Gpx
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -14,17 +16,22 @@ import java.io.InputStream
 val parser = GPXParser()
 
 @OptIn(DelicateCoroutinesApi::class)
-fun getGpxWaypoints(path: String, context: Context, onResponse: (List<LatLng>) -> Unit) {
+fun getGpxWaypoints(
+    path: String,
+    context: Context,
+    onResponse: (List<LatLng>, LatLng, Float) -> Unit
+) {
     GlobalScope.launch {
         val coordinatesList = mutableListOf<LatLng>()
         try {
-            val input: InputStream = context.assets.open(path)
-            val parsedGpx: Gpx? = parser.parse(input) // consider using a background thread
+            val input: InputStream? = context.contentResolver.openInputStream(Uri.parse(path))
+            val parsedGpx: Gpx? = parser.parse(input)
             parsedGpx?.let {
                 for (wp in it.wayPoints) {
-                    coordinatesList.add(LatLng(wp.latitude, wp.longitude))
+                    val point = LatLng(wp.latitude, wp.longitude)
+                    coordinatesList.add(point)
                 }
-                onResponse(coordinatesList)
+                onResponse(coordinatesList, calculateCameraPosition(coordinatesList), 16.0f)
             } ?: {
                 // error parsing track
             }
