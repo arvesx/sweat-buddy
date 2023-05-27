@@ -25,4 +25,10 @@ val ManropeFamily = FontFamily(
     )
 )
 
+val OutfitFamily = FontFamily(
+    Font(
+        R.font.outfit_regular
+    )
+)
+
 
