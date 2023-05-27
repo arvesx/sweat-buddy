@@ -7,8 +7,10 @@ import com.google.maps.android.compose.CameraPositionState
 import io.ticofab.androidgpxparser.parser.GPXParser
 import io.ticofab.androidgpxparser.parser.domain.Gpx
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 import java.io.InputStream
@@ -31,7 +33,10 @@ fun getGpxWaypoints(
                     val point = LatLng(wp.latitude, wp.longitude)
                     coordinatesList.add(point)
                 }
-                onResponse(coordinatesList, calculateCameraPosition(coordinatesList), 16.0f)
+                val newCameraLatLng = calculateCameraPosition(coordinatesList)
+                withContext(Dispatchers.Main) {
+                    onResponse(coordinatesList, newCameraLatLng, 14.0f)
+                }
             } ?: {
                 // error parsing track
             }

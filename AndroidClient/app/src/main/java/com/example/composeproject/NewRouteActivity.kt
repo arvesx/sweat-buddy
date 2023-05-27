@@ -51,6 +51,7 @@ import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.MapStyle
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.JointType
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.CameraPositionState
@@ -142,14 +143,7 @@ fun NewRouteScreen() {
 
 
                     TextButton(
-                        onClick = {
-//                            GeoDirections.makeApiRequest(
-//                                37.96622832169046, 23.61833709383111,
-//                                37.977036403363506, 23.776965790453765
-//                            ) { newList ->
-//                                coordinates = newList
-//                            }
-                        },
+                        onClick = {},
                         modifier = Modifier.clip(CircleShape)
                     ) {
                         Text(
@@ -168,7 +162,7 @@ fun NewRouteScreen() {
 
             ) {
 
-//                MapScreen(coordinates, cameraPositionState)
+                MapScreen(coordinates, cameraPositionState)
             }
         }
         Box(
@@ -252,16 +246,19 @@ fun MapScreen(coordinates: List<LatLng>, cameraPositionState: CameraPositionStat
             mapStyleOptions = MapStyleOptions(MapStyle.json1)
         )
     ) {
-        Circle(center = coordinates[0], radius = 15.0, fillColor = Blue2, strokeColor = Blue2)
-        Circle(
-            center = coordinates[coordinates.size - 1],
-            radius = 15.0,
-            fillColor = Blue2,
-            strokeColor = Blue2
-        )
-        Polyline(
-            points = coordinates, color = Blue2
-        )
+        if (coordinates.isNotEmpty()) {
+            Circle(center = coordinates[0], radius = 15.0, fillColor = Blue2, strokeColor = Blue2)
+            Circle(
+                center = coordinates[coordinates.size - 1],
+                radius = 15.0,
+                fillColor = Blue2,
+                strokeColor = Blue2
+            )
+            Polyline(
+                points = coordinates, color = Blue2, jointType = JointType.ROUND
+            )
+        }
+
 
     }
 }
