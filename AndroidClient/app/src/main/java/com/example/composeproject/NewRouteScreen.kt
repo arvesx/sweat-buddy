@@ -49,7 +49,7 @@ import com.example.composeproject.ui.theme.Blue1
 import com.example.composeproject.ui.theme.Blue2
 import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.MapStyle
-import com.google.android.gms.maps.CameraUpdateFactory
+import com.example.composeproject.utils.getGpxWaypoints
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.JointType
 import com.google.android.gms.maps.model.LatLng
@@ -61,7 +61,6 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
-import kotlinx.coroutines.coroutineScope
 
 
 @Composable

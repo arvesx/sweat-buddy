@@ -1,9 +1,8 @@
-package com.example.composeproject
+package com.example.composeproject.utils
 
 import android.content.Context
 import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.CameraPositionState
 import io.ticofab.androidgpxparser.parser.GPXParser
 import io.ticofab.androidgpxparser.parser.domain.Gpx
 import kotlinx.coroutines.DelicateCoroutinesApi
