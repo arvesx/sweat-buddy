@@ -53,6 +53,7 @@ public class ClientHandlerThread extends Thread {
             username = (String) this.inputStream.readObject();
             this.clientData.setUsername(username);
 
+
             gpxFile = (GpxFile) this.inputStream.readObject();
             this.clientData.setGpxFile(gpxFile);
 

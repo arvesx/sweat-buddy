@@ -2,6 +2,7 @@ package server;
 
 import dependencies.Utilities;
 import dependencies.fileprocessing.gpx.Chunk;
+import user.Authentication;
 
 import static server.Utils.*;
 
@@ -32,16 +33,16 @@ public class Server {
             this.workerServerSocket = new ServerSocket(this.workerListenerPort);
             serverRunning = true;
             distributing = true;
-            
-            LOGGER.info("Starting Server...");
 
+            LOGGER.info("Starting Server...");
+            Authentication.readAllUserCredentialsFromJson();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     protected void connect() throws InterruptedException {
-        
+
         LOGGER.info("Listening for new clients on port " + this.clientListenerPort);
         this.clientListener = new ClientListener(this.clientServerSocket);
         clientListener.start();
