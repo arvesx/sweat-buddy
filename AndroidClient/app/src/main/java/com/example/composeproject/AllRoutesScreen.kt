@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.composeproject.data.DataProvider
 import com.example.composeproject.data.RouteInfo
 import com.example.composeproject.ui.theme.Aqua1
@@ -50,8 +51,8 @@ import com.example.composeproject.ui.theme.White1
 import com.example.composeproject.ui.theme.WhiteBlue1
 
 @Composable
-@Preview(showSystemUi = true, showBackground = true)
-fun RoutesScreen() {
+//@Preview(showSystemUi = true, showBackground = true)
+fun RoutesScreen(navController: NavController) {
 
     Box(
         modifier = Modifier
@@ -65,11 +66,11 @@ fun RoutesScreen() {
                 )
             )
     ) {
-        UpperSection(120.dp)
+        UpperSection(120.dp, navController)
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 40.dp, end = 40.dp, top=40.dp),
+                .padding(start = 40.dp, end = 40.dp, top = 40.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(
@@ -317,7 +318,7 @@ fun TopCard(totalNumberOfRoutes: Int, totalKilometers: Float) {
 }
 
 @Composable
-fun UpperSection(height: Dp) {
+fun UpperSection(height: Dp, navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -339,7 +340,7 @@ fun UpperSection(height: Dp) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate(Screen.HomeScreen.route) },
                 modifier = Modifier.clip(CircleShape)
             ) {
                 Image(
@@ -355,7 +356,7 @@ fun UpperSection(height: Dp) {
                 fontSize = 18.sp,
             )
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate(Screen.NewRouteScreen.route) },
                 modifier = Modifier.clip(CircleShape)
             ) {
                 Image(

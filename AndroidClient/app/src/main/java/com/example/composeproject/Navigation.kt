@@ -6,8 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun Navigation()
-{
+fun Navigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.SplashScreen.route)
     {
@@ -16,9 +15,16 @@ fun Navigation()
         }
 
         composable(Screen.HomeScreen.route) {
-            HomeScreen()
+            HomeScreen(navController)
         }
 
+        composable(Screen.AllRoutesScreen.route) {
+            RoutesScreen(navController = navController)
+        }
+
+        composable(Screen.NewRouteScreen.route) {
+            NewRouteScreen(navController = navController)
+        }
     }
 }
 

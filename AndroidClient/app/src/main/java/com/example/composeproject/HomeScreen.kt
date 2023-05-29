@@ -7,6 +7,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,15 +27,16 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
+import androidx.navigation.NavController
 import com.example.composeproject.ui.theme.*
 import java.time.MonthDay
 import java.time.Year
 
 
 @Composable
-@Preview(showSystemUi = true, showBackground = true)
-fun HomeScreen() {
-    Column (
+//@Preview(showSystemUi = true, showBackground = true)
+fun HomeScreen(navController: NavController) {
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(
@@ -47,7 +49,7 @@ fun HomeScreen() {
             ),
     )
     {
-        Box (
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(268.dp)
@@ -61,7 +63,7 @@ fun HomeScreen() {
                 ),
         )
         {
-            Box (
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentSize(Alignment.BottomStart)
@@ -80,7 +82,7 @@ fun HomeScreen() {
                 )
             }
 
-            Box (
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentSize(Alignment.BottomStart)
@@ -99,7 +101,7 @@ fun HomeScreen() {
                 )
             }
 
-            Box (
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentSize(Alignment.BottomStart)
@@ -118,7 +120,7 @@ fun HomeScreen() {
                 )
             }
 
-            Box (
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentSize(Alignment.TopEnd)
@@ -137,7 +139,7 @@ fun HomeScreen() {
                 )
             }
 
-            Box (
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentSize(Alignment.TopEnd)
@@ -160,7 +162,7 @@ fun HomeScreen() {
 
 
             Column {
-                Row (
+                Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -176,12 +178,12 @@ fun HomeScreen() {
             }
         }
 
-        Row (
+        Row(
             horizontalArrangement = Arrangement.SpaceBetween
         )
         {
             Column {
-                RoutesCard()
+                RoutesCard(navController)
                 Spacer(modifier = Modifier.height(15.dp))
                 LeaderBoardCard()
             }
@@ -211,7 +213,6 @@ fun HomeScreen() {
 }
 
 
-
 // Data
 data class Bar(val value: Float, var perc: Float = 1f)
 
@@ -237,8 +238,7 @@ fun BarChart(
     animDuration: Int,
     animDelay: Int,
     data: List<Bar>
-)
-{
+) {
 
     // calculate percentages
     val dataMaxValue = data.maxOf { it.value }
@@ -290,7 +290,7 @@ fun BarChart(
         )
         {
             var day = 0
-            states.forEach{
+            states.forEach {
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -341,7 +341,7 @@ fun BarChart(
 
 @Composable
 fun UserAvatar(avatar: String) {
-    Image (
+    Image(
         painter = painterResource(id = R.mipmap.old_man),
         contentDescription = null,
         //contentScale = ContentScale.Crop,
@@ -355,8 +355,7 @@ fun UserAvatar(avatar: String) {
 }
 
 @Composable
-fun TrophiesSection(trophies: Int)
-{
+fun TrophiesSection(trophies: Int) {
     Surface(
         modifier = Modifier
             .width(156.dp)
@@ -367,21 +366,21 @@ fun TrophiesSection(trophies: Int)
         color = Color(255, 255, 255, 0x66),
     )
     {
-        Row (
+        Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .wrapContentSize()
         )
         {
-            Image (
+            Image(
                 painter = painterResource(id = R.mipmap.trophy),
                 contentDescription = null,
                 modifier = Modifier
                     .size(28.dp)
             )
 
-            Text (
+            Text(
                 text = "$trophies",
                 fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.white),
@@ -399,10 +398,11 @@ fun TrophiesSection(trophies: Int)
 fun DateSection() {
 
     val year = Year.now() // requires API 26 current (min25) (fix: changed minSDK from 25 to 26)
-    val month = MonthDay.now().month.toString().substring(0, 1) + MonthDay.now().month.toString().substring(1).lowercase()
+    val month = MonthDay.now().month.toString().substring(0, 1) + MonthDay.now().month.toString()
+        .substring(1).lowercase()
     val day = MonthDay.now().dayOfMonth
 
-    Row (
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .offset(y = 4.dp),
@@ -422,7 +422,7 @@ fun DateSection() {
 @Composable
 fun GreetingSection(username: String = "Pappou") {
 
-    Row (
+    Row(
         modifier = Modifier
             .fillMaxWidth(),
         //horizontalArrangement = Arrangement.SpaceBetween,
@@ -430,7 +430,7 @@ fun GreetingSection(username: String = "Pappou") {
 
     )
     {
-        Text (
+        Text(
             modifier = Modifier
                 .offset(28.dp),
             text = "Good day, $username!",
@@ -439,12 +439,12 @@ fun GreetingSection(username: String = "Pappou") {
             fontSize = 22.sp,
         )
 
-        Spacer (
+        Spacer(
             modifier = Modifier
                 .width(28.dp)
         )
 
-        Image (
+        Image(
             painter = painterResource(id = R.mipmap.fire_icon),
             contentDescription = null,
             modifier = Modifier
@@ -457,13 +457,13 @@ fun GreetingSection(username: String = "Pappou") {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoutesCard()
-{
+fun RoutesCard(navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.42f)
             .height(105.dp)
-            .offset(x = 20.dp, y = (-50).dp),
+            .offset(x = 20.dp, y = (-50).dp)
+            .clickable { navController.navigate(Screen.AllRoutesScreen.route) },
         shape = RoundedCornerShape(25.dp),
         colors = CardDefaults.cardColors(Color.White),
         /*
@@ -486,7 +486,7 @@ fun RoutesCard()
             //horizontalAlignment = Alignment.CenterHorizontally
         )
         {
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 //horizontalArrangement = Arrangement.SpaceBetween,
@@ -501,12 +501,12 @@ fun RoutesCard()
                     fontSize = 16.sp,
                 )
 
-                Spacer (
+                Spacer(
                     modifier = Modifier
                         .width(5.dp)
                 )
 
-                Image (
+                Image(
                     painter = painterResource(id = R.mipmap.routes_icon),
                     contentDescription = null,
                     modifier = Modifier
@@ -521,7 +521,7 @@ fun RoutesCard()
                     .height(6.dp)
             )
 
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -534,7 +534,7 @@ fun RoutesCard()
                     color = Color(0, 0, 0, 0xBF)
                 )
 
-                Spacer (
+                Spacer(
                     modifier = Modifier
                         .width(5.dp)
                 )
@@ -556,8 +556,7 @@ fun RoutesCard()
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GoalsCard()
-{
+fun GoalsCard() {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.88f)
@@ -585,7 +584,7 @@ fun GoalsCard()
             //horizontalAlignment = Alignment.CenterHorizontally
         )
         {
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 //horizontalArrangement = Arrangement.SpaceBetween,
@@ -600,12 +599,12 @@ fun GoalsCard()
                     fontSize = 16.sp,
                 )
 
-                Spacer (
+                Spacer(
                     modifier = Modifier
                         .width(7.dp)
                 )
 
-                Image (
+                Image(
                     painter = painterResource(id = R.drawable.goals_icon),
                     contentDescription = null,
                     modifier = Modifier
@@ -620,13 +619,13 @@ fun GoalsCard()
                     .height(16.dp)
             )
 
-            Box (
+            Box(
                 modifier = Modifier
                     .fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
             )
             {
-                CircularProgressBar (
+                CircularProgressBar(
                     curNumber = 500,
                     goalNumber = 600,
                     animDelay = 300,
@@ -639,13 +638,13 @@ fun GoalsCard()
                     .height(22.dp)
             )
 
-            Box (
+            Box(
                 modifier = Modifier
                     .fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
             )
             {
-                CircularProgressBar (
+                CircularProgressBar(
                     curNumber = 3,
                     goalNumber = 10,
                     animDelay = 800,
@@ -661,8 +660,7 @@ fun GoalsCard()
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LeaderBoardCard()
-{
+fun LeaderBoardCard() {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.42f)
@@ -690,7 +688,7 @@ fun LeaderBoardCard()
             //horizontalAlignment = Alignment.CenterHorizontally
         )
         {
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 //horizontalArrangement = Arrangement.SpaceBetween,
@@ -705,12 +703,12 @@ fun LeaderBoardCard()
                     fontSize = 16.sp,
                 )
 
-                Spacer (
+                Spacer(
                     modifier = Modifier
                         .width(5.dp)
                 )
 
-                Image (
+                Image(
                     painter = painterResource(id = R.drawable.leaderboard_icon),
                     contentDescription = null,
                     modifier = Modifier
@@ -726,7 +724,7 @@ fun LeaderBoardCard()
                     .height(6.dp)
             )
 
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -758,8 +756,7 @@ fun LeaderBoardCard()
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SegmentsCard()
-{
+fun SegmentsCard() {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.88f)
@@ -779,7 +776,7 @@ fun SegmentsCard()
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp, hoveredElevation = 10.dp),
     )
     {
-        Box (
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
@@ -800,7 +797,7 @@ fun SegmentsCard()
                 //horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                Row (
+                Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     //horizontalArrangement = Arrangement.SpaceBetween,
@@ -816,12 +813,12 @@ fun SegmentsCard()
                         color = Color.White
                     )
 
-                    Spacer (
+                    Spacer(
                         modifier = Modifier
                             .width(20.dp)
                     )
 
-                    Image (
+                    Image(
                         painter = painterResource(id = R.drawable.segments_icon),
                         contentDescription = null,
                         modifier = Modifier
@@ -835,10 +832,6 @@ fun SegmentsCard()
 
     }
 }
-
-
-
-
 
 
 @OptIn(ExperimentalTextApi::class)
@@ -863,8 +856,7 @@ fun CircularProgressBar(
     strokeWidth: Dp = 8.dp,
     animDuration: Int = 1000,
     animDelay: Int = 0
-)
-{
+) {
     var animationPlayed by remember {
         mutableStateOf(false)
     }
@@ -877,7 +869,7 @@ fun CircularProgressBar(
         targetValue = if (animationPlayed) percentage.value else 0f,
         animationSpec = tween(
             durationMillis = animDuration,
-            delayMillis =  animDelay,
+            delayMillis = animDelay,
             //easing = FastOutSlowInEasing
         )
     )
@@ -900,13 +892,13 @@ fun CircularProgressBar(
             color = Color(0, 0, 0, 0xBF)
         )
         Spacer(modifier = Modifier.width(18.dp))
-        Box (
+        Box(
             modifier = Modifier
                 .size(radius * 2f),
             contentAlignment = Alignment.Center
         )
         {
-            Canvas (
+            Canvas(
                 modifier = Modifier
                     .fillMaxSize(),
                 onDraw = {
@@ -934,13 +926,13 @@ fun CircularProgressBar(
                 }
             )
 
-            Row (
+            Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.Top,
             )
             {
                 Text(
-                    text = (curPercentage.value*100).toInt().toString(),
+                    text = (curPercentage.value * 100).toInt().toString(),
                     style = TextStyle(
                         brush = activeBarColor,
                     ),
@@ -963,7 +955,6 @@ fun CircularProgressBar(
             }
 
         }
-
 
 
     }

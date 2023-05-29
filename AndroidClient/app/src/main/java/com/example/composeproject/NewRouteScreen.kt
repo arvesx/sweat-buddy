@@ -44,6 +44,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.darkrockstudios.libraries.mpfilepicker.FilePicker
 import com.example.composeproject.ui.theme.Blue1
 import com.example.composeproject.ui.theme.Blue2
@@ -64,8 +65,8 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 
 @Composable
-@Preview(showSystemUi = true, showBackground = true)
-fun NewRouteScreen() {
+//@Preview(showSystemUi = true, showBackground = true)
+fun NewRouteScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -124,7 +125,7 @@ fun NewRouteScreen() {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = { navController.navigate(Screen.AllRoutesScreen.route) },
                         modifier = Modifier.clip(CircleShape)
                     ) {
                         Image(
