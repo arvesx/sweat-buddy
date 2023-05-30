@@ -1,13 +1,16 @@
 package server;
 
+import com.google.gson.Gson;
+import dependencies.fileprocessing.TransmissionObject;
+import dependencies.fileprocessing.TransmissionObjectType;
 import dependencies.fileprocessing.gpx.GpxFile;
 import dependencies.fileprocessing.gpx.GpxResults;
 import dependencies.mapper.Map;
 import fileprocessing.ClientData;
+import user.Authentication;
+import user.UserCredentials;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -24,6 +27,7 @@ public class ClientHandlerThread extends Thread {
     private final Socket clientSocket;
     private final ClientData clientData;
 
+    private boolean loggedIn;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
 
@@ -40,81 +44,119 @@ public class ClientHandlerThread extends Thread {
         return clientData;
     }
 
+    private GpxResults handleGpxFile(InputStream gpxInputStream) throws InterruptedException {
+
+        GpxFile gpxFile = new GpxFile(gpxInputStream);
+        this.clientData.setGpxFile(gpxFile);
+
+        LOGGER.info("Client#" + this.clientData.getID() + ": Received GPX File");
+
+        synchronized (GXP_FILE_ID_LOCK) {
+            gpxFileId++;
+            gpxFile.setGpxFileId(gpxFileId);
+
+            synchronized (INTERMEDIATE_RESULTS_LOCK) {
+                intermediateResults.put(gpxFileId, new ArrayList<>());
+            }
+        }
+
+        gpxFile.makeChunks();
+        for (var chunk : gpxFile.getChunks()) {
+            synchronized (MESSAGE_Q_LOCK) {
+                messageQueue.enqueue(chunk);
+                MESSAGE_Q_LOCK.notify();
+            }
+        }
+
+        int gpxFileId = gpxFile.getGpxFileId();
+        // Waiting to receive all intermediate results to perform aggregation and calculate the final result.
+        ArrayList<Map.WorkerResult> processedResults;
+        synchronized (INTERMEDIATE_RESULTS_LOCK) {
+            int intermediateResultsListLength = intermediateResults.get(gpxFileId).size();
+            int numberOfChunksInGpx = gpxFile.getChunks().size();
+            while (intermediateResultsListLength != numberOfChunksInGpx) {
+                INTERMEDIATE_RESULTS_LOCK.wait();
+                intermediateResultsListLength = intermediateResults.get(gpxFile.getGpxFileId()).size();
+                numberOfChunksInGpx = gpxFile.getChunks().size();
+            }
+            processedResults = intermediateResults.get(gpxFileId);
+        }
+
+        Reduce.ReducedResult finalResults = Reduce.reduce(processedResults);
+
+        double totalDistanceInKilometers = finalResults.value().totalDistanceInKilometers();
+        double totalAscentInMeters = finalResults.value().totalAscentInMeters();
+        double totalTimeInMinutes = finalResults.value().totalTimeInMinutes();
+        double averageSpeedInKilometersPerHour = finalResults.value().averageSpeedKilometerPerHour();
+        double totalTimeInMillis = finalResults.value().totalTimeInMillis();
+
+
+        LOGGER.debug("GPX File ID: " + finalResults.key() +
+                ", Total Distance: " + totalDistanceInKilometers +
+                ", Total Ascent: " + totalAscentInMeters +
+                ", Total Time: " + totalTimeInMinutes +
+                ", Average Speed: " + averageSpeedInKilometersPerHour + "\n");
+
+        GpxResults gpxResults = new GpxResults(
+                totalDistanceInKilometers,
+                totalAscentInMeters,
+                totalTimeInMinutes,
+                averageSpeedInKilometersPerHour
+        );
+        return gpxResults;
+    }
+
     @Override
     public void run() {
         try {
-
+            loggedIn = false;
             this.outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
             this.inputStream = new ObjectInputStream(clientSocket.getInputStream());
+            Gson gson = new Gson();
 
-            String username;
-            GpxFile gpxFile;
-
-            username = (String) this.inputStream.readObject();
-            this.clientData.setUsername(username);
+            Authentication auth = new Authentication();
 
 
-            gpxFile = (GpxFile) this.inputStream.readObject();
-            this.clientData.setGpxFile(gpxFile);
+            while (true) {
 
-            LOGGER.info("Client#" + this.clientData.getID() + ": Received GPX File");
+                String receivedJsonString = (String) this.inputStream.readObject();
+                TransmissionObject receivedData = gson.fromJson(receivedJsonString, TransmissionObject.class);
 
-            synchronized (GXP_FILE_ID_LOCK) {
-                gpxFileId++;
-                gpxFile.setGpxFileId(gpxFileId);
+                if (receivedData.type == TransmissionObjectType.LOGIN_MESSAGE) {
+                    try {
+                        auth.handleLoginProcess(receivedData.username, receivedData.password);
+                        this.clientData.setUsername(receivedData.username);
+                        loggedIn = true;
+                        System.out.println("Login from " + receivedData.username + " successful.");
+                        TransmissionObject to = new TransmissionObject();
+                        to.type = TransmissionObjectType.LOGIN_MESSAGE;
+                        to.message = "Successful Login";
+                        to.success = 1;
+                        String jsonTransmissionObject = gson.toJson(to);
+                        outputStream.writeObject(jsonTransmissionObject);
 
-                synchronized (INTERMEDIATE_RESULTS_LOCK) {
-                    intermediateResults.put(gpxFileId, new ArrayList<>());
+                    } catch (Exception e) {
+                        TransmissionObject to = new TransmissionObject();
+                        to.type = TransmissionObjectType.LOGIN_MESSAGE;
+                        to.message = e.getMessage();
+                        to.success = 0;
+                        String jsonTransmissionObject = gson.toJson(to);
+                        outputStream.writeObject(jsonTransmissionObject);
+                    }
+                }
+                if (loggedIn) {
+                    if (receivedData.type == TransmissionObjectType.GPX_FILE) {
+                        GpxResults results = handleGpxFile(new ByteArrayInputStream(receivedData.gpxFile.getBytes()));
+
+                        TransmissionObject to = new TransmissionObject();
+                        to.type = TransmissionObjectType.GPX_RESULTS;
+                        to.gpxResults = results;
+
+                        String jsonTransmissionObject = gson.toJson(to);
+                        outputStream.writeObject(jsonTransmissionObject);
+                    }
                 }
             }
-
-            gpxFile.makeChunks();
-            for (var chunk : gpxFile.getChunks()) {
-                synchronized (MESSAGE_Q_LOCK) {
-                    messageQueue.enqueue(chunk);
-                    MESSAGE_Q_LOCK.notify();
-                }
-            }
-
-            int gpxFileId = gpxFile.getGpxFileId();
-            // Waiting to receive all intermediate results to perform aggregation and calculate the final result.
-            ArrayList<Map.WorkerResult> processedResults;
-            synchronized (INTERMEDIATE_RESULTS_LOCK) {
-                int intermediateResultsListLength = intermediateResults.get(gpxFileId).size();
-                int numberOfChunksInGpx = gpxFile.getChunks().size();
-                while (intermediateResultsListLength != numberOfChunksInGpx) {
-                    INTERMEDIATE_RESULTS_LOCK.wait();
-                    intermediateResultsListLength = intermediateResults.get(gpxFile.getGpxFileId()).size();
-                    numberOfChunksInGpx = gpxFile.getChunks().size();
-                }
-                processedResults = intermediateResults.get(gpxFileId);
-            }
-
-            Reduce.ReducedResult finalResults = Reduce.reduce(processedResults);
-
-            double totalDistanceInKilometers = finalResults.value().totalDistanceInKilometers();
-            double totalAscentInMeters = finalResults.value().totalAscentInMeters();
-            double totalTimeInMinutes = finalResults.value().totalTimeInMinutes();
-            double averageSpeedInKilometersPerHour = finalResults.value().averageSpeedKilometerPerHour();
-            double totalTimeInMillis = finalResults.value().totalTimeInMillis();
-
-
-
-            LOGGER.debug("GPX File ID: " + finalResults.key() +
-                    ", Total Distance: " + totalDistanceInKilometers +
-                    ", Total Ascent: " + totalAscentInMeters +
-                    ", Total Time: " + totalTimeInMinutes +
-                    ", Average Speed: " + averageSpeedInKilometersPerHour + "\n");
-
-            GpxResults gpxResults = new GpxResults(
-                    totalDistanceInKilometers,
-                    totalAscentInMeters,
-                    totalTimeInMinutes,
-                    averageSpeedInKilometersPerHour
-            );
-
-            outputStream.writeObject(gpxResults);
-
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

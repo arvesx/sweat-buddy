@@ -8,7 +8,8 @@ repositories {
 }
 
 dependencies {
-    
+    implementation 'com.google.code.gson:gson:2.10.1'
+
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
     implementation 'ch.qos.logback:logback-classic:1.4.7'
 

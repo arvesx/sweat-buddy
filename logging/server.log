@@ -1,4 +1,4 @@
-23:19:31.032 [main] INFO  server.Server - Starting Server...
-23:19:31.039 [main] INFO  server.Server - Listening for new clients on port 1234
-23:19:31.041 [main] INFO  server.Server - Listening for new workers on port 2345
-23:20:02.900 [Thread-1] INFO  server.Server - Worker node added
+04:09:46.348 [main] INFO  server.Server - Starting Server...
+04:09:46.414 [main] INFO  server.Server - Listening for new clients on port 1234
+04:09:46.415 [main] INFO  server.Server - Listening for new workers on port 2345
+04:09:57.235 [Thread-0] INFO  server.Server - Client#0: Connected

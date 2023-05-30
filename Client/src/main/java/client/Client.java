@@ -4,6 +4,9 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
+import dependencies.fileprocessing.TransmissionObject;
+import dependencies.fileprocessing.TransmissionObjectType;
 import dependencies.fileprocessing.gpx.GpxResults;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -14,24 +17,16 @@ import dependencies.fileprocessing.gpx.GpxFile;
 public class Client {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Client.class);
-
-    private final String username;
-    private final GpxFile gpxFile;
+    private String username;
+    private GpxFile gpxFile;
 
     private Socket socket;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
 
-    public Client(String username, String host_address, int port, String gpxFile) {
+    private Gson gson = new Gson();
 
-        this.username = username;
-        String file_path = "src\\main\\resources\\gpxfiles\\" + gpxFile;
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("File Sent to Server: " + file_path);
-        }
-
-        this.gpxFile = new GpxFile(file_path);
+    public Client(String host_address, int port) {
 
         try {
             this.socket = new Socket(host_address, port);
@@ -45,17 +40,11 @@ public class Client {
         }
     }
 
-    public void sendClientInfo() {
+    public void sendClientInfo(TransmissionObject to) {
         try {
+            String jsonString = gson.toJson(to);
 
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Username: " + this.username);
-            }
-
-            this.outputStream.writeObject(this.username);
-            this.outputStream.flush();
-
-            this.outputStream.writeObject(this.gpxFile);
+            this.outputStream.writeObject(jsonString);
             this.outputStream.flush();
 
 
@@ -66,24 +55,23 @@ public class Client {
     }
 
     public static void main(String[] args) {
+        Client c = new Client(Utilities.HOST_ADDRESS, Utilities.CLIENTS_PORT);
 
-        String gpxfile = args[0];
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Pick a username: ");
-        String username = scanner.nextLine();
+        Scanner s = new Scanner(System.in);
+        System.out.print("Username: ");
+        String username = s.nextLine();
+        System.out.println("Password: ");
+        String password = s.nextLine();
 
-        Client cl = new Client(username, Utilities.HOST_ADDRESS, Utilities.CLIENTS_PORT, gpxfile);
+        TransmissionObject to = new TransmissionObject();
+        to.type = TransmissionObjectType.LOGIN_MESSAGE;
+        to.username = username;
+        to.password = password;
+        c.sendClientInfo(to);
 
-        cl.sendClientInfo();
+        while (true) {
 
-        GpxResults results;
-        scanner.close();
-        try {
-            results = (GpxResults) cl.inputStream.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
 
-        System.out.println(results);
     }
 }
