@@ -17,7 +17,8 @@ public class Authentication {
 
     private static final String filePath = "Server/src/main/java/user/file.json";
 
-    public void handleLoginProcess(String username, String password) throws Exception {
+    public int handleLoginProcess(String username, String password) throws Exception {
+        if (allUsers == null) allUsers = new ArrayList<>();
 
         UserCredentials userCredentials = null;
         for (var i : allUsers) {
@@ -30,9 +31,13 @@ public class Authentication {
         if (userCredentials == null) throw new Exception("Incorrect Username");
 
         if (!hashPassword(password).equals(userCredentials.hashedPassword)) throw new Exception("Incorrect Password");
+
+        return userCredentials.userId;
     }
 
-    public void handleRegistration(String username, String password) throws Exception {
+    public int handleRegistration(String username, String password) throws Exception {
+
+        if (allUsers == null) allUsers = new ArrayList<>();
 
         if (isUsernameAlreadyRegistered(username)) {
             throw new Exception("Username has already been registered.");
@@ -54,6 +59,7 @@ public class Authentication {
             allUsers.add(newUserCredentials);
             writeAllUserCredentialsToJson();
         }
+        return newUserCredentials.userId;
     }
 
     public static void writeAllUserCredentialsToJson() {

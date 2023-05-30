@@ -6,9 +6,11 @@ import dependencies.fileprocessing.TransmissionObjectType;
 import dependencies.fileprocessing.gpx.GpxFile;
 import dependencies.fileprocessing.gpx.GpxResults;
 import dependencies.mapper.Map;
+import dependencies.user.Route;
+import dependencies.user.UserData;
 import fileprocessing.ClientData;
 import user.Authentication;
-import user.UserCredentials;
+import user.userdata.DataExchangeHandler;
 
 import java.io.*;
 import java.net.Socket;
@@ -28,6 +30,7 @@ public class ClientHandlerThread extends Thread {
     private final ClientData clientData;
 
     private boolean loggedIn;
+    private UserData userData;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
 
@@ -124,12 +127,14 @@ public class ClientHandlerThread extends Thread {
 
                 if (receivedData.type == TransmissionObjectType.LOGIN_MESSAGE) {
                     try {
-                        auth.handleLoginProcess(receivedData.username, receivedData.password);
+                        int userId = auth.handleLoginProcess(receivedData.username, receivedData.password);
                         this.clientData.setUsername(receivedData.username);
                         loggedIn = true;
                         System.out.println("Login from " + receivedData.username + " successful.");
+                        this.userData = DataExchangeHandler.getSpecificUserData(userId);
                         TransmissionObject to = new TransmissionObject();
-                        to.type = TransmissionObjectType.LOGIN_MESSAGE;
+                        to.type = TransmissionObjectType.USER_DATA;
+                        to.userData = userData;
                         to.message = "Successful Login";
                         to.success = 1;
                         String jsonTransmissionObject = gson.toJson(to);
@@ -144,12 +149,57 @@ public class ClientHandlerThread extends Thread {
                         outputStream.writeObject(jsonTransmissionObject);
                     }
                 }
-                if (loggedIn) {
-                    if (receivedData.type == TransmissionObjectType.GPX_FILE) {
-                        GpxResults results = handleGpxFile(new ByteArrayInputStream(receivedData.gpxFile.getBytes()));
+
+                if (receivedData.type == TransmissionObjectType.REGISTRATION_MESSAGE) {
+                    try {
+                        int userId = auth.handleRegistration(receivedData.username, receivedData.password);
+                        UserData newUserData = new UserData();
+                        newUserData.routes = new ArrayList<>();
+                        newUserData.segments = new ArrayList<>();
+                        newUserData.userId = userId;
+                        DataExchangeHandler.userData.add(newUserData);
+                        DataExchangeHandler.writeAllUserDataToJson();
+
+                        loggedIn = true;
+                        userData = newUserData;
 
                         TransmissionObject to = new TransmissionObject();
-                        to.type = TransmissionObjectType.GPX_RESULTS;
+                        to.type = TransmissionObjectType.USER_DATA;
+                        to.userData = userData;
+                        to.message = "Successful Registration";
+                        to.success = 1;
+                        String jsonTransmissionObject = gson.toJson(to);
+                        outputStream.writeObject(jsonTransmissionObject);
+
+
+                    } catch (Exception e) {
+                        TransmissionObject to = new TransmissionObject();
+                        to.type = TransmissionObjectType.REGISTRATION_MESSAGE;
+                        to.message = e.getMessage();
+                        to.success = 0;
+                        String jsonTransmissionObject = gson.toJson(to);
+                        outputStream.writeObject(jsonTransmissionObject);
+                    }
+                }
+                if (loggedIn) {
+                    if (receivedData.type == TransmissionObjectType.GPX_FILE) {
+                        System.out.println("Received gpx file from " + this.clientData.getUsername());
+                        GpxResults results = handleGpxFile(new ByteArrayInputStream(receivedData.gpxFile.getBytes()));
+
+                        Route newRoute = new Route();
+                        newRoute.routeName = receivedData.message;
+                        newRoute.totalTimeInMinutes = results.totalTimeInMinutes();
+                        newRoute.totalDistanceInKm = results.distanceInKilometers();
+                        newRoute.totalElevationInM = results.totalAscentInMete();
+                        newRoute.averageSpeedInKmH = results.avgSpeedInKilometersPerHour();
+
+                        userData.routes.add(newRoute);
+
+                        DataExchangeHandler.writeAllUserDataToJson();
+
+                        TransmissionObject to = new TransmissionObject();
+                        to.type = TransmissionObjectType.USER_DATA;
+                        to.userData = userData;
                         to.gpxResults = results;
 
                         String jsonTransmissionObject = gson.toJson(to);
