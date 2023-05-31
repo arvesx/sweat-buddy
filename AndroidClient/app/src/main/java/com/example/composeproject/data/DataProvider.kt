@@ -54,4 +54,9 @@ object DataProvider {
         LatLng(37.944477889945155, 23.693989646908282),
         LatLng(37.94513360173761, 23.693201077457903)
     )
+    val usersList = listOf(
+        UserInfo(1,"gigachad", 999),
+        UserInfo(2,"indian_geek", 500),
+        UserInfo(3,"lady", 410)
+    )
 }

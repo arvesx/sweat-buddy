@@ -25,6 +25,7 @@ val Blue2 = Color(0xFF3870EE)
 
 // ---
 val Blue3 = Color(0xFF8BCEFF)
+val Purple2 = Color(0x403200BF)
 
 // Home Screen Lower Background
 val White1 = Color(0xFFF2F5FB)
