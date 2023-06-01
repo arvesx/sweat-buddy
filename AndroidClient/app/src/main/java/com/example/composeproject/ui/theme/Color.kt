@@ -43,6 +43,6 @@ val Aqua2 = Color(0xFF2988E6)
 val Blue4 = Color(0xFF4360F5)
 
 //Home Screen Segments Card
-val Blue5 = Color(0xFF3A6FEF)
+val Blue5 = Color(0xFF4C7DF3)
 val Purple1 = Color(0xFF4758F7)
 

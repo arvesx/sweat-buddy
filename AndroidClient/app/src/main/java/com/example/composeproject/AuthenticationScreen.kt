@@ -42,8 +42,9 @@ import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.White1
 import com.example.composeproject.ui.theme.WhiteBlue1
 
-@Preview(showSystemUi = true, showBackground = true)
+
 @Composable
+@Preview(showSystemUi = true, showBackground = true)
 fun AuthenticationScreen() {
     Box(
         modifier = Modifier
