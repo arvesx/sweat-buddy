@@ -37,10 +37,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.composeproject.ui.theme.AquaLogo
 import com.example.composeproject.ui.theme.Blue1
 import com.example.composeproject.ui.theme.Blue2
@@ -51,10 +53,11 @@ import com.example.composeproject.ui.theme.WhiteBlue1
 
 
 @Composable
-@Preview(showSystemUi = true, showBackground = true)
-fun Signup() {
-    Box(modifier = Modifier
-        .offset(x = (-120).dp, y = (-250).dp)
+//@Preview(showSystemUi = true, showBackground = true)
+fun Signup(navController: NavController) {
+    Box(
+        modifier = Modifier
+            .offset(x = (-120).dp, y = (-250).dp)
     ) {
         Canvas(
             modifier = Modifier
@@ -77,7 +80,7 @@ fun Signup() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { navController.popBackStack() },
                 modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
             ) {
                 Image(
@@ -90,7 +93,8 @@ fun Signup() {
             Text(
                 text = "Back", color = Color.White,
                 fontFamily = ManropeFamily,
-                fontSize = 23.sp)
+                fontSize = 23.sp
+            )
         }
         Text(
             text = "Sign Up", color = WhiteBlue1,
@@ -125,14 +129,14 @@ fun Signup() {
                     .fillMaxSize()
                     .padding(top = 390.dp)
             ) {
-                val canvasWidth = size.width*2
+                val canvasWidth = size.width * 2
                 val arcHeight = 3600f
                 drawArc(
                     color = Blue2.copy(alpha = 0.05f),
                     startAngle = 0f,
                     sweepAngle = -180f,
                     useCenter = false,
-                    topLeft = Offset(-size.width/2, -arcHeight/2),
+                    topLeft = Offset(-size.width / 2, -arcHeight / 2),
                     size = Size(canvasWidth, arcHeight)
                 )
             }
@@ -141,14 +145,14 @@ fun Signup() {
                     .fillMaxSize()
                     .padding(top = 470.dp)
             ) {
-                val canvasWidth = size.width*2
+                val canvasWidth = size.width * 2
                 val arcHeight = 3600f
                 drawArc(
                     color = Blue2.copy(alpha = 0.1f),
                     startAngle = 0f,
                     sweepAngle = -180f,
                     useCenter = false,
-                    topLeft = Offset(-size.width/2, -arcHeight/2),
+                    topLeft = Offset(-size.width / 2, -arcHeight / 2),
                     size = Size(canvasWidth, arcHeight)
                 )
             }
@@ -157,37 +161,50 @@ fun Signup() {
                     .fillMaxSize()
                     .padding(top = 550.dp),
             ) {
-                val canvasWidth = size.width*2
+                val canvasWidth = size.width * 2
                 val arcHeight = 3600f
                 drawArc(
                     color = Blue2,
                     startAngle = 0f,
                     sweepAngle = -180f,
                     useCenter = false,
-                    topLeft = Offset(-size.width/2, -arcHeight/2),
+                    topLeft = Offset(-size.width / 2, -arcHeight / 2),
                     size = Size(canvasWidth, arcHeight)
                 )
             }
             Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
+                modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text( text = "Username", color = Color.White,
-                    fontFamily = ManropeFamily,
-                    fontSize = 15.sp
-                )
-                LoginTextField("Type here...")
-                Spacer(modifier = Modifier.height(30.dp))
-                Text( text = "Password", color = Color.White,
-                    fontFamily = ManropeFamily,
-                    fontSize = 15.sp
-                )
-                LoginTextField("Type here...")
-                Spacer(modifier = Modifier.height(30.dp))
+                Column(
+                    modifier = Modifier,
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    Text(
+                        text = "Username", color = Color.White,
+                        fontFamily = ManropeFamily,
+                        fontSize = 15.sp
+                    )
+                    UsernameTextField()
+
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                Column(
+                    modifier = Modifier,
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    Text(
+                        text = "Password", color = Color.White,
+                        fontFamily = ManropeFamily,
+                        fontSize = 15.sp
+                    )
+//                    PasswordTextField(viewModel)
+                }
+                Spacer(modifier = Modifier.height(20.dp))
                 Button(
-                    onClick = {/*TODO*/},
+                    onClick = {/*TODO*/ },
                     shape = RoundedCornerShape(17.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = WhiteBlue1),
                     modifier = Modifier
@@ -205,14 +222,13 @@ fun Signup() {
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignupTextField(title: String) {
+fun UsernameTextField() {
     var text by remember { mutableStateOf(TextFieldValue("")) }
     OutlinedTextField(
         value = text,
-        label = { Text(text = title, color = WhiteBlue1) },
+        label = { Text(text = "Your username", color = WhiteBlue1) },
         onValueChange = {
             text = it
         },
@@ -220,10 +236,12 @@ fun SignupTextField(title: String) {
             focusedBorderColor = Color.White,
             unfocusedBorderColor = WhiteBlue1,
             textColor = WhiteBlue1,
-            containerColor = Blue5
+            containerColor = Blue5,
+            cursorColor = Color.White
         ),
         modifier = Modifier
             .fillMaxWidth(0.5f)
             .height(60.dp)
     )
 }
+

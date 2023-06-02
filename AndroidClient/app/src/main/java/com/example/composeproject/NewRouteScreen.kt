@@ -125,7 +125,7 @@ fun NewRouteScreen(navController: NavController) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
-                        onClick = { navController.navigate(Screen.AllRoutesScreen.route) },
+                        onClick = { navController.popBackStack() },
                         modifier = Modifier.clip(CircleShape)
                     ) {
                         Image(

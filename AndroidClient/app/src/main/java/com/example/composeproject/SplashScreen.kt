@@ -35,8 +35,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 //@Preview(showSystemUi = true, showBackground = true)
-fun SplashScreen(navController: NavController)
-{
+fun SplashScreen(navController: NavController) {
     val scale = remember {
         Animatable(0f)
     }
@@ -67,7 +66,7 @@ fun SplashScreen(navController: NavController)
             )
         )
         delay(1500L)
-        navController.navigate(Screen.HomeScreen.route)
+        navController.navigate(Screen.AuthenticationScreen.route)
 
     }
 

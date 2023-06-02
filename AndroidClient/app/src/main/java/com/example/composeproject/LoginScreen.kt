@@ -37,10 +37,15 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.composeproject.ui.theme.AquaLogo
 import com.example.composeproject.ui.theme.Blue1
 import com.example.composeproject.ui.theme.Blue2
@@ -48,13 +53,20 @@ import com.example.composeproject.ui.theme.Blue4
 import com.example.composeproject.ui.theme.Blue5
 import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.WhiteBlue1
+import com.example.composeproject.viewmodel.LoginViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
-@Preview(showSystemUi = true, showBackground = true)
-fun Login() {
-    Box(modifier = Modifier
-        .offset(x = (-120).dp, y = (-250).dp)
+//@Preview(showSystemUi = true, showBackground = true)
+fun Login(navController: NavController) {
+    val viewModel: LoginViewModel = viewModel()
+    Box(
+        modifier = Modifier
+            .offset(x = (-120).dp, y = (-250).dp)
     ) {
         Canvas(
             modifier = Modifier
@@ -68,7 +80,6 @@ fun Login() {
     }
     Column(
         modifier = Modifier
-            .fillMaxSize()
     ) {
         Row(
             modifier = Modifier
@@ -77,7 +88,7 @@ fun Login() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { navController.popBackStack() },
                 modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
             ) {
                 Image(
@@ -90,7 +101,8 @@ fun Login() {
             Text(
                 text = "Back", color = Color.White,
                 fontFamily = ManropeFamily,
-                fontSize = 23.sp)
+                fontSize = 23.sp
+            )
         }
         Text(
             text = "Log In", color = WhiteBlue1,
@@ -125,14 +137,14 @@ fun Login() {
                     .fillMaxSize()
                     .padding(top = 390.dp)
             ) {
-                val canvasWidth = size.width*2
+                val canvasWidth = size.width * 2
                 val arcHeight = 3600f
                 drawArc(
                     color = Blue2.copy(alpha = 0.05f),
                     startAngle = 0f,
                     sweepAngle = -180f,
                     useCenter = false,
-                    topLeft = Offset(-size.width/2, -arcHeight/2),
+                    topLeft = Offset(-size.width / 2, -arcHeight / 2),
                     size = Size(canvasWidth, arcHeight)
                 )
             }
@@ -141,14 +153,14 @@ fun Login() {
                     .fillMaxSize()
                     .padding(top = 470.dp)
             ) {
-                val canvasWidth = size.width*2
+                val canvasWidth = size.width * 2
                 val arcHeight = 3600f
                 drawArc(
                     color = Blue2.copy(alpha = 0.1f),
                     startAngle = 0f,
                     sweepAngle = -180f,
                     useCenter = false,
-                    topLeft = Offset(-size.width/2, -arcHeight/2),
+                    topLeft = Offset(-size.width / 2, -arcHeight / 2),
                     size = Size(canvasWidth, arcHeight)
                 )
             }
@@ -157,37 +169,53 @@ fun Login() {
                     .fillMaxSize()
                     .padding(top = 550.dp),
             ) {
-                val canvasWidth = size.width*2
+                val canvasWidth = size.width * 2
                 val arcHeight = 3600f
                 drawArc(
                     color = Blue2,
                     startAngle = 0f,
                     sweepAngle = -180f,
                     useCenter = false,
-                    topLeft = Offset(-size.width/2, -arcHeight/2),
+                    topLeft = Offset(-size.width / 2, -arcHeight / 2),
                     size = Size(canvasWidth, arcHeight)
                 )
             }
             Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
+                modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text( text = "Username", color = Color.White,
-                    fontFamily = ManropeFamily,
-                    fontSize = 15.sp
-                )
-                LoginTextField("Type here...")
-                Spacer(modifier = Modifier.height(30.dp))
-                Text( text = "Password", color = Color.White,
-                    fontFamily = ManropeFamily,
-                    fontSize = 15.sp
-                )
-                LoginTextField("Type here...")
-                Spacer(modifier = Modifier.height(30.dp))
+                Column(
+                    modifier = Modifier,
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    Text(
+                        text = "Username", color = Color.White,
+                        fontFamily = ManropeFamily,
+                        fontSize = 15.sp
+                    )
+                    LoginTextField(viewModel)
+
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                Column(
+                    modifier = Modifier,
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    Text(
+                        text = "Password", color = Color.White,
+                        fontFamily = ManropeFamily,
+                        fontSize = 15.sp
+                    )
+                    PasswordTextField(viewModel)
+                }
+                Spacer(modifier = Modifier.height(20.dp))
                 Button(
-                    onClick = {/*TODO*/},
+                    onClick = {
+                        viewModel.onLogin(navController)
+
+                    },
                     shape = RoundedCornerShape(17.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = WhiteBlue1),
                     modifier = Modifier
@@ -208,22 +236,45 @@ fun Login() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginTextField(title: String) {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+fun LoginTextField(viewModel: LoginViewModel) {
     OutlinedTextField(
-        value = text,
-        label = { Text(text = title, color = WhiteBlue1) },
+        value = viewModel.usernameText.value,
+        label = { Text(text = "Your username", color = WhiteBlue1) },
         onValueChange = {
-            text = it
+            viewModel.usernameText.value = it
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Color.White,
             unfocusedBorderColor = WhiteBlue1,
             textColor = WhiteBlue1,
-            containerColor = Blue5
+            containerColor = Blue5,
+            cursorColor = Color.White
         ),
         modifier = Modifier
             .fillMaxWidth(0.5f)
             .height(60.dp)
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PasswordTextField(viewModel: LoginViewModel) {
+    OutlinedTextField(
+        value = viewModel.passwordText.value,
+        label = { Text(text = "Your password", color = WhiteBlue1) },
+        onValueChange = {
+            viewModel.passwordText.value = it
+        },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = Color.White,
+            unfocusedBorderColor = WhiteBlue1,
+            textColor = WhiteBlue1,
+            containerColor = Blue5,
+            cursorColor = Color.White
+        ),
+        modifier = Modifier
+            .fillMaxWidth(0.5f)
+            .height(60.dp),
+        visualTransformation = PasswordVisualTransformation(),
     )
 }

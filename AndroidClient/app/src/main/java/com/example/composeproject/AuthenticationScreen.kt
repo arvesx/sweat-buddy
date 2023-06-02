@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.composeproject.ui.theme.Blue1
 import com.example.composeproject.ui.theme.Blue2
 import com.example.composeproject.ui.theme.ManropeFamily
@@ -44,8 +45,8 @@ import com.example.composeproject.ui.theme.WhiteBlue1
 
 
 @Composable
-@Preview(showSystemUi = true, showBackground = true)
-fun AuthenticationScreen() {
+//@Preview(showSystemUi = true, showBackground = true)
+fun AuthenticationScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -58,8 +59,9 @@ fun AuthenticationScreen() {
                 )
             )
     ) {
-        Column( modifier = Modifier
-            .fillMaxSize(),
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
@@ -105,14 +107,14 @@ fun AuthenticationScreen() {
                         .fillMaxSize()
                         .padding(top = 340.dp)
                 ) {
-                    val canvasWidth = size.width*2
+                    val canvasWidth = size.width * 2
                     val arcHeight = 3600f
                     drawArc(
                         color = Blue2.copy(alpha = 0.05f),
                         startAngle = 0f,
                         sweepAngle = -180f,
                         useCenter = false,
-                        topLeft = Offset(-size.width/2, -arcHeight/2),
+                        topLeft = Offset(-size.width / 2, -arcHeight / 2),
                         size = Size(canvasWidth, arcHeight)
                     )
                 }
@@ -121,14 +123,14 @@ fun AuthenticationScreen() {
                         .fillMaxSize()
                         .padding(top = 450.dp)
                 ) {
-                    val canvasWidth = size.width*2
+                    val canvasWidth = size.width * 2
                     val arcHeight = 3600f
                     drawArc(
                         color = Blue2.copy(alpha = 0.1f),
                         startAngle = 0f,
                         sweepAngle = -180f,
                         useCenter = false,
-                        topLeft = Offset(-size.width/2, -arcHeight/2),
+                        topLeft = Offset(-size.width / 2, -arcHeight / 2),
                         size = Size(canvasWidth, arcHeight)
                     )
                 }
@@ -137,14 +139,14 @@ fun AuthenticationScreen() {
                         .fillMaxSize()
                         .padding(top = 550.dp),
                 ) {
-                    val canvasWidth = size.width*2
+                    val canvasWidth = size.width * 2
                     val arcHeight = 3600f
                     drawArc(
                         color = Blue2,
                         startAngle = 0f,
                         sweepAngle = -180f,
                         useCenter = false,
-                        topLeft = Offset(-size.width/2, -arcHeight/2),
+                        topLeft = Offset(-size.width / 2, -arcHeight / 2),
                         size = Size(canvasWidth, arcHeight)
                     )
                 }
@@ -155,7 +157,7 @@ fun AuthenticationScreen() {
                     verticalArrangement = Arrangement.Bottom
                 ) {
                     Button(
-                        onClick = {},
+                        onClick = { navController.navigate(Screen.LoginScreen.route) },
                         shape = RoundedCornerShape(17.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = WhiteBlue1),
                         modifier = Modifier
@@ -169,7 +171,7 @@ fun AuthenticationScreen() {
                     }
                     Spacer(modifier = Modifier.height(30.dp))
                     OutlinedButton(
-                        onClick = {},
+                        onClick = { navController.navigate(Screen.SignUpScreen.route) },
                         shape = RoundedCornerShape(17.dp),
                         border = BorderStroke(2.dp, Color.White),
                         modifier = Modifier

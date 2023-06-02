@@ -3,6 +3,7 @@ package com.example.composeproject
 import android.graphics.Paint
 import android.graphics.Paint.Align
 import android.os.Bundle
+import android.view.View
 import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,16 +34,26 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
+import androidx.core.view.WindowCompat
 import com.example.composeproject.ui.theme.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.time.MonthDay
 import java.time.Year
 import kotlin.math.absoluteValue
 
 class MainActivity : ComponentActivity() {
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+
+
+
         setContent {
-            
+
             Navigation()
 
         }

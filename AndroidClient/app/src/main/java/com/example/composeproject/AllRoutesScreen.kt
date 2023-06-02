@@ -340,7 +340,7 @@ fun UpperSection(height: Dp, navController: NavController) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(
-                onClick = { navController.navigate(Screen.HomeScreen.route) },
+                onClick = { navController.popBackStack() },
                 modifier = Modifier.clip(CircleShape)
             ) {
                 Image(
