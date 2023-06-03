@@ -49,10 +49,11 @@ import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.Pink1
 import com.example.composeproject.ui.theme.White1
 import com.example.composeproject.ui.theme.WhiteBlue1
+import com.example.composeproject.viewmodel.SharedViewModel
 
 @Composable
 //@Preview(showSystemUi = true, showBackground = true)
-fun RoutesScreen(navController: NavController) {
+fun RoutesScreen(navController: NavController, sharedViewModel: SharedViewModel) {
 
     Box(
         modifier = Modifier
@@ -78,7 +79,10 @@ fun RoutesScreen(navController: NavController) {
                     .fillMaxWidth()
                     .height(50.dp)
             )
-            TopCard(14, 41f)
+            TopCard(
+                sharedViewModel.totalNumberOfRoutes.value,
+                sharedViewModel.totalKilometeres.value
+            )
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -96,18 +100,19 @@ fun RoutesScreen(navController: NavController) {
                         .fillMaxWidth()
                         .height(10.dp)
                 )
-                RoutesContent()
+                RoutesContent(sharedViewModel)
             }
         }
     }
 }
 
 @Composable
-fun RoutesContent() {
-    val routes = remember { DataProvider.routesList }
+fun RoutesContent(sharedViewModel: SharedViewModel) {
+
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(routes) { route ->
-            RouteCard(route)
+        items(sharedViewModel.routes.value) { route ->
+            val routeInfo = RouteInfo(1, route.routeName, route.routeType, 5)
+            RouteCard(routeInfo)
         }
     }
 }
@@ -199,11 +204,11 @@ fun RouteCard(route: RouteInfo) {
                                             .clip(
                                                 CircleShape
                                             )
-                                            .background(Color.Green)
+                                            .background(Blue2)
                                     )
                                     Spacer(modifier = Modifier.width(5.dp))
                                     Text(
-                                        "IN PROGRESS",
+                                        "COMPLETED",
                                         fontWeight = FontWeight.Light,
                                         fontFamily = ManropeFamily,
                                         fontSize = 12.sp,

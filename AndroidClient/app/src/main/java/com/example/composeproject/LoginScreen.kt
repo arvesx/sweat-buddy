@@ -54,6 +54,7 @@ import com.example.composeproject.ui.theme.Blue5
 import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.WhiteBlue1
 import com.example.composeproject.viewmodel.LoginViewModel
+import com.example.composeproject.viewmodel.SharedViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -62,7 +63,7 @@ import kotlinx.coroutines.launch
 @OptIn(DelicateCoroutinesApi::class)
 @Composable
 //@Preview(showSystemUi = true, showBackground = true)
-fun Login(navController: NavController) {
+fun Login(navController: NavController, sharedViewModel: SharedViewModel) {
     val viewModel: LoginViewModel = viewModel()
     Box(
         modifier = Modifier
@@ -213,7 +214,7 @@ fun Login(navController: NavController) {
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
                     onClick = {
-                        viewModel.onLogin(navController)
+                        viewModel.onLogin(navController, sharedViewModel)
 
                     },
                     shape = RoundedCornerShape(17.dp),

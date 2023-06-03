@@ -54,11 +54,12 @@ import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.WhiteBlue1
 import com.example.composeproject.viewmodel.LoginViewModel
 import com.example.composeproject.viewmodel.RegisterViewModel
+import com.example.composeproject.viewmodel.SharedViewModel
 
 
 @Composable
 //@Preview(showSystemUi = true, showBackground = true)
-fun Signup(navController: NavController) {
+fun Signup(navController: NavController, sharedViewModel: SharedViewModel) {
     val viewModel: RegisterViewModel = viewModel()
     Box(
         modifier = Modifier
@@ -209,7 +210,7 @@ fun Signup(navController: NavController) {
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
-                    onClick = { viewModel.onRegister(navController) },
+                    onClick = { viewModel.onRegister(navController, sharedViewModel) },
                     shape = RoundedCornerShape(17.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = WhiteBlue1),
                     modifier = Modifier

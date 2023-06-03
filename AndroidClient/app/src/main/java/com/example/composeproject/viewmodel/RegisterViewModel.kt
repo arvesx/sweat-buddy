@@ -17,7 +17,7 @@ class RegisterViewModel : ViewModel() {
     var usernameText = mutableStateOf(TextFieldValue(""))
     var passwordText = mutableStateOf(TextFieldValue(""))
 
-    fun onRegister(navController: NavController) {
+    fun onRegister(navController: NavController, sharedViewModel: SharedViewModel) {
 
         val scope = CoroutineScope(Dispatchers.IO)
         scope.launch {
@@ -29,9 +29,16 @@ class RegisterViewModel : ViewModel() {
             println(to.username)
             println(to.password)
             val answer = backendCommunicator.sendClientInfo(to)
+
             withContext(Dispatchers.Main) {
 
-                if (answer.success == 1) navController.navigate(Screen.HomeScreen.route)
+                if (answer.success == 1) {
+                    sharedViewModel.updateViewModel(answer)
+                    sharedViewModel.username.value = usernameText.value.text
+                    navController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.SplashScreen.route) { inclusive = true }
+                    }
+                }
             }
         }
 

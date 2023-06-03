@@ -29,13 +29,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
 import com.example.composeproject.ui.theme.*
+import com.example.composeproject.viewmodel.SharedViewModel
 import java.time.MonthDay
 import java.time.Year
 
 
 @Composable
 //@Preview(showSystemUi = true, showBackground = true)
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -174,7 +175,7 @@ fun HomeScreen(navController: NavController) {
                 }
 
                 DateSection()
-                GreetingSection()
+                GreetingSection(sharedViewModel.username.value)
             }
         }
 
@@ -183,7 +184,7 @@ fun HomeScreen(navController: NavController) {
         )
         {
             Column {
-                RoutesCard(navController)
+                RoutesCard(navController, sharedViewModel)
                 Spacer(modifier = Modifier.height(15.dp))
                 LeaderBoardCard()
             }
@@ -457,7 +458,7 @@ fun GreetingSection(username: String = "Pappou") {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoutesCard(navController: NavController) {
+fun RoutesCard(navController: NavController, sharedViewModel: SharedViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.42f)
@@ -540,7 +541,10 @@ fun RoutesCard(navController: NavController) {
                 )
 
                 Text(
-                    text = "18km",
+
+                    text = "${
+                        String.format("%.1f", sharedViewModel.mostRecentRouteKm.value).toDouble()
+                    }km",
                     fontFamily = ManropeFamily,
                     fontSize = 12.sp,
                     color = Color(0, 0, 0, 0x66)

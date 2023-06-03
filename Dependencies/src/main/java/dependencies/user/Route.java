@@ -9,4 +9,6 @@ public class Route {
     public double averageSpeedInKmH;
     public double totalTimeInMinutes;
 
+    public int routeType;
+
 }

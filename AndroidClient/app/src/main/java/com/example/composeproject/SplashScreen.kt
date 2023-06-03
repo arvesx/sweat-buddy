@@ -66,7 +66,9 @@ fun SplashScreen(navController: NavController) {
             )
         )
         delay(1500L)
-        navController.navigate(Screen.AuthenticationScreen.route)
+        navController.navigate(Screen.AuthenticationScreen.route){
+            popUpTo(Screen.SplashScreen.route) { inclusive = true }
+        }
 
     }
 

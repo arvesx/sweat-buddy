@@ -37,15 +37,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.composeproject.ui.theme.Blue1
 import com.example.composeproject.ui.theme.Blue2
 import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.White1
 import com.example.composeproject.ui.theme.WhiteBlue1
+import com.example.composeproject.viewmodel.SharedViewModel
 
-@Preview(showSystemUi = true, showBackground = true)
+//@Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun NewRouteCreatedScreen() {
+fun NewRouteCreatedScreen(navController: NavController, sharedViewModel: SharedViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()

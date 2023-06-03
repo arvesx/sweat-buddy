@@ -51,6 +51,7 @@ import com.example.composeproject.ui.theme.Blue2
 import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.MapStyle
 import com.example.composeproject.utils.getGpxWaypoints
+import com.example.composeproject.viewmodel.SharedViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.JointType
 import com.google.android.gms.maps.model.LatLng
@@ -66,7 +67,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 //@Preview(showSystemUi = true, showBackground = true)
-fun NewRouteScreen(navController: NavController) {
+fun NewRouteScreen(navController: NavController, sharedViewModel: SharedViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()

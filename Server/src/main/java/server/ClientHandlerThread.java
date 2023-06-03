@@ -192,12 +192,13 @@ public class ClientHandlerThread extends Thread {
                         newRoute.totalDistanceInKm = results.distanceInKilometers();
                         newRoute.totalElevationInM = results.totalAscentInMete();
                         newRoute.averageSpeedInKmH = results.avgSpeedInKilometersPerHour();
-
+                        newRoute.points = calculateRoutePoints(results);
                         userData.routes.add(newRoute);
-
                         DataExchangeHandler.writeAllUserDataToJson();
 
                         TransmissionObject to = new TransmissionObject();
+                        userData.routesDoneThisMonth++;
+                        userData.totalKmThisMonth += results.distanceInKilometers();
                         to.type = TransmissionObjectType.USER_DATA;
                         to.userData = userData;
                         to.gpxResults = results;
@@ -212,5 +213,19 @@ public class ClientHandlerThread extends Thread {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static int calculateRoutePoints(GpxResults results) {
+        return (int) results.totalAscentInMete() * 10 + (int) results.distanceInKilometers() * 100;
+    }
+
+    public static int getRouteType(GpxResults results) {
+        var ascent = results.totalAscentInMete();
+        if (ascent > 200) return 0;
+        var speed = results.avgSpeedInKilometersPerHour();
+        if (speed > 9.7) return 2;
+
+        return 1;
+
     }
 }
