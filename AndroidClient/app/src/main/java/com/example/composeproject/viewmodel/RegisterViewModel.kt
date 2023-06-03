@@ -8,22 +8,22 @@ import com.example.composeproject.BackendCommunicator
 import com.example.composeproject.Screen
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectType
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class LoginViewModel : ViewModel() {
+class RegisterViewModel : ViewModel() {
+
     var usernameText = mutableStateOf(TextFieldValue(""))
     var passwordText = mutableStateOf(TextFieldValue(""))
 
-    fun onLogin(navController: NavController) {
+    fun onRegister(navController: NavController) {
+
         val scope = CoroutineScope(Dispatchers.IO)
         scope.launch {
             val backendCommunicator = BackendCommunicator.getInstance()
             val to =
-                BackendCommunicator.createTransmissionObject(TransmissionObjectType.LOGIN_MESSAGE)
+                BackendCommunicator.createTransmissionObject(TransmissionObjectType.REGISTRATION_MESSAGE)
             to.username = usernameText.value.text
             to.password = passwordText.value.text
             println(to.username)
@@ -37,5 +37,4 @@ class LoginViewModel : ViewModel() {
 
 
     }
-
 }

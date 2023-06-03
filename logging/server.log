@@ -1,4 +1,11 @@
-04:02:33.056 [main] INFO  server.Server - Starting Server...
-04:02:33.130 [main] INFO  server.Server - Listening for new clients on port 1234
-04:02:33.132 [main] INFO  server.Server - Listening for new workers on port 2345
-04:02:40.302 [Thread-0] INFO  server.Server - Client#0: Connected
+21:27:31.389 [main] INFO  server.Server - Starting Server...
+21:27:31.457 [main] INFO  server.Server - Listening for new clients on port 1234
+21:27:31.458 [main] INFO  server.Server - Listening for new workers on port 2345
+21:28:15.541 [Thread-0] INFO  server.Server - Client#0: Connected
+21:29:17.552 [Thread-0] INFO  server.Server - Client#1: Connected
+21:33:12.597 [Thread-0] INFO  server.Server - Client#2: Connected
+21:49:31.418 [Thread-0] INFO  server.Server - Client#3: Connected
+21:50:53.312 [Thread-0] INFO  server.Server - Client#4: Connected
+22:42:04.345 [Thread-0] INFO  server.Server - Client#5: Connected
+22:44:19.386 [Thread-0] INFO  server.Server - Client#6: Connected
+22:56:06.865 [Thread-0] INFO  server.Server - Client#7: Connected

@@ -14,13 +14,15 @@ import java.net.Socket;
 public class BackendCommunicator {
     private static BackendCommunicator instance = null;
     private Socket socket;
+
+    private boolean connectionEstablished;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
 
     private static final Gson gson = new Gson();
 
     private BackendCommunicator() {
-
+        connectionEstablished = false;
     }
 
     public void attemptConnection() {
@@ -28,6 +30,7 @@ public class BackendCommunicator {
             this.socket = new Socket("192.168.1.3", Utilities.CLIENTS_PORT);
             this.outputStream = new ObjectOutputStream(socket.getOutputStream());
             this.inputStream = new ObjectInputStream(socket.getInputStream());
+            this.connectionEstablished = true;
             System.out.println("connection established");
         } catch (IOException e) {
             System.out.println(e);
@@ -35,6 +38,8 @@ public class BackendCommunicator {
     }
 
     public TransmissionObject sendClientInfo(TransmissionObject to) {
+        if (!connectionEstablished) attemptConnection();
+
         try {
             System.out.println("sending to server to");
             String jsonString = gson.toJson(to);
@@ -57,8 +62,7 @@ public class BackendCommunicator {
     }
 
     public static TransmissionObject decodeJsonString(String jsonString) {
-        TransmissionObject to = gson.fromJson(jsonString, TransmissionObject.class);
-        return to;
+        return gson.fromJson(jsonString, TransmissionObject.class);
     }
 
     public static TransmissionObject createTransmissionObject(TransmissionObjectType type) {

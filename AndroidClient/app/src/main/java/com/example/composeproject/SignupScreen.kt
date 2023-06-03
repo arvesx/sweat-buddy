@@ -42,6 +42,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.composeproject.ui.theme.AquaLogo
 import com.example.composeproject.ui.theme.Blue1
@@ -50,11 +52,14 @@ import com.example.composeproject.ui.theme.Blue4
 import com.example.composeproject.ui.theme.Blue5
 import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.WhiteBlue1
+import com.example.composeproject.viewmodel.LoginViewModel
+import com.example.composeproject.viewmodel.RegisterViewModel
 
 
 @Composable
 //@Preview(showSystemUi = true, showBackground = true)
 fun Signup(navController: NavController) {
+    val viewModel: RegisterViewModel = viewModel()
     Box(
         modifier = Modifier
             .offset(x = (-120).dp, y = (-250).dp)
@@ -186,7 +191,7 @@ fun Signup(navController: NavController) {
                         fontFamily = ManropeFamily,
                         fontSize = 15.sp
                     )
-                    UsernameTextField()
+                    UsernameTextField(viewModel)
 
                 }
                 Spacer(modifier = Modifier.height(20.dp))
@@ -200,11 +205,11 @@ fun Signup(navController: NavController) {
                         fontFamily = ManropeFamily,
                         fontSize = 15.sp
                     )
-//                    PasswordTextField(viewModel)
+                    PasswordTextField(viewModel)
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
-                    onClick = {/*TODO*/ },
+                    onClick = { viewModel.onRegister(navController) },
                     shape = RoundedCornerShape(17.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = WhiteBlue1),
                     modifier = Modifier
@@ -224,13 +229,12 @@ fun Signup(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UsernameTextField() {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+fun UsernameTextField(viewModel: RegisterViewModel) {
     OutlinedTextField(
-        value = text,
+        value = viewModel.usernameText.value,
         label = { Text(text = "Your username", color = WhiteBlue1) },
         onValueChange = {
-            text = it
+            viewModel.usernameText.value = it
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Color.White,
@@ -245,3 +249,25 @@ fun UsernameTextField() {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PasswordTextField(viewModel: RegisterViewModel) {
+    OutlinedTextField(
+        value = viewModel.passwordText.value,
+        label = { Text(text = "Your password", color = WhiteBlue1) },
+        onValueChange = {
+            viewModel.passwordText.value = it
+        },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = Color.White,
+            unfocusedBorderColor = WhiteBlue1,
+            textColor = WhiteBlue1,
+            containerColor = Blue5,
+            cursorColor = Color.White
+        ),
+        modifier = Modifier
+            .fillMaxWidth(0.5f)
+            .height(60.dp),
+        visualTransformation = PasswordVisualTransformation(),
+    )
+}
