@@ -10,7 +10,7 @@ public class UserData {
     public float mostRecentRouteKm;
 
     public int routesDoneThisMonth;
-    public int totalKmThisMonth;
+    public float totalKmThisMonth;
 
     public int totalSegments;
     public int bestPositionInSegments;

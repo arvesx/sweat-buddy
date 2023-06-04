@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import dependencies.fileprocessing.TransmissionObject;
+import dependencies.fileprocessing.TransmissionObjectBuilder;
 import dependencies.fileprocessing.TransmissionObjectType;
 import dependencies.fileprocessing.gpx.GpxFile;
 import dependencies.fileprocessing.gpx.GpxResults;
@@ -39,15 +40,7 @@ public class ClientHandlerThread extends Thread {
         this.clientData = new ClientData(clientId);
     }
 
-    public Socket getClientSocket() {
-        return clientSocket;
-    }
-
-    public ClientData getClientData() {
-        return clientData;
-    }
-
-    private GpxResults handleGpxFile(InputStream gpxInputStream) throws InterruptedException {
+    private GpxResults analyzeGpxFile(InputStream gpxInputStream) throws InterruptedException {
 
         GpxFile gpxFile = new GpxFile(gpxInputStream);
         this.clientData.setGpxFile(gpxFile);
@@ -91,7 +84,7 @@ public class ClientHandlerThread extends Thread {
         double totalAscentInMeters = finalResults.value().totalAscentInMeters();
         double totalTimeInMinutes = finalResults.value().totalTimeInMinutes();
         double averageSpeedInKilometersPerHour = finalResults.value().averageSpeedKilometerPerHour();
-        double totalTimeInMillis = finalResults.value().totalTimeInMillis();
+        long totalTimeInMillis = finalResults.value().totalTimeInMillis();
 
 
         LOGGER.debug("GPX File ID: " + finalResults.key() +
@@ -100,13 +93,14 @@ public class ClientHandlerThread extends Thread {
                 ", Total Time: " + totalTimeInMinutes +
                 ", Average Speed: " + averageSpeedInKilometersPerHour + "\n");
 
-        GpxResults gpxResults = new GpxResults(
+
+        return new GpxResults(
                 totalDistanceInKilometers,
                 totalAscentInMeters,
                 totalTimeInMinutes,
-                averageSpeedInKilometersPerHour
+                averageSpeedInKilometersPerHour,
+                totalTimeInMillis
         );
-        return gpxResults;
     }
 
     @Override
@@ -127,81 +121,78 @@ public class ClientHandlerThread extends Thread {
 
                 if (receivedData.type == TransmissionObjectType.LOGIN_MESSAGE) {
                     try {
+                        // See if user exists
                         int userId = auth.handleLoginProcess(receivedData.username, receivedData.password);
                         this.clientData.setUsername(receivedData.username);
+
+                        // if so, log him in
                         loggedIn = true;
                         System.out.println("Login from " + receivedData.username + " successful.");
-                        this.userData = DataExchangeHandler.getSpecificUserData(userId);
-                        TransmissionObject to = new TransmissionObject();
-                        to.type = TransmissionObjectType.USER_DATA;
-                        to.userData = userData;
-                        to.message = "Successful Login";
-                        to.success = 1;
+
+                        // fetch his user data
+                        userData = DataExchangeHandler.getSpecificUserData(userId);
+
+                        // craft a transmission object to send a success message including his data
+                        TransmissionObject to = new TransmissionObjectBuilder()
+                                .type(TransmissionObjectType.USER_DATA)
+                                .userData(userData)
+                                .message("Successful login")
+                                .success(1)
+                                .craft();
+
+                        // send back to client success message and his user data
                         String jsonTransmissionObject = gson.toJson(to);
                         outputStream.writeObject(jsonTransmissionObject);
 
                     } catch (Exception e) {
-                        TransmissionObject to = new TransmissionObject();
-                        to.type = TransmissionObjectType.LOGIN_MESSAGE;
-                        to.message = e.getMessage();
-                        to.success = 0;
-                        String jsonTransmissionObject = gson.toJson(to);
-                        outputStream.writeObject(jsonTransmissionObject);
+                        handleAuthFailure(TransmissionObjectType.LOGIN_MESSAGE, e.getMessage(), gson);
                     }
                 }
 
                 if (receivedData.type == TransmissionObjectType.REGISTRATION_MESSAGE) {
                     try {
                         int userId = auth.handleRegistration(receivedData.username, receivedData.password);
-                        UserData newUserData = new UserData();
-                        newUserData.routes = new ArrayList<>();
-                        newUserData.segments = new ArrayList<>();
-                        newUserData.userId = userId;
+                        UserData newUserData = handleNewAccUserData(userId);
                         DataExchangeHandler.userData.add(newUserData);
                         DataExchangeHandler.writeAllUserDataToJson();
 
                         loggedIn = true;
                         userData = newUserData;
 
-                        TransmissionObject to = new TransmissionObject();
-                        to.type = TransmissionObjectType.USER_DATA;
-                        to.userData = userData;
-                        to.message = "Successful Registration";
-                        to.success = 1;
+                        TransmissionObject to = new TransmissionObjectBuilder()
+                                .type(TransmissionObjectType.USER_DATA)
+                                .userData(userData)
+                                .message("Successful Registration")
+                                .success(1)
+                                .craft();
+
                         String jsonTransmissionObject = gson.toJson(to);
                         outputStream.writeObject(jsonTransmissionObject);
-
 
                     } catch (Exception e) {
-                        TransmissionObject to = new TransmissionObject();
-                        to.type = TransmissionObjectType.REGISTRATION_MESSAGE;
-                        to.message = e.getMessage();
-                        to.success = 0;
-                        String jsonTransmissionObject = gson.toJson(to);
-                        outputStream.writeObject(jsonTransmissionObject);
+                        handleAuthFailure(TransmissionObjectType.REGISTRATION_MESSAGE, e.getMessage(), gson);
                     }
                 }
                 if (loggedIn) {
                     if (receivedData.type == TransmissionObjectType.GPX_FILE) {
                         System.out.println("Received gpx file from " + this.clientData.getUsername());
-                        GpxResults results = handleGpxFile(new ByteArrayInputStream(receivedData.gpxFile.getBytes()));
+                        GpxResults results = analyzeGpxFile(new ByteArrayInputStream(receivedData.gpxFile.getBytes()));
 
-                        Route newRoute = new Route();
-                        newRoute.routeName = receivedData.message;
-                        newRoute.totalTimeInMinutes = results.totalTimeInMinutes();
-                        newRoute.totalDistanceInKm = results.distanceInKilometers();
-                        newRoute.totalElevationInM = results.totalAscentInMete();
-                        newRoute.averageSpeedInKmH = results.avgSpeedInKilometersPerHour();
-                        newRoute.points = calculateRoutePoints(results);
+                        Route newRoute = processGpxResults(results, receivedData);
+
                         userData.routes.add(newRoute);
-                        DataExchangeHandler.writeAllUserDataToJson();
-
-                        TransmissionObject to = new TransmissionObject();
                         userData.routesDoneThisMonth++;
                         userData.totalKmThisMonth += results.distanceInKilometers();
-                        to.type = TransmissionObjectType.USER_DATA;
-                        to.userData = userData;
-                        to.gpxResults = results;
+
+                        DataExchangeHandler.writeAllUserDataToJson();
+
+                        TransmissionObject to = new TransmissionObjectBuilder()
+                                .type(TransmissionObjectType.USER_DATA)
+                                .userData(userData)
+                                .message("New GPX file has been processed.")
+                                .success(1)
+                                .craft();
+
 
                         String jsonTransmissionObject = gson.toJson(to);
                         outputStream.writeObject(jsonTransmissionObject);
@@ -217,6 +208,36 @@ public class ClientHandlerThread extends Thread {
 
     public static int calculateRoutePoints(GpxResults results) {
         return (int) results.totalAscentInMete() * 10 + (int) results.distanceInKilometers() * 100;
+    }
+
+    private UserData handleNewAccUserData(int userId) {
+        UserData newUserData = new UserData();
+        newUserData.routes = new ArrayList<>();
+        newUserData.segments = new ArrayList<>();
+        newUserData.userId = userId;
+        return newUserData;
+    }
+
+    private void handleAuthFailure(TransmissionObjectType type, String message, Gson gson) throws IOException {
+        TransmissionObject to = new TransmissionObject();
+        to.type = type;
+        to.message = message;
+        to.success = 0;
+        String jsonTransmissionObject = gson.toJson(to);
+        outputStream.writeObject(jsonTransmissionObject);
+    }
+
+    public Route processGpxResults(GpxResults results, TransmissionObject receivedData) {
+        Route newRoute = new Route();
+        newRoute.routeName = receivedData.message;
+        newRoute.totalTimeInMinutes = results.totalTimeInMinutes();
+        newRoute.totalDistanceInKm = results.distanceInKilometers();
+        newRoute.totalElevationInM = results.totalAscentInMete();
+        newRoute.averageSpeedInKmH = results.avgSpeedInKilometersPerHour();
+        newRoute.routeType = getRouteType(results);
+        newRoute.points = calculateRoutePoints(results);
+
+        return newRoute;
     }
 
     public static int getRouteType(GpxResults results) {

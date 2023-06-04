@@ -5,7 +5,8 @@ import java.io.Serializable;
 public record GpxResults(double distanceInKilometers,
                          double totalAscentInMete,
                          double totalTimeInMinutes,
-                         double avgSpeedInKilometersPerHour) implements Serializable {
+                         double avgSpeedInKilometersPerHour,
+                         long totalTimeInMillis) implements Serializable {
 
 
 }
