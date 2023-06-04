@@ -297,7 +297,7 @@ fun TopCard(totalNumberOfRoutes: Int, totalKilometers: Float) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "$totalKilometers km",
+                    text = String.format("%.1f", totalKilometers) + " km",
                     fontWeight = FontWeight.Bold,
                     fontFamily = ManropeFamily,
                     fontSize = 24.sp
@@ -345,7 +345,11 @@ fun UpperSection(height: Dp, navController: NavController) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(
-                onClick = { navController.popBackStack() },
+                onClick = {
+                    navController.navigate(Screen.HomeScreen.route) {
+
+                    }
+                },
                 modifier = Modifier.clip(CircleShape)
             ) {
                 Image(

@@ -36,7 +36,7 @@ class LoginViewModel : ViewModel() {
                     sharedViewModel.updateViewModel(answer)
                     sharedViewModel.username.value = usernameText.value.text
                     navController.navigate(Screen.HomeScreen.route) {
-                        popUpTo(Screen.SplashScreen.route) { inclusive = true }
+                        popUpTo(0)
                     }
                 }
 

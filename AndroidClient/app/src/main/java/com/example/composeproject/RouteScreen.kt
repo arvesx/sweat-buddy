@@ -33,7 +33,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,7 +59,7 @@ fun NewRouteCreatedScreen(navController: NavController, sharedViewModel: SharedV
                 )
             )
     ) {
-        UpperSection("Route Name", 150)
+        UpperSection("Route Name", 150, navController)
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -68,10 +67,10 @@ fun NewRouteCreatedScreen(navController: NavController, sharedViewModel: SharedV
             contentAlignment = Alignment.Center
         ) {
             CardInMiddle(
-                totalDistance = 12.0f,
-                totalElevation = 7.0f,
-                avgSpeed = 4.0f,
-                totalTime = "1h25m"
+                totalDistance = sharedViewModel.totalDistance.value,
+                totalElevation = sharedViewModel.totalElevation.value,
+                avgSpeed = sharedViewModel.avgSpeed.value,
+                totalTime = sharedViewModel.totalTime.value
             )
         }
     }
@@ -106,7 +105,7 @@ fun CardInMiddle(totalDistance: Float, totalElevation: Float, avgSpeed: Float, t
                     modifier = Modifier.fillMaxHeight(),
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    RouteInfoElement("$totalDistance" + "km", "Total Distance")
+                    RouteInfoElement(String.format("%.1f", totalDistance) + "km", "Total Distance")
                     RouteInfoElement(totalTime, "Total Time")
                 }
                 Column(
@@ -114,8 +113,8 @@ fun CardInMiddle(totalDistance: Float, totalElevation: Float, avgSpeed: Float, t
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
 
-                    RouteInfoElement("$totalElevation" + "m", "Total Elevation")
-                    RouteInfoElement("$avgSpeed" + "km/h", "Average Speed")
+                    RouteInfoElement(String.format("%.1f", totalElevation) + "m", "Total Elevation")
+                    RouteInfoElement(String.format("%.1f", avgSpeed) + "km/h", "Average Speed")
 
                 }
             }
@@ -154,7 +153,7 @@ fun RouteInfoElement(upperText: String, lowerText: String) {
 }
 
 @Composable
-fun UpperSection(routeName: String, scorePoints: Int) {
+fun UpperSection(routeName: String, scorePoints: Int, navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -180,7 +179,7 @@ fun UpperSection(routeName: String, scorePoints: Int) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { navController.navigate(Screen.AllRoutesScreen.route) },
                     modifier = Modifier.clip(CircleShape)
                 ) {
                     Image(

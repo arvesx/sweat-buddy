@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.darkrockstudios.libraries.mpfilepicker.FilePicker
 import com.example.composeproject.ui.theme.Blue1
@@ -51,6 +53,8 @@ import com.example.composeproject.ui.theme.Blue2
 import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.MapStyle
 import com.example.composeproject.utils.getGpxWaypoints
+import com.example.composeproject.viewmodel.NewRouteViewModel
+import com.example.composeproject.viewmodel.RegisterViewModel
 import com.example.composeproject.viewmodel.SharedViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.JointType
@@ -87,16 +91,21 @@ fun NewRouteScreen(navController: NavController, sharedViewModel: SharedViewMode
         val cameraPositionState = rememberCameraPositionState {
             position = CameraPosition.fromLatLngZoom(LatLng(1.35, 103.87), 10f)
         }
+
+        val viewModel: NewRouteViewModel = viewModel()
+
         // File picker
         var showFilePicker by remember { mutableStateOf(false) }
-        var pathChosen by remember { mutableStateOf("") }
         val context = LocalContext.current
 
         FilePicker(showFilePicker, fileExtensions = listOf("xml")) { path ->
             showFilePicker = false
             if (path != null) {
-                pathChosen = path.path
-                getGpxWaypoints(pathChosen, context) { newList, cameraNewLatLng, cameraNewZoom ->
+                viewModel.pathChosen.value = path.path
+                getGpxWaypoints(
+                    viewModel.pathChosen.value,
+                    context
+                ) { newList, cameraNewLatLng, cameraNewZoom ->
                     coordinates = newList
 
                     cameraPositionState.position =
@@ -144,7 +153,9 @@ fun NewRouteScreen(navController: NavController, sharedViewModel: SharedViewMode
 
 
                     TextButton(
-                        onClick = {},
+                        onClick = {
+                            viewModel.onCreate(navController, sharedViewModel, context)
+                        },
                         modifier = Modifier.clip(CircleShape)
                     ) {
                         Text(
@@ -196,7 +207,10 @@ fun NewRouteScreen(navController: NavController, sharedViewModel: SharedViewMode
                         verticalArrangement = Arrangement.SpaceEvenly
                     ) {
                         Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
-                            RouteNameTextField(title = "Give your route a name")
+                            RouteNameTextField(
+                                title = "Give your route a name",
+                                viewModel.textFieldValue
+                            )
                             Spacer(modifier = Modifier.width(10.dp))
                             IconButton(
                                 onClick = { showFilePicker = true },
@@ -222,13 +236,12 @@ fun NewRouteScreen(navController: NavController, sharedViewModel: SharedViewMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RouteNameTextField(title: String) {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+fun RouteNameTextField(title: String, text: MutableState<TextFieldValue>) {
     OutlinedTextField(
-        value = text,
+        value = text.value,
         label = { Text(text = title) },
         onValueChange = {
-            text = it
+            text.value = it
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Blue2

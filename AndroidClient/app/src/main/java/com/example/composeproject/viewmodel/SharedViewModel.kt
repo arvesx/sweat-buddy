@@ -13,6 +13,13 @@ class SharedViewModel : ViewModel() {
     var totalNumberOfRoutes = mutableStateOf(0)
     var totalKilometeres = mutableStateOf(0.0f)
 
+    // specific route info
+    var totalDistance = mutableStateOf(0.0f)
+    var totalElevation = mutableStateOf(0.0f)
+    var avgSpeed = mutableStateOf(0.0f)
+    var totalTime = mutableStateOf("0m")
+
+
     fun updateViewModel(to: TransmissionObject) {
 
         if (to.userData.routes.isNotEmpty()) {
@@ -25,4 +32,21 @@ class SharedViewModel : ViewModel() {
 
     }
 
+    fun updateSpecificRoute(
+        totalDistance: Double,
+        totalElevation: Double,
+        avgSpeed: Double,
+        totalTime: Long
+    ) {
+        val milliseconds: Long = totalTime
+        val minutes = milliseconds / 1000 / 60
+        val seconds = milliseconds / 1000 % 60
+
+
+        this.totalDistance.value = totalDistance.toFloat()
+        this.totalElevation.value = totalElevation.toFloat()
+        this.avgSpeed.value = avgSpeed.toFloat()
+        this.totalTime.value = "${minutes}m${seconds}s"
+    }
 }
+

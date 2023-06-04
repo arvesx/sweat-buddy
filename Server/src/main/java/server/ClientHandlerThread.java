@@ -158,6 +158,7 @@ public class ClientHandlerThread extends Thread {
 
                         loggedIn = true;
                         userData = newUserData;
+                        this.clientData.setUsername(receivedData.username);
 
                         TransmissionObject to = new TransmissionObjectBuilder()
                                 .type(TransmissionObjectType.USER_DATA)
@@ -193,6 +194,7 @@ public class ClientHandlerThread extends Thread {
                                 .success(1)
                                 .craft();
 
+                        to.gpxResults = results;
 
                         String jsonTransmissionObject = gson.toJson(to);
                         outputStream.writeObject(jsonTransmissionObject);
@@ -244,7 +246,7 @@ public class ClientHandlerThread extends Thread {
         var ascent = results.totalAscentInMete();
         if (ascent > 200) return 0;
         var speed = results.avgSpeedInKilometersPerHour();
-        if (speed > 9.7) return 2;
+        if (speed > 6.4) return 2;
 
         return 1;
 
