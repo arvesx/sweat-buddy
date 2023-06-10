@@ -67,7 +67,7 @@ fun RoutesScreen(navController: NavController, sharedViewModel: SharedViewModel)
                 )
             )
     ) {
-        UpperSection(120.dp, navController)
+        ScreenUpperSection(SectionContent.ROUTES, 120.dp, navController)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -79,7 +79,7 @@ fun RoutesScreen(navController: NavController, sharedViewModel: SharedViewModel)
                     .fillMaxWidth()
                     .height(50.dp)
             )
-            TopCard(
+            RoutesTopCard(
                 sharedViewModel.totalNumberOfRoutes.value,
                 sharedViewModel.totalKilometeres.value
             )
@@ -100,151 +100,7 @@ fun RoutesScreen(navController: NavController, sharedViewModel: SharedViewModel)
                         .fillMaxWidth()
                         .height(10.dp)
                 )
-                RoutesContent(sharedViewModel)
-            }
-        }
-    }
-}
-
-@Composable
-fun RoutesContent(sharedViewModel: SharedViewModel) {
-
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(sharedViewModel.routes.value) { route ->
-            val routeInfo = RouteInfo(1, route.routeName, route.routeType, 5)
-            RouteCard(routeInfo)
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun RouteCard(route: RouteInfo) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp)
-            .padding(top = 10.dp),
-        shape = RoundedCornerShape(25.dp),
-        colors = CardDefaults.cardColors(Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp, hoveredElevation = 10.dp),
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colorStops = arrayOf(
-                            0.2f to Pink1,
-                            1.3f to Aqua1,
-                        ),
-                    )
-                )
-                .padding(start = 7.dp)
-        ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize(),
-                shape = RoundedCornerShape(15.dp)
-            ) {
-                Box(modifier = Modifier.background(Color.White)) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(start = 10.dp, end = 10.dp),
-                        verticalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        var iconType: Painter = painterResource(id = R.drawable.mountain)
-                        var stringType: String = "UNKNOWN"
-                        when (route.type) {
-                            0 -> {
-                                iconType = painterResource(id = R.drawable.mountain)
-                                stringType = "HIKING"
-                            }
-
-                            1 -> {
-                                iconType = painterResource(id = R.drawable.path)
-                                stringType = "WALK"
-                            }
-
-                            2 -> {
-                                iconType = painterResource(id = R.drawable.runningshoe)
-                                stringType = "RUN"
-                            }
-                        }
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Box() {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Image(
-                                        painter = iconType,
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .size(16.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(10.dp))
-                                    Text(
-                                        stringType,
-                                        fontWeight = FontWeight.Light,
-                                        fontFamily = ManropeFamily,
-                                        fontSize = 12.sp,
-                                        modifier = Modifier.alpha(0.7f),
-                                    )
-
-                                }
-                            }
-                            Box() {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(7.dp)
-                                            .clip(
-                                                CircleShape
-                                            )
-                                            .background(Blue2)
-                                    )
-                                    Spacer(modifier = Modifier.width(5.dp))
-                                    Text(
-                                        "COMPLETED",
-                                        fontWeight = FontWeight.Light,
-                                        fontFamily = ManropeFamily,
-                                        fontSize = 12.sp,
-                                        modifier = Modifier.alpha(0.7f),
-                                    )
-                                }
-                            }
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = route.title,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = ManropeFamily,
-                                fontSize = 16.sp
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Row() {
-
-                            }
-                            Text(
-                                text = "12m", fontWeight = FontWeight.Light,
-                                fontFamily = ManropeFamily,
-                                fontSize = 10.sp,
-                                modifier = Modifier.alpha(0.7f)
-                            )
-
-                        }
-                    }
-                }
+                ContentList(SectionContent.ROUTES, sharedViewModel)
             }
         }
     }
@@ -252,7 +108,7 @@ fun RouteCard(route: RouteInfo) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopCard(totalNumberOfRoutes: Int, totalKilometers: Float) {
+fun RoutesTopCard(totalNumberOfRoutes: Int, totalKilometers: Float) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -319,63 +175,5 @@ fun TopCard(totalNumberOfRoutes: Int, totalKilometers: Float) {
                 )
             }
         }
-    }
-}
-
-@Composable
-fun UpperSection(height: Dp, navController: NavController) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(height)
-            .background(
-                Brush.verticalGradient(
-                    colorStops = arrayOf(
-                        0.0f to Blue2,
-                        1f to Blue1,
-                    ),
-                )
-            )
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(
-                onClick = {
-                    navController.navigate(Screen.HomeScreen.route) {
-
-                    }
-                },
-                modifier = Modifier.clip(CircleShape)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.left),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(38.dp)
-                )
-            }
-            Text(
-                text = "Routes", color = colorResource(id = R.color.white),
-                fontFamily = ManropeFamily,
-                fontSize = 18.sp,
-            )
-            IconButton(
-                onClick = { navController.navigate(Screen.NewRouteScreen.route) },
-                modifier = Modifier.clip(CircleShape)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.plus),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(24.dp)
-                )
-            }
-        }
-
     }
 }

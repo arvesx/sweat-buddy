@@ -4,11 +4,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObject
 import com.example.composeproject.dependencies.user.Route
+import com.example.composeproject.dependencies.user.Segment
 
 class SharedViewModel : ViewModel() {
 
     var username = mutableStateOf("")
     var routes = mutableStateOf(listOf<Route>())
+    var segments = mutableStateOf(listOf<Segment>())
     var mostRecentRouteKm = mutableStateOf(0.0)
     var totalNumberOfRoutes = mutableStateOf(0)
     var totalKilometeres = mutableStateOf(0.0f)

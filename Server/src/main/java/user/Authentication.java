@@ -15,7 +15,7 @@ public class Authentication {
     public static final Object ALL_USERS_LIST_LOCK = new Object();
     public static ArrayList<UserCredentials> allUsers = new ArrayList<>();
 
-    private static final String filePath = "Server/src/main/java/user/file.json";
+    private static final String filePath = "src/main/java/user/file.json";
 
     public int handleLoginProcess(String username, String password) throws Exception {
         if (allUsers == null) allUsers = new ArrayList<>();

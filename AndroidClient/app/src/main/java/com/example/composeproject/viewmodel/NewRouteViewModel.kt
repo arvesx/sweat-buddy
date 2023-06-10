@@ -36,6 +36,7 @@ class NewRouteViewModel : ViewModel() {
                 val backendCommunicator = BackendCommunicator.getInstance()
                 val answer = backendCommunicator.sendClientInfo(to)
 
+
                 if (answer.success == 1) {
                     sharedViewModel.updateViewModel(answer)
                     sharedViewModel.updateSpecificRoute(

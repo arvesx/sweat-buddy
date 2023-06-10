@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 public class DataExchangeHandler {
     public static ArrayList<UserData> userData = new ArrayList<>();
     public static final Object USER_DATA_LOCK = new Object();
-    private static final String filePath = "Server/src/main/java/user/userdata/userdata_db.json";
+    private static final String filePath = "src/main/java/user/userdata/userdata_db.json";
 
     public static void writeAllUserDataToJson() {
         Gson gson = new Gson();

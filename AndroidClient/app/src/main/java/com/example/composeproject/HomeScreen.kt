@@ -192,7 +192,7 @@ fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
             Column {
                 GoalsCard()
                 Spacer(modifier = Modifier.height(15.dp))
-                SegmentsCard()
+                SegmentsCard(navController)
             }
         }
 
@@ -760,23 +760,24 @@ fun LeaderBoardCard() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SegmentsCard() {
+fun SegmentsCard(navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.88f)
             .height(53.dp)
-            .offset(x = 0.dp, y = (-50).dp),
+            .offset(x = 0.dp, y = (-50).dp)
+            .clickable { navController.navigate(Screen.AllSegmentsScreen.route) },
         shape = RoundedCornerShape(25.dp),
-        /*
-        * cardElevation(
-            defaultElevation: Dp,
-            pressedElevation: Dp,
-            focusedElevation: Dp,
-            hoveredElevation: Dp,
-            draggedElevation: Dp,
-            disabledElevation: Dp
-        )
-        * */
+    /*
+    * cardElevation(
+        defaultElevation: Dp,
+        pressedElevation: Dp,
+        focusedElevation: Dp,
+        hoveredElevation: Dp,
+        draggedElevation: Dp,
+        disabledElevation: Dp
+    )
+    * */
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp, hoveredElevation = 10.dp),
     )
     {

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.composeproject.BackendCommunicator
 import com.example.composeproject.Screen
+import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectBuilder
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,8 +23,7 @@ class RegisterViewModel : ViewModel() {
         val scope = CoroutineScope(Dispatchers.IO)
         scope.launch {
             val backendCommunicator = BackendCommunicator.getInstance()
-            val to =
-                BackendCommunicator.createTransmissionObject(TransmissionObjectType.REGISTRATION_MESSAGE)
+            val to = BackendCommunicator.createTransmissionObject(TransmissionObjectType.REGISTRATION_MESSAGE)
             to.username = usernameText.value.text
             to.password = passwordText.value.text
             println(to.username)

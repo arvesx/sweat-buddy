@@ -1,8 +1,12 @@
-18:00:49.396 [main] INFO  server.Server - Starting Server...
-18:00:49.402 [main] INFO  server.Server - Listening for new clients on port 1234
-18:00:49.402 [main] INFO  server.Server - Listening for new workers on port 2345
-18:01:25.957 [Thread-1] INFO  server.Server - Worker node added
-18:02:45.244 [Thread-0] INFO  server.Server - Client#0: Connected
-18:02:45.299 [Thread-5] INFO  server.Server - Client#0: Received GPX File
-18:02:45.390 [Thread-5] DEBUG server.Server - GPX File ID: Key[gpxFileId=1], Total Distance: 2.7957391950078954, Total Ascent: 8.619999999999997, Total Time: 18.35, Average Speed: 9.141381564058513
-
+23:39:56.565 [main] INFO  server.Server - Starting Server...
+23:39:56.624 [main] INFO  server.Server - Listening for new clients on port 1234
+23:39:56.626 [main] INFO  server.Server - Listening for new workers on port 2345
+23:39:58.311 [Thread-1] INFO  server.Server - Worker node added
+23:41:13.417 [Thread-0] INFO  server.Server - Client#0: Connected
+23:42:27.761 [Thread-0] INFO  server.Server - Client#1: Connected
+23:51:21.476 [Thread-0] INFO  server.Server - Client#2: Connected
+23:52:34.778 [Thread-0] INFO  server.Server - Client#3: Connected
+00:35:50.869 [Thread-0] INFO  server.Server - Client#4: Connected
+00:36:30.767 [Thread-0] INFO  server.Server - Client#5: Connected
+00:37:48.987 [Thread-0] INFO  server.Server - Client#6: Connected
+00:39:53.452 [Thread-0] INFO  server.Server - Client#7: Connected

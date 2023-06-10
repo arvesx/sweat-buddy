@@ -44,6 +44,15 @@ fun Navigation() {
         composable(Screen.RouteScreen.route) {
             NewRouteCreatedScreen(navController, sharedViewModel)
         }
+
+        composable(Screen.AllSegmentsScreen.route) {
+            SegmentsScreen(navController, sharedViewModel)
+        }
+
+        composable(Screen.NewSegmentScreen.route) {
+            NewSegmentScreen(navController, sharedViewModel)
+        }
+
     }
 }
 
