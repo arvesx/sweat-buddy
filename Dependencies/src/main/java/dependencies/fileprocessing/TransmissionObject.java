@@ -1,5 +1,8 @@
 package dependencies.fileprocessing;
 
+import java.util.List;
+
+import ch.qos.logback.core.joran.sanity.Pair;
 import dependencies.fileprocessing.gpx.GpxResults;
 import dependencies.user.UserData;
 
@@ -10,6 +13,8 @@ public class TransmissionObject {
     public String gpxFile;
     public UserData userData;
     public GpxResults gpxResults;
+
+    public List<Pair<Double, Double>> coordinates;
 
     public String username;
     public String password;

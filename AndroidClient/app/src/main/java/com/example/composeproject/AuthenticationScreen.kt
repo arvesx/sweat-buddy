@@ -157,12 +157,12 @@ fun AuthenticationScreen(navController: NavController) {
                     verticalArrangement = Arrangement.Bottom
                 ) {
                     Button(
-                        onClick = { navController.navigate(Screen.LoginScreen.route) },
-                        shape = RoundedCornerShape(17.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = WhiteBlue1),
                         modifier = Modifier
                             .fillMaxWidth(0.4f)
                             .height(55.dp),
+                        onClick = { navController.navigate(Screen.LoginScreen.route) },
+                        shape = RoundedCornerShape(17.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = WhiteBlue1),
                     ) {
                         Text(
                             text = "Log In", color = Blue1, fontFamily = ManropeFamily,
@@ -171,12 +171,12 @@ fun AuthenticationScreen(navController: NavController) {
                     }
                     Spacer(modifier = Modifier.height(30.dp))
                     OutlinedButton(
-                        onClick = { navController.navigate(Screen.SignUpScreen.route) },
-                        shape = RoundedCornerShape(17.dp),
-                        border = BorderStroke(2.dp, Color.White),
                         modifier = Modifier
                             .fillMaxWidth(0.4f)
                             .height(55.dp),
+                        onClick = { navController.navigate(Screen.SignUpScreen.route) },
+                        shape = RoundedCornerShape(17.dp),
+                        border = BorderStroke(2.dp, Color.White),
                     ) {
                         Text(
                             text = "Sign Up", color = Color.White, fontFamily = ManropeFamily,

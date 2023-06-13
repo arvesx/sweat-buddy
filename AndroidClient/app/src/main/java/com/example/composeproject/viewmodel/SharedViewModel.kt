@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObject
 import com.example.composeproject.dependencies.user.Route
 import com.example.composeproject.dependencies.user.Segment
+import com.google.android.gms.maps.model.LatLng
 
 class SharedViewModel : ViewModel() {
 
@@ -21,11 +22,18 @@ class SharedViewModel : ViewModel() {
     var avgSpeed = mutableStateOf(0.0f)
     var totalTime = mutableStateOf("0m")
 
+    fun updateRouteCoordinates(coordinatesLatLng: List<LatLng>) {
+
+        routes.value.last().coordinatesLatLng = coordinatesLatLng
+    }
 
     fun updateViewModel(to: TransmissionObject) {
 
         if (to.userData.routes.isNotEmpty()) {
             routes = mutableStateOf(to.userData.routes)
+            routes.value.forEach {item ->
+                item.coordinatesLatLng
+            }
             mostRecentRouteKm.value = routes.value.last().totalDistanceInKm
             totalNumberOfRoutes.value = to.userData.routesDoneThisMonth
             totalKilometeres.value = to.userData.totalKmThisMonth

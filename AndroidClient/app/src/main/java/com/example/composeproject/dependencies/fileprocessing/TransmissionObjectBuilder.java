@@ -3,6 +3,10 @@ package com.example.composeproject.dependencies.fileprocessing;
 
 import com.example.composeproject.dependencies.user.UserData;
 
+import java.util.List;
+
+import kotlin.Pair;
+
 public class TransmissionObjectBuilder {
     private final TransmissionObject to;
 
@@ -20,6 +24,10 @@ public class TransmissionObjectBuilder {
         return this;
     }
 
+    public TransmissionObjectBuilder coordinates(List<Pair<Double, Double>> coordinates) {
+        to.coordinates = coordinates;
+        return this;
+    }
     public TransmissionObjectBuilder username(String username) {
         to.username = username;
         return this;

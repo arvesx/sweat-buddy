@@ -1,43 +1,34 @@
 package com.example.composeproject
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.InteractionSource
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.darkrockstudios.libraries.mpfilepicker.FilePicker
 import com.example.composeproject.dependencies.user.Route
 import com.example.composeproject.ui.theme.Blue1
 import com.example.composeproject.ui.theme.Blue2
 import com.example.composeproject.ui.theme.ManropeFamily
-import com.example.composeproject.utils.getGpxWaypoints
-import com.example.composeproject.viewmodel.NewRouteViewModel
+import com.example.composeproject.utils.calculateCameraPosition
 import com.example.composeproject.viewmodel.SharedViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
@@ -119,7 +110,7 @@ fun NewSegmentScreen(navController: NavController, sharedViewModel: SharedViewMo
 
             ) {
 
-                //MapScreen(coordinates, cameraPositionState)
+                MapScreen(coordinates, cameraPositionState)
             }
         }
         Box(
@@ -127,7 +118,7 @@ fun NewSegmentScreen(navController: NavController, sharedViewModel: SharedViewMo
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
-            Column() {
+            Column {
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -154,7 +145,18 @@ fun NewSegmentScreen(navController: NavController, sharedViewModel: SharedViewMo
                         Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
 
                             //Spinner
-                            Spinner(viewModel, navController, routes = sharedViewModel.routes.value)
+                            Spinner(
+                                viewModel,
+                                navController,
+                                routes = sharedViewModel.routes.value
+                            ){ selectedCoordinates ->
+                                coordinates = selectedCoordinates
+                                val newCameraLatLng = calculateCameraPosition(coordinates)
+                                val cameraNewZoom = 14.0f
+
+                                cameraPositionState.position =
+                                    CameraPosition.fromLatLngZoom(newCameraLatLng, cameraNewZoom)
+                            }
 
                             Spacer(modifier = Modifier.width(10.dp))
 
@@ -179,11 +181,13 @@ fun Spinner(
     viewModel: NewSegmentViewModel,
     navController: NavController,
     routes: List<Route>,
+    onResponse: (List<LatLng>) -> Unit
 )
 {
     ExposedDropdownMenuBox(
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color.White)
             .wrapContentSize(Alignment.TopStart),
         expanded = viewModel.isExpanded.value,
         onExpandedChange = {
@@ -191,27 +195,41 @@ fun Spinner(
         }
     )
     {
-        TextField(
+        OutlinedTextField(
             value = viewModel.selectedRoute.value.routeName,
             onValueChange = {},
             readOnly = true,
-            label = { Text(text = "Routes") },
+            label = { Text(text = "Select your Route") },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = viewModel.isExpanded.value)
             },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = Modifier.menuAnchor()
+            colors = ExposedDropdownMenuDefaults.textFieldColors(
+                focusedIndicatorColor = Blue2,
+                focusedLabelColor = Blue2,
+                unfocusedIndicatorColor = Color.Black,
+                containerColor = Color.White,
+            ),
+            modifier = Modifier
+                .menuAnchor()
         )
         ExposedDropdownMenu(
             expanded = viewModel.isExpanded.value,
-            onDismissRequest = { viewModel.isExpanded.value = false }
+            onDismissRequest = { viewModel.isExpanded.value = false },
+            modifier = Modifier
+                .background(Color.White)
         )
         {
             routes.forEach {route ->
                 DropdownMenuItem(
                     text = { Text(text = route.routeName)},
                     onClick = {
-                        viewModel.onPressItem(navController, route)
+                        viewModel.onPressItem(
+                            navController,
+                            route
+                        ){selectedCoordinates ->
+                            onResponse(selectedCoordinates)
+                        }
+
                     },
                 )
             }

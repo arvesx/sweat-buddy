@@ -232,6 +232,7 @@ public class ClientHandlerThread extends Thread {
     public Route processGpxResults(GpxResults results, TransmissionObject receivedData) {
         Route newRoute = new Route();
         newRoute.routeName = receivedData.message;
+        newRoute.coordinates = receivedData.coordinates;
         newRoute.totalTimeInMinutes = results.totalTimeInMinutes();
         newRoute.totalDistanceInKm = results.distanceInKilometers();
         newRoute.totalElevationInM = results.totalAscentInMete();

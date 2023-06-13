@@ -8,6 +8,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -186,7 +188,7 @@ fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
             Column {
                 RoutesCard(navController, sharedViewModel)
                 Spacer(modifier = Modifier.height(15.dp))
-                LeaderBoardCard()
+                LeaderBoardCard(navController)
             }
             Spacer(modifier = Modifier.width(40.dp))
             Column {
@@ -459,24 +461,15 @@ fun GreetingSection(username: String = "Pappou") {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoutesCard(navController: NavController, sharedViewModel: SharedViewModel) {
+
     Card(
         modifier = Modifier
             .fillMaxWidth(0.42f)
             .height(105.dp)
             .offset(x = 20.dp, y = (-50).dp)
-            .clickable { navController.navigate(Screen.AllRoutesScreen.route) },
+            .bounceClick { navController.navigate(Screen.AllRoutesScreen.route) },
         shape = RoundedCornerShape(25.dp),
         colors = CardDefaults.cardColors(Color.White),
-        /*
-        * cardElevation(
-            defaultElevation: Dp,
-            pressedElevation: Dp,
-            focusedElevation: Dp,
-            hoveredElevation: Dp,
-            draggedElevation: Dp,
-            disabledElevation: Dp
-        )
-        * */
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp, hoveredElevation = 10.dp),
     )
     {
@@ -543,8 +536,7 @@ fun RoutesCard(navController: NavController, sharedViewModel: SharedViewModel) {
                 Text(
 
                     text = "${
-                        String.format("%.1f", sharedViewModel.mostRecentRouteKm.value).toDouble()
-                    }km",
+                        String.format("%.1f", sharedViewModel.mostRecentRouteKm.value)}km",
                     fontFamily = ManropeFamily,
                     fontSize = 12.sp,
                     color = Color(0, 0, 0, 0x66)
@@ -664,12 +656,14 @@ fun GoalsCard() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LeaderBoardCard() {
+fun LeaderBoardCard(navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.42f)
             .height(164.dp)
-            .offset(x = 20.dp, y = (-50).dp),
+            .offset(x = 20.dp, y = (-50).dp)
+            .bounceClick( { } ),
+            //.clickable { navController.navigate(Screen.) },
         shape = RoundedCornerShape(25.dp),
         colors = CardDefaults.cardColors(Color.White),
         /*
@@ -766,7 +760,7 @@ fun SegmentsCard(navController: NavController) {
             .fillMaxWidth(0.88f)
             .height(53.dp)
             .offset(x = 0.dp, y = (-50).dp)
-            .clickable { navController.navigate(Screen.AllSegmentsScreen.route) },
+            .bounceClick { navController.navigate(Screen.AllSegmentsScreen.route) },
         shape = RoundedCornerShape(25.dp),
     /*
     * cardElevation(
