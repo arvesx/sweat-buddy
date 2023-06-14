@@ -36,8 +36,8 @@ import java.time.Year
 
 
 @Composable
-//@Preview(showSystemUi = true, showBackground = true)
-fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
+@Preview(showSystemUi = true, showBackground = true)
+fun HomeScreen() { // navController: NavController, sharedViewModel: SharedViewModel
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -171,12 +171,12 @@ fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 )
                 {
-                    UserAvatar("ss")
+                    UserAvatar()
                     TrophiesSection(trophies = 1589)
                 }
 
                 DateSection()
-                GreetingSection(sharedViewModel.username.value)
+                GreetingSection() //sharedViewModel.username.value
             }
         }
 
@@ -185,7 +185,7 @@ fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
         )
         {
             Column {
-                RoutesCard(navController, sharedViewModel)
+                RoutesCard() // navController, sharedViewModel
                 Spacer(modifier = Modifier.height(15.dp))
                 LeaderBoardCard()
             }
@@ -342,7 +342,7 @@ fun BarChart(
 }
 
 @Composable
-fun UserAvatar(avatar: String) {
+fun UserAvatar() {
     var clicked by remember { mutableStateOf(false) }
 
     if (!clicked) {
@@ -365,7 +365,7 @@ fun UserAvatar(avatar: String) {
     if (clicked){
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.43f)
+                .fillMaxWidth(0.57f)
                 .height(65.dp)
                 .padding(start = 25.dp)
                 .clip(
@@ -393,6 +393,15 @@ fun UserAvatar(avatar: String) {
                         .border(1.dp, color = Color.White, CircleShape)
                         .clip(CircleShape)
                         .clickable { clicked = false }
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.stats),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(50.dp)
+                        .padding(end = 15.dp)
+                        .clip(CircleShape)
+                        .clickable { /*TODO*/ }
                 )
                 Image(
                     painter = painterResource(id = R.drawable.logout),
@@ -474,7 +483,7 @@ fun DateSection() {
 }
 
 @Composable
-fun GreetingSection(username: String) {
+fun GreetingSection() { // username: String
 
     Row(
         modifier = Modifier
@@ -487,7 +496,7 @@ fun GreetingSection(username: String) {
         Text(
             modifier = Modifier
                 .offset(28.dp),
-            text = "Good day, $username!",
+            text = "Good day, chad!",
             color = colorResource(id = R.color.white),
             fontFamily = ManropeFamily,
             fontSize = 22.sp,
@@ -511,13 +520,13 @@ fun GreetingSection(username: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoutesCard(navController: NavController, sharedViewModel: SharedViewModel) {
+fun RoutesCard() { // navController: NavController, sharedViewModel: SharedViewModel
     Card(
         modifier = Modifier
             .fillMaxWidth(0.42f)
             .height(105.dp)
             .offset(x = 20.dp, y = (-50).dp)
-            .clickable { navController.navigate(Screen.AllRoutesScreen.route) },
+            .clickable {  }, //navController.navigate(Screen.AllRoutesScreen.route)
         shape = RoundedCornerShape(25.dp),
         colors = CardDefaults.cardColors(Color.White),
         /*
@@ -595,7 +604,7 @@ fun RoutesCard(navController: NavController, sharedViewModel: SharedViewModel) {
 
                 Text(
 
-                    text = "${String.format("%.1f", sharedViewModel.mostRecentRouteKm.value).toDouble()} km",
+                    text = "8 km", //String.format("%.1f", sharedViewModel.mostRecentRouteKm.value).toDouble()
                     fontFamily = ManropeFamily,
                     fontSize = 12.sp,
                     color = Color(0, 0, 0, 0x66)

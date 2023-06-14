@@ -39,10 +39,9 @@ val Aqua3 = Color(0xFFA4BAFE)
 val White2 = Color(0xFFEDEDED)
 
 // Home Screen Circular Bar Chart
-val Aqua2 = Color(0xFF2988E6)
+val Aqua2 = Color(0xFF14AADA)
 val Blue4 = Color(0xFF4360F5)
 
 //Home Screen Segments Card
 val Blue5 = Color(0xFF4C7DF3)
 val Purple1 = Color(0xFF4758F7)
-
