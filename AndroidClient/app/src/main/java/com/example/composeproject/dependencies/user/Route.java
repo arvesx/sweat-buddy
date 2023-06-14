@@ -1,7 +1,7 @@
 package com.example.composeproject.dependencies.user;
 
 public class Route {
-    public String routeName = "";
+    public String routeName;
     public int points;
 
     public double totalDistanceInKm;

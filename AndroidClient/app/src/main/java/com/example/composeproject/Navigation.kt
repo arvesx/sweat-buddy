@@ -19,9 +19,9 @@ fun Navigation() {
             SplashScreen(navController)
         }
 
-//        composable(Screen.HomeScreen.route) {
-//            HomeScreen(navController, sharedViewModel)
-//        }
+        composable(Screen.HomeScreen.route) {
+            HomeScreen(navController, sharedViewModel)
+        }
 
         composable(Screen.AllRoutesScreen.route) {
             RoutesScreen(navController = navController, sharedViewModel)
@@ -51,6 +51,10 @@ fun Navigation() {
 
         composable(Screen.NewSegmentScreen.route) {
             NewSegmentScreen(navController, sharedViewModel)
+        }
+
+        composable(Screen.StatsScreen.route) {
+            StatsScreen(navController = navController, sharedViewModel)
         }
 
     }

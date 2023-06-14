@@ -1,6 +1,6 @@
 package com.example.composeproject.dependencies.fileprocessing;
 
-
+import com.example.composeproject.dependencies.user.GenericStats;
 import com.example.composeproject.dependencies.user.UserData;
 
 public class TransmissionObjectBuilder {
@@ -47,6 +47,11 @@ public class TransmissionObjectBuilder {
 
     public TransmissionObjectBuilder gpxFile(String gpxFile) {
         to.gpxFile = gpxFile;
+        return this;
+    }
+
+    public TransmissionObjectBuilder genericStats(GenericStats genericStats) {
+        to.genericStats = genericStats;
         return this;
     }
 

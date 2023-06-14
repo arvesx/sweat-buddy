@@ -1,18 +1,15 @@
 package com.example.composeproject.dependencies.user;
 
+import com.example.composeproject.dependencies.fileprocessing.gpx.WaypointImpl;
+
+import java.util.ArrayList;
+
 public class Segment {
-
+    public int segmentId;
     public String segmentName;
-
-    /*
-    public int points;
-
-    public double totalDistanceInKm;
-    public double totalElevationInM;
-    public double averageSpeedInKmH;
-    public double totalTimeInMinutes;
-    */
-
     public int segmentType;
+    public ArrayList<SegmentEntry> leaderboard;
+    public ArrayList<WaypointImpl> waypoints;
+
 
 }

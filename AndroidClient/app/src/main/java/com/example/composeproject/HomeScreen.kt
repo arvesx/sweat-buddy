@@ -36,8 +36,7 @@ import java.time.Year
 
 
 @Composable
-@Preview(showSystemUi = true, showBackground = true)
-fun HomeScreen() { // navController: NavController, sharedViewModel: SharedViewModel
+fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -171,12 +170,12 @@ fun HomeScreen() { // navController: NavController, sharedViewModel: SharedViewM
                     verticalAlignment = Alignment.CenterVertically
                 )
                 {
-                    UserAvatar()
+                    UserAvatar(navController)
                     TrophiesSection(trophies = 1589)
                 }
 
                 DateSection()
-                GreetingSection() //sharedViewModel.username.value
+                GreetingSection(sharedViewModel.username.value)
             }
         }
 
@@ -185,7 +184,7 @@ fun HomeScreen() { // navController: NavController, sharedViewModel: SharedViewM
         )
         {
             Column {
-                RoutesCard() // navController, sharedViewModel
+                RoutesCard(navController, sharedViewModel)
                 Spacer(modifier = Modifier.height(15.dp))
                 LeaderBoardCard()
             }
@@ -342,7 +341,7 @@ fun BarChart(
 }
 
 @Composable
-fun UserAvatar() {
+fun UserAvatar(navController: NavController) {
     var clicked by remember { mutableStateOf(false) }
 
     if (!clicked) {
@@ -362,7 +361,7 @@ fun UserAvatar() {
             )
         }
     }
-    if (clicked){
+    if (clicked) {
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.57f)
@@ -395,8 +394,8 @@ fun UserAvatar() {
                         .clickable { clicked = false }
                 )
                 IconButton(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
+                    onClick = { navController.navigate(Screen.StatsScreen.route) },
+                    modifier = Modifier.clip(CircleShape)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.stats),
@@ -409,7 +408,7 @@ fun UserAvatar() {
                 }
                 IconButton(
                     onClick = { /*TODO*/ },
-                    modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
+                    modifier = Modifier.clip(CircleShape)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.logout),
@@ -491,7 +490,7 @@ fun DateSection() {
 }
 
 @Composable
-fun GreetingSection() { // username: String
+fun GreetingSection(username: String) { //
 
     Row(
         modifier = Modifier
@@ -504,7 +503,7 @@ fun GreetingSection() { // username: String
         Text(
             modifier = Modifier
                 .offset(28.dp),
-            text = "Good day, chad!",
+            text = "Good day, $username",
             color = colorResource(id = R.color.white),
             fontFamily = ManropeFamily,
             fontSize = 22.sp,
@@ -526,15 +525,14 @@ fun GreetingSection() { // username: String
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoutesCard() { // navController: NavController, sharedViewModel: SharedViewModel
+fun RoutesCard(navController: NavController, sharedViewModel: SharedViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.42f)
             .height(105.dp)
             .offset(x = 20.dp, y = (-50).dp)
-            .clickable {  }, //navController.navigate(Screen.AllRoutesScreen.route)
+            .clickable { navController.navigate(Screen.AllRoutesScreen.route) },
         shape = RoundedCornerShape(25.dp),
         colors = CardDefaults.cardColors(Color.White),
         /*
@@ -612,7 +610,9 @@ fun RoutesCard() { // navController: NavController, sharedViewModel: SharedViewM
 
                 Text(
 
-                    text = "8 km", //String.format("%.1f", sharedViewModel.mostRecentRouteKm.value).toDouble()
+                    text = "${
+                        String.format("%.1f", sharedViewModel.mostRecentRouteKm.value).toDouble()
+                    }km",
                     fontFamily = ManropeFamily,
                     fontSize = 12.sp,
                     color = Color(0, 0, 0, 0x66)
@@ -626,7 +626,6 @@ fun RoutesCard() { // navController: NavController, sharedViewModel: SharedViewM
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GoalsCard() {
     Card(
@@ -730,7 +729,6 @@ fun GoalsCard() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LeaderBoardCard() {
     Card(
@@ -826,7 +824,6 @@ fun LeaderBoardCard() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SegmentsCard(navController: NavController) {
     Card(
@@ -836,16 +833,16 @@ fun SegmentsCard(navController: NavController) {
             .offset(x = 0.dp, y = (-50).dp)
             .clickable { navController.navigate(Screen.AllSegmentsScreen.route) },
         shape = RoundedCornerShape(25.dp),
-    /*
-    * cardElevation(
-        defaultElevation: Dp,
-        pressedElevation: Dp,
-        focusedElevation: Dp,
-        hoveredElevation: Dp,
-        draggedElevation: Dp,
-        disabledElevation: Dp
-    )
-    * */
+        /*
+        * cardElevation(
+            defaultElevation: Dp,
+            pressedElevation: Dp,
+            focusedElevation: Dp,
+            hoveredElevation: Dp,
+            draggedElevation: Dp,
+            disabledElevation: Dp
+        )
+        * */
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp, hoveredElevation = 10.dp),
     )
     {

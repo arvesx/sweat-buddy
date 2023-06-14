@@ -25,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -43,6 +44,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.composeproject.ui.theme.Aqua2
 import com.example.composeproject.ui.theme.Blue1
 import com.example.composeproject.ui.theme.Blue2
@@ -51,10 +54,14 @@ import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.Purple1
 import com.example.composeproject.ui.theme.White1
 import com.example.composeproject.ui.theme.WhiteBlue1
+import com.example.composeproject.viewmodel.LoginViewModel
+import com.example.composeproject.viewmodel.SharedViewModel
+import com.example.composeproject.viewmodel.StatsScreenViewModel
 
 @Composable
-@Preview(showSystemUi = true, showBackground = true)
-fun StatsScreen() {
+fun StatsScreen(navController: NavController, sharedViewModel: SharedViewModel) {
+    val viewModel: StatsScreenViewModel = viewModel()
+    viewModel.onPageLoad()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -68,11 +75,11 @@ fun StatsScreen() {
             )
     ) {
         Column {
-            TopBar()
+            TopBar(navController)
             StatsCard(
-                totalDistance = 90.0f,
-                totalElevation = 6.0f,
-                totalTime = "30h"
+                totalDistance = viewModel.totalDistance,
+                totalElevation = viewModel.totalElevation,
+                totalTime = viewModel.totalTime
             )
             Spacer(modifier = Modifier.height(20.dp))
             Legend()
@@ -83,6 +90,32 @@ fun StatsScreen() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
+
+                val distanced = listOf(
+                    Bar(viewModel.totalDistance.value),
+                    Bar(viewModel.avgTotalDistance.value)
+                )
+                val timed = listOf(
+                    Bar(viewModel.totalTimeMillis.value.toFloat()),
+                    Bar(viewModel.avgTotalTimeMillis.value.toFloat())
+                )
+                val elevationd = listOf(
+                    Bar(viewModel.totalElevation.value),
+                    Bar(viewModel.avgTotalElevation.value)
+                )
+//                val distanced = listOf(
+//                    Bar(45.0f),
+//                    Bar(20.0f)
+//                )
+//                val timed = listOf(
+//                    Bar(54.0f),
+//                    Bar(23.0f)
+//                )
+//                val elevationd = listOf(
+//                    Bar(13.0f),
+//                    Bar(26.0f)
+//                )
+
                 Bars(
                     data = distanced,
                     description = "Total Distance"
@@ -101,7 +134,7 @@ fun StatsScreen() {
 }
 
 @Composable
-fun TopBar() {
+fun TopBar(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -127,7 +160,7 @@ fun TopBar() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { navController.navigate(Screen.HomeScreen.route) },
                     modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
                 ) {
                     Image(
@@ -151,7 +184,11 @@ fun TopBar() {
 }
 
 @Composable
-fun StatsCard(totalDistance: Float, totalElevation: Float, totalTime: String) {
+fun StatsCard(
+    totalDistance: MutableState<Float>,
+    totalElevation: MutableState<Float>,
+    totalTime: MutableState<String>
+) {
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 5.dp,
@@ -177,17 +214,13 @@ fun StatsCard(totalDistance: Float, totalElevation: Float, totalTime: String) {
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                RouteInfoElement("$totalDistance" + "km", "Total Distance")
-                RouteInfoElement(totalTime, "Total Time")
-                RouteInfoElement("$totalElevation" + "m", "Total Elevation")
+                RouteInfoElement("${totalDistance.value}km", "Total Distance")
+                RouteInfoElement(totalTime.value, "Total Time")
+                RouteInfoElement("${totalElevation.value}m", "Total Elevation")
             }
         }
     }
 }
-
-val distanced = listOf( Bar(90.0f), Bar(43.5f))
-val timed = listOf( Bar(30.0f), Bar(19.0f))
-val elevationd = listOf( Bar(6.0f), Bar(12.0f))
 
 @Composable
 fun Bars(
@@ -266,8 +299,7 @@ fun Bars(
                                 )
                             }
                         )
-                    }
-                    else {
+                    } else {
                         Canvas(
                             modifier = Modifier
                                 .size(37.dp, it.value * maxBarSize)
@@ -301,7 +333,7 @@ fun Bars(
 
 @Composable
 fun Legend() {
-    Row (
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 30.dp),

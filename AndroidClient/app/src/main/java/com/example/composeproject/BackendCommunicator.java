@@ -27,7 +27,7 @@ public class BackendCommunicator {
 
     public void attemptConnection() {
         try {
-            this.socket = new Socket("192.168.1.11", Utilities.CLIENTS_PORT);
+            this.socket = new Socket("192.168.1.3", Utilities.CLIENTS_PORT);
             this.outputStream = new ObjectOutputStream(socket.getOutputStream());
             this.inputStream = new ObjectInputStream(socket.getInputStream());
             this.connectionEstablished = true;

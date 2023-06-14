@@ -4,6 +4,7 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="testRunner" value="GRADLE" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/AndroidClient" />
         <option name="gradleJvm" value="temurin-17" />
         <option name="modules">
@@ -14,6 +15,7 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="testRunner" value="GRADLE" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/Client" />
         <option name="gradleJvm" value="temurin-17" />
         <option name="modules">
@@ -23,6 +25,7 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="testRunner" value="GRADLE" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/Dependencies" />
         <option name="gradleJvm" value="temurin-17" />
         <option name="modules">
@@ -32,6 +35,7 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="testRunner" value="GRADLE" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/Server" />
         <option name="gradleJvm" value="temurin-17" />
         <option name="modules">
@@ -41,6 +45,7 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="testRunner" value="GRADLE" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/Worker" />
         <option name="gradleJvm" value="temurin-17" />
         <option name="modules">
