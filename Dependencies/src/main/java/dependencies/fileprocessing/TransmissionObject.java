@@ -1,6 +1,7 @@
 package dependencies.fileprocessing;
 
 import dependencies.fileprocessing.gpx.GpxResults;
+import dependencies.user.GenericStats;
 import dependencies.user.UserData;
 
 public class TransmissionObject {
@@ -10,6 +11,8 @@ public class TransmissionObject {
     public String gpxFile;
     public UserData userData;
     public GpxResults gpxResults;
+
+    public GenericStats genericStats;
 
     public String username;
     public String password;

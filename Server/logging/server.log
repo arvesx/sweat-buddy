@@ -1,12 +1,5 @@
-23:39:56.565 [main] INFO  server.Server - Starting Server...
-23:39:56.624 [main] INFO  server.Server - Listening for new clients on port 1234
-23:39:56.626 [main] INFO  server.Server - Listening for new workers on port 2345
-23:39:58.311 [Thread-1] INFO  server.Server - Worker node added
-23:41:13.417 [Thread-0] INFO  server.Server - Client#0: Connected
-23:42:27.761 [Thread-0] INFO  server.Server - Client#1: Connected
-23:51:21.476 [Thread-0] INFO  server.Server - Client#2: Connected
-23:52:34.778 [Thread-0] INFO  server.Server - Client#3: Connected
-00:35:50.869 [Thread-0] INFO  server.Server - Client#4: Connected
-00:36:30.767 [Thread-0] INFO  server.Server - Client#5: Connected
-00:37:48.987 [Thread-0] INFO  server.Server - Client#6: Connected
-00:39:53.452 [Thread-0] INFO  server.Server - Client#7: Connected
+03:14:21.777 [main] INFO  server.Server - Starting Server...
+03:14:21.838 [main] INFO  server.Server - Generic data have been read from file
+03:14:21.845 [main] INFO  server.Server - Avg total distance: 10.307246, Avg total elevation: 111.22, Avg total time: 4504000
+03:14:21.848 [main] INFO  server.Server - Listening for new clients on port 1234
+03:14:21.849 [main] INFO  server.Server - Listening for new workers on port 2345

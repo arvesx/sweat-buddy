@@ -38,6 +38,7 @@ public class Server {
             LOGGER.info("Starting Server...");
             Authentication.readAllUserCredentialsFromJson();
             DataExchangeHandler.readAllUserDataFromJson();
+            DataExchangeHandler.readGenericData();
         } catch (IOException e) {
             e.printStackTrace();
         }

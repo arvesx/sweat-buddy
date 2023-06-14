@@ -7,6 +7,7 @@ import dependencies.fileprocessing.TransmissionObjectType;
 import dependencies.fileprocessing.gpx.GpxFile;
 import dependencies.fileprocessing.gpx.GpxResults;
 import dependencies.mapper.Map;
+import dependencies.user.GenericStats;
 import dependencies.user.Route;
 import dependencies.user.UserData;
 import fileprocessing.ClientData;
@@ -18,6 +19,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import static server.Utils.*;
+import static user.userdata.DataExchangeHandler.populateGenericStatsObject;
 
 
 /**
@@ -184,6 +186,10 @@ public class ClientHandlerThread extends Thread {
                         userData.routes.add(newRoute);
                         userData.routesDoneThisMonth++;
                         userData.totalKmThisMonth += results.distanceInKilometers();
+                        userData.totalElevation += results.totalAscentInMete();
+                        userData.totalTime += results.totalTimeInMillis();
+
+                        DataExchangeHandler.updateAverageMetrics();
 
                         DataExchangeHandler.writeAllUserDataToJson();
 
@@ -195,6 +201,26 @@ public class ClientHandlerThread extends Thread {
                                 .craft();
 
                         to.gpxResults = results;
+
+                        String jsonTransmissionObject = gson.toJson(to);
+                        outputStream.writeObject(jsonTransmissionObject);
+                    }
+                    // If a user requests to see his stats compared to average population stats, he makes
+                    // a separate request to receive fresh and updated data.
+                    if (receivedData.type == TransmissionObjectType.GENERIC_STATS_REQUEST) {
+
+                        GenericStats genericStatsObject = new GenericStats();
+                        genericStatsObject.totalDistance = userData.totalKmThisMonth;
+                        genericStatsObject.totalElevation = userData.totalElevation;
+                        genericStatsObject.totalTime = userData.totalTime;
+                        populateGenericStatsObject(genericStatsObject);
+
+                        TransmissionObject to = new TransmissionObjectBuilder()
+                                .type(TransmissionObjectType.GENERIC_STATS_REQUEST)
+                                .genericStats(genericStatsObject)
+                                .message("Request Successful")
+                                .success(1)
+                                .craft();
 
                         String jsonTransmissionObject = gson.toJson(to);
                         outputStream.writeObject(jsonTransmissionObject);
