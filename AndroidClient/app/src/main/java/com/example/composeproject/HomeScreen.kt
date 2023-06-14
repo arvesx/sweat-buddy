@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.colorResource
@@ -35,8 +36,8 @@ import java.time.Year
 
 
 @Composable
-//@Preview(showSystemUi = true, showBackground = true)
-fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
+@Preview(showSystemUi = true, showBackground = true)
+fun HomeScreen() { // navController: NavController, sharedViewModel: SharedViewModel
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -170,12 +171,12 @@ fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 )
                 {
-                    UserAvatar("ss")
+                    UserAvatar()
                     TrophiesSection(trophies = 1589)
                 }
 
                 DateSection()
-                GreetingSection(sharedViewModel.username.value)
+                GreetingSection() //sharedViewModel.username.value
             }
         }
 
@@ -184,7 +185,7 @@ fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
         )
         {
             Column {
-                RoutesCard(navController, sharedViewModel)
+                RoutesCard() // navController, sharedViewModel
                 Spacer(modifier = Modifier.height(15.dp))
                 LeaderBoardCard()
             }
@@ -341,18 +342,87 @@ fun BarChart(
 }
 
 @Composable
-fun UserAvatar(avatar: String) {
-    Image(
-        painter = painterResource(id = R.mipmap.old_man),
-        contentDescription = null,
-        //contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .size(120.dp)
-            .padding(28.dp)
-            .border(1.dp, color = Color.White, CircleShape)
-            .clip(CircleShape)
+fun UserAvatar() {
+    var clicked by remember { mutableStateOf(false) }
 
-    )
+    if (!clicked) {
+        Box(
+            modifier = Modifier
+                .height(65.dp)
+                .padding(start = 25.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.manb),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(65.dp)
+                    .border(1.dp, color = Color.White, CircleShape)
+                    .clip(CircleShape)
+                    .clickable { clicked = true }
+            )
+        }
+    }
+    if (clicked){
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(0.57f)
+                .height(65.dp)
+                .padding(start = 25.dp)
+                .clip(
+                    RoundedCornerShape(
+                        bottomStart = 32.dp,
+                        topStart = 35.dp,
+                        topEnd = 28.dp,
+                        bottomEnd = 28.dp
+                    )
+                )
+                .background(
+                    Color.White.copy(alpha = 0.1f)
+                )
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.manb),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(65.dp)
+                        .border(1.dp, color = Color.White, CircleShape)
+                        .clip(CircleShape)
+                        .clickable { clicked = false }
+                )
+                IconButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.stats),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(50.dp)
+                            .padding(end = 15.dp)
+                            .clip(CircleShape)
+                    )
+                }
+                IconButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.logout),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(50.dp)
+                            .padding(end = 15.dp)
+                            .clip(CircleShape)
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -421,7 +491,7 @@ fun DateSection() {
 }
 
 @Composable
-fun GreetingSection(username: String = "Pappou") {
+fun GreetingSection() { // username: String
 
     Row(
         modifier = Modifier
@@ -434,7 +504,7 @@ fun GreetingSection(username: String = "Pappou") {
         Text(
             modifier = Modifier
                 .offset(28.dp),
-            text = "Good day, $username!",
+            text = "Good day, chad!",
             color = colorResource(id = R.color.white),
             fontFamily = ManropeFamily,
             fontSize = 22.sp,
@@ -458,13 +528,13 @@ fun GreetingSection(username: String = "Pappou") {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoutesCard(navController: NavController, sharedViewModel: SharedViewModel) {
+fun RoutesCard() { // navController: NavController, sharedViewModel: SharedViewModel
     Card(
         modifier = Modifier
             .fillMaxWidth(0.42f)
             .height(105.dp)
             .offset(x = 20.dp, y = (-50).dp)
-            .clickable { navController.navigate(Screen.AllRoutesScreen.route) },
+            .clickable {  }, //navController.navigate(Screen.AllRoutesScreen.route)
         shape = RoundedCornerShape(25.dp),
         colors = CardDefaults.cardColors(Color.White),
         /*
@@ -542,9 +612,7 @@ fun RoutesCard(navController: NavController, sharedViewModel: SharedViewModel) {
 
                 Text(
 
-                    text = "${
-                        String.format("%.1f", sharedViewModel.mostRecentRouteKm.value).toDouble()
-                    }km",
+                    text = "8 km", //String.format("%.1f", sharedViewModel.mostRecentRouteKm.value).toDouble()
                     fontFamily = ManropeFamily,
                     fontSize = 12.sp,
                     color = Color(0, 0, 0, 0x66)
@@ -958,11 +1026,6 @@ fun CircularProgressBar(
                     fontWeight = FontWeight.ExtraBold
                 )
             }
-
         }
-
-
     }
-
-
 }

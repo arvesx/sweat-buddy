@@ -19,9 +19,9 @@ fun Navigation() {
             SplashScreen(navController)
         }
 
-        composable(Screen.HomeScreen.route) {
-            HomeScreen(navController, sharedViewModel)
-        }
+//        composable(Screen.HomeScreen.route) {
+//            HomeScreen(navController, sharedViewModel)
+//        }
 
         composable(Screen.AllRoutesScreen.route) {
             RoutesScreen(navController = navController, sharedViewModel)
