@@ -5,5 +5,6 @@ public enum TransmissionObjectType {
     GPX_RESULTS,
     REGISTRATION_MESSAGE,
     LOGIN_MESSAGE,
-    USER_DATA
+    USER_DATA,
+    LEADERBOARD
 }

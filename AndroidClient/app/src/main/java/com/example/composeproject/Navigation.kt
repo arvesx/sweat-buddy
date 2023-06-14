@@ -53,6 +53,10 @@ fun Navigation() {
             NewSegmentScreen(navController, sharedViewModel)
         }
 
+        composable(Screen.LeaderboardScreen.route) {
+            LeaderboardScreen(navController, sharedViewModel)
+        }
+
     }
 }
 

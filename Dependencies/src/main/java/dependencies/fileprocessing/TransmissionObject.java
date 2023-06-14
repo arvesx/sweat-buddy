@@ -15,6 +15,7 @@ public class TransmissionObject {
     public GpxResults gpxResults;
 
     public List<Pair<Double, Double>> coordinates;
+    public List<UserData> leaderboardList;
 
     public String username;
     public String password;

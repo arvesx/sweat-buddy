@@ -29,8 +29,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.composeproject.data.UserInfo
 import com.example.composeproject.ui.theme.*
+import com.example.composeproject.viewmodel.HomeViewModel
+import com.example.composeproject.viewmodel.LoginViewModel
 import com.example.composeproject.viewmodel.SharedViewModel
 import java.time.MonthDay
 import java.time.Year
@@ -39,6 +43,10 @@ import java.time.Year
 @Composable
 //@Preview(showSystemUi = true, showBackground = true)
 fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
+    val viewModel: HomeViewModel = viewModel()
+
+    viewModel.onLeaderboardClick(navController, sharedViewModel)
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -188,7 +196,7 @@ fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
             Column {
                 RoutesCard(navController, sharedViewModel)
                 Spacer(modifier = Modifier.height(15.dp))
-                LeaderBoardCard(navController)
+                LeaderBoardCard(navController, sharedViewModel, viewModel)
             }
             Spacer(modifier = Modifier.width(40.dp))
             Column {
@@ -656,14 +664,16 @@ fun GoalsCard() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LeaderBoardCard(navController: NavController) {
+fun LeaderBoardCard(navController: NavController, sharedViewModel: SharedViewModel, viewModel: HomeViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.42f)
             .height(164.dp)
             .offset(x = 20.dp, y = (-50).dp)
-            .bounceClick( { } ),
-            //.clickable { navController.navigate(Screen.) },
+            .bounceClick {
+                viewModel.onLeaderboardClick(navController, sharedViewModel)
+                navController.navigate(Screen.LeaderboardScreen.route)
+            },
         shape = RoundedCornerShape(25.dp),
         colors = CardDefaults.cardColors(Color.White),
         /*
@@ -681,9 +691,9 @@ fun LeaderBoardCard(navController: NavController) {
     {
         Column(
             modifier = Modifier
-                .padding(15.dp)
+                .padding(15.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
             //.padding(top = 4.dp)
-            //horizontalAlignment = Alignment.CenterHorizontally
         )
         {
             Row(
@@ -719,37 +729,120 @@ fun LeaderBoardCard(navController: NavController) {
 
             Spacer(
                 modifier = Modifier
-                    .height(6.dp)
+                    .height(8.dp)
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            )
-            {
-//                Text(
-//                    text = "Most Recent",
-//                    fontFamily = ManropeFamily,
-//                    fontSize = 16.sp,
-//                    color = Color(0, 0, 0, 0xBF)
-//                )
-//
-//                Spacer (
-//                    modifier = Modifier
-//                        .width(5.dp)
-//                )
-//
-//                Text(
-//                    text = "18km",
-//                    fontFamily = ManropeFamily,
-//                    fontSize = 12.sp,
-//                    color = Color(0, 0, 0, 0x66)
-//                )
+            if (sharedViewModel.leaderboardList.value.isNotEmpty()) {
 
+                val userInfo: UserInfo = sharedViewModel.getUserDataByID(sharedViewModel.userID.value)
+
+                if (userInfo.position == 1)
+                {
+                    LeaderboardTextField(
+                        user = userInfo,
+                        focused = true
+                    )
+                    Spacer (modifier = Modifier.height(3.dp))
+
+                    if (sharedViewModel.getUserDataByPosition(userInfo.position + 1).position != 0)
+                    {
+                        LeaderboardTextField(
+                            user = sharedViewModel.getUserDataByPosition(2),
+                            focused = false
+                        )
+                        Spacer (modifier = Modifier.height(3.dp))
+
+                        if (userInfo.position + 1 < sharedViewModel.leaderboardList.value.size) {
+                            LeaderboardTextField(
+                                user = sharedViewModel.getUserDataByPosition(3),
+                                focused = false
+                            )
+                        }
+                    }
+
+                }
+                else if (userInfo.position == sharedViewModel.leaderboardList.value.size)
+                {
+                    LeaderboardTextField(
+                        user = sharedViewModel.getUserDataByPosition(userInfo.position - 2),
+                        focused = false
+                    )
+                    Spacer (modifier = Modifier.height(3.dp))
+
+                    LeaderboardTextField(
+                        user = sharedViewModel.getUserDataByPosition(userInfo.position - 1),
+                        focused = false
+                    )
+                    Spacer (modifier = Modifier.height(3.dp))
+
+                    LeaderboardTextField(
+                        user = userInfo,
+                        focused = true
+                    )
+                }
+                else
+                {
+                    LeaderboardTextField(
+                        user = sharedViewModel.getUserDataByPosition(userInfo.position - 1),
+                        focused = false
+                    )
+                    Spacer (modifier = Modifier.height(3.dp))
+
+                    LeaderboardTextField(
+                        user = userInfo,
+                        focused = true
+                    )
+                    Spacer (modifier = Modifier.height(3.dp))
+
+                    if (userInfo.position + 1 < sharedViewModel.leaderboardList.value.size)
+                    {
+                        LeaderboardTextField(
+                            user = sharedViewModel.getUserDataByPosition(userInfo.position + 1),
+                            focused = false
+                        )
+                    }
+                }
             }
         }
     }
+}
+
+@Composable
+fun LeaderboardTextField(
+    user: UserInfo,
+    focused: Boolean
+)
+{
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    )
+    {
+        val fontSize = if (focused) 22.sp else 16.sp
+        val pointsSize = if (focused) 20.sp else 15.sp
+
+        Text(
+            text = "${user.position}",
+            fontFamily = ManropeFamily,
+            fontSize = fontSize,
+            color = Color(0, 0, 0, 0xBF)
+        )
+        Spacer (modifier = Modifier.width(10.dp))
+        Text(
+            text = user.username,
+            fontFamily = ManropeFamily,
+            fontSize = fontSize,
+            color = Color(0, 0, 0, 0xBF)
+        )
+        Spacer (modifier = Modifier.width(10.dp))
+        Text(
+            text = "${user.points}",
+            fontFamily = ManropeFamily,
+            fontSize = pointsSize,
+            color = Color(0, 0, 0, 0x66)
+        )
+
+    }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

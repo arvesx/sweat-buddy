@@ -2,16 +2,20 @@ package com.example.composeproject.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.composeproject.data.UserInfo
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObject
 import com.example.composeproject.dependencies.user.Route
 import com.example.composeproject.dependencies.user.Segment
+import com.example.composeproject.dependencies.user.UserData
 import com.google.android.gms.maps.model.LatLng
 
 class SharedViewModel : ViewModel() {
 
+    var userID = mutableStateOf(0)
     var username = mutableStateOf("")
     var routes = mutableStateOf(listOf<Route>())
     var segments = mutableStateOf(listOf<Segment>())
+    var leaderboardList = mutableStateOf(listOf<UserInfo>())
     var mostRecentRouteKm = mutableStateOf(0.0)
     var totalNumberOfRoutes = mutableStateOf(0)
     var totalKilometeres = mutableStateOf(0.0f)
@@ -29,11 +33,9 @@ class SharedViewModel : ViewModel() {
 
     fun updateViewModel(to: TransmissionObject) {
 
+        userID.value = to.userData.userId
         if (to.userData.routes.isNotEmpty()) {
             routes = mutableStateOf(to.userData.routes)
-            routes.value.forEach {item ->
-                item.coordinatesLatLng
-            }
             mostRecentRouteKm.value = routes.value.last().totalDistanceInKm
             totalNumberOfRoutes.value = to.userData.routesDoneThisMonth
             totalKilometeres.value = to.userData.totalKmThisMonth
@@ -58,5 +60,32 @@ class SharedViewModel : ViewModel() {
         this.avgSpeed.value = avgSpeed.toFloat()
         this.totalTime.value = "${minutes}m${seconds}s"
     }
+
+    fun getUserDataByID(userID: Int): UserInfo {
+        if (leaderboardList.value.isNotEmpty())
+        {
+            leaderboardList.value.forEach {item ->
+                if (item.userID == userID)
+                {
+                    return item
+                }
+            }
+        }
+        return UserInfo(0, 0, "", 0)
+    }
+
+    fun getUserDataByPosition(userPosition: Int): UserInfo {
+        if (leaderboardList.value.isNotEmpty())
+        {
+            leaderboardList.value.forEach {item ->
+                if (item.position == userPosition)
+                {
+                    return item
+                }
+            }
+        }
+        return UserInfo(0, 0, "", 0)
+    }
+
 }
 

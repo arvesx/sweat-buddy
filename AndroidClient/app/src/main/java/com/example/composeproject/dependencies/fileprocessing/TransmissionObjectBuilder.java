@@ -24,6 +24,11 @@ public class TransmissionObjectBuilder {
         return this;
     }
 
+    public TransmissionObjectBuilder leaderboardList(List<UserData> leaderboardList) {
+        to.leaderboardList = leaderboardList;
+        return this;
+    }
+
     public TransmissionObjectBuilder coordinates(List<Pair<Double, Double>> coordinates) {
         to.coordinates = coordinates;
         return this;
