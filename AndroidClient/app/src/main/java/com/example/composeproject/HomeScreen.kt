@@ -394,24 +394,32 @@ fun UserAvatar() {
                         .clip(CircleShape)
                         .clickable { clicked = false }
                 )
-                Image(
-                    painter = painterResource(id = R.drawable.stats),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .padding(end = 15.dp)
-                        .clip(CircleShape)
-                        .clickable { /*TODO*/ }
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.logout),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .padding(end = 15.dp)
-                        .clip(CircleShape)
-                        .clickable { /*TODO*/ }
-                )
+                IconButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.stats),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(50.dp)
+                            .padding(end = 15.dp)
+                            .clip(CircleShape)
+                    )
+                }
+                IconButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.logout),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(50.dp)
+                            .padding(end = 15.dp)
+                            .clip(CircleShape)
+                    )
+                }
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.example.composeproject
 
-import android.graphics.Paint
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -68,12 +67,13 @@ fun StatsScreen() {
                 )
             )
     ) {
-        Column() {
+        Column {
             TopBar()
             StatsCard(
                 totalDistance = 90.0f,
                 totalElevation = 6.0f,
-                totalTime = "30h")
+                totalTime = "30h"
+            )
             Spacer(modifier = Modifier.height(20.dp))
             Legend()
             Spacer(modifier = Modifier.height(20.dp))
@@ -159,7 +159,7 @@ fun StatsCard(totalDistance: Float, totalElevation: Float, totalTime: String) {
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .height(180.dp)
+            .height(130.dp)
             .padding(start = 22.dp, end = 22.dp)
             .offset(x = 0.dp, y = -(20.dp)),
         shape = RoundedCornerShape(25.dp),
@@ -191,7 +191,7 @@ val elevationd = listOf( Bar(6.0f), Bar(12.0f))
 
 @Composable
 fun Bars(
-    maxBarSize: Dp = 250.dp,
+    maxBarSize: Dp = 300.dp,
     animDuration: Int = 1000,
     animDelay: Int = 20,
     data: List<Bar>,
@@ -232,8 +232,6 @@ fun Bars(
         animationPlayed = true
     }
 
-    val paint = Paint()
-
     Box(
         modifier = Modifier
             .fillMaxHeight(0.7f),
@@ -241,7 +239,7 @@ fun Bars(
     )
     {
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Bottom
         )
         {
@@ -252,16 +250,10 @@ fun Bars(
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
-//                    Text(
-//                        text = "${data[day].value.toInt()}km",
-//                        fontFamily = ManropeFamily,
-//                        fontSize = 12.sp,
-//                        color = Color(0, 0, 0, 0xBF)
-//                    )
                     if (day == 1) {
                         Canvas(
                             modifier = Modifier
-                                .size(45.dp, it.value * maxBarSize)
+                                .size(37.dp, it.value * maxBarSize)
                                 .clip(RoundedCornerShape(8.dp)),
                             onDraw = {
                                 drawRect(
@@ -278,7 +270,7 @@ fun Bars(
                     else {
                         Canvas(
                             modifier = Modifier
-                                .size(45.dp, it.value * maxBarSize)
+                                .size(37.dp, it.value * maxBarSize)
                                 .clip(RoundedCornerShape(8.dp)),
                             onDraw = {
                                 drawRect(
@@ -294,6 +286,7 @@ fun Bars(
                     }
                     day++
                 }
+                Spacer(modifier = Modifier.width(7.dp))
             }
         }
         Text(
