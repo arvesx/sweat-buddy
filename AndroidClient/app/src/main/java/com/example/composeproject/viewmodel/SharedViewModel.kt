@@ -25,6 +25,7 @@ class SharedViewModel : ViewModel() {
     var totalElevation = mutableStateOf(0.0f)
     var avgSpeed = mutableStateOf(0.0f)
     var totalTime = mutableStateOf("0m")
+    var routeName = mutableStateOf("")
 
     fun updateRouteCoordinates(coordinatesLatLng: List<LatLng>) {
 

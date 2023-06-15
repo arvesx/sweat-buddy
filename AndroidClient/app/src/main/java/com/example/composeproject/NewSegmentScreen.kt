@@ -32,8 +32,7 @@ import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
-fun NewSegmentScreen(navController: NavController, sharedViewModel: SharedViewModel)
-{
+fun NewSegmentScreen(navController: NavController, sharedViewModel: SharedViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -148,7 +147,7 @@ fun NewSegmentScreen(navController: NavController, sharedViewModel: SharedViewMo
                                 viewModel,
                                 navController,
                                 routes = sharedViewModel.routes.value
-                            ){ selectedCoordinates ->
+                            ) { selectedCoordinates ->
                                 coordinates = selectedCoordinates
                                 val newCameraLatLng = calculateCameraPosition(coordinates)
                                 val cameraNewZoom = 14.0f
@@ -181,8 +180,7 @@ fun Spinner(
     navController: NavController,
     routes: List<Route>,
     onResponse: (List<LatLng>) -> Unit
-)
-{
+) {
     ExposedDropdownMenuBox(
         modifier = Modifier
             .fillMaxWidth()
@@ -194,8 +192,13 @@ fun Spinner(
         }
     )
     {
+        var curRouteName = ""
+        if (viewModel.selectedRoute.value.routeName != null) {
+            curRouteName = viewModel.selectedRoute.value.routeName
+        }
+
         OutlinedTextField(
-            value = viewModel.selectedRoute.value.routeName,
+            value = curRouteName,
             onValueChange = {},
             readOnly = true,
             label = { Text(text = "Select your Route") },
@@ -218,14 +221,14 @@ fun Spinner(
                 .background(Color.White)
         )
         {
-            routes.forEach {route ->
+            routes.forEach { route ->
                 DropdownMenuItem(
-                    text = { Text(text = route.routeName)},
+                    text = { Text(text = route.routeName) },
                     onClick = {
                         viewModel.onPressItem(
                             navController,
                             route
-                        ){selectedCoordinates ->
+                        ) { selectedCoordinates ->
                             onResponse(selectedCoordinates)
                         }
 
@@ -235,7 +238,6 @@ fun Spinner(
         }
 
     }
-
 
 
 }
