@@ -18,4 +18,9 @@ public class UserData {
 
     public int totalSegments;
     public int bestPositionInSegments;
+
+    public int getPoints()
+    {
+        return this.points;
+    }
 }

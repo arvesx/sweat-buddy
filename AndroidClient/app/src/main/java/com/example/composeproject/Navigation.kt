@@ -57,6 +57,10 @@ fun Navigation() {
             StatsScreen(navController = navController, sharedViewModel)
         }
 
+        composable(Screen.LeaderboardScreen.route) {
+            LeaderboardScreen(navController, sharedViewModel)
+        }
+
     }
 }
 

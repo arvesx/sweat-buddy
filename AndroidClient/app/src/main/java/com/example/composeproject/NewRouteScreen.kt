@@ -106,6 +106,7 @@ fun NewRouteScreen(navController: NavController, sharedViewModel: SharedViewMode
                     viewModel.pathChosen.value,
                     context
                 ) { newList, cameraNewLatLng, cameraNewZoom ->
+
                     coordinates = newList
 
                     cameraPositionState.position =
@@ -151,10 +152,14 @@ fun NewRouteScreen(navController: NavController, sharedViewModel: SharedViewMode
                         fontSize = 18.sp,
                     )
 
-
                     TextButton(
                         onClick = {
-                            viewModel.onCreate(navController, sharedViewModel, context)
+                            viewModel.onCreate(
+                                navController,
+                                sharedViewModel,
+                                context,
+                                coordinates = coordinates
+                            )
                         },
                         modifier = Modifier.clip(CircleShape)
                     ) {

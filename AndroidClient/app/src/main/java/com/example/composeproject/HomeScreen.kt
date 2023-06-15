@@ -8,6 +8,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,8 +30,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.composeproject.data.UserInfo
 import com.example.composeproject.ui.theme.*
+import com.example.composeproject.viewmodel.HomeViewModel
+import com.example.composeproject.viewmodel.LoginViewModel
 import com.example.composeproject.viewmodel.SharedViewModel
 import java.time.MonthDay
 import java.time.Year
@@ -37,6 +43,10 @@ import java.time.Year
 
 @Composable
 fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
+    val viewModel: HomeViewModel = viewModel()
+
+    viewModel.onLeaderboardClick(navController, sharedViewModel)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -186,7 +196,7 @@ fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
             Column {
                 RoutesCard(navController, sharedViewModel)
                 Spacer(modifier = Modifier.height(15.dp))
-                LeaderBoardCard()
+                LeaderBoardCard(navController, sharedViewModel, viewModel)
             }
             Spacer(modifier = Modifier.width(40.dp))
             Column {
@@ -490,7 +500,7 @@ fun DateSection() {
 }
 
 @Composable
-fun GreetingSection(username: String) { //
+fun GreetingSection(username: String = "Pappou") {
 
     Row(
         modifier = Modifier
@@ -503,7 +513,7 @@ fun GreetingSection(username: String) { //
         Text(
             modifier = Modifier
                 .offset(28.dp),
-            text = "Good day, $username",
+            text = "Good day, $username!",
             color = colorResource(id = R.color.white),
             fontFamily = ManropeFamily,
             fontSize = 22.sp,
@@ -527,24 +537,15 @@ fun GreetingSection(username: String) { //
 
 @Composable
 fun RoutesCard(navController: NavController, sharedViewModel: SharedViewModel) {
+
     Card(
         modifier = Modifier
             .fillMaxWidth(0.42f)
             .height(105.dp)
             .offset(x = 20.dp, y = (-50).dp)
-            .clickable { navController.navigate(Screen.AllRoutesScreen.route) },
+            .bounceClick { navController.navigate(Screen.AllRoutesScreen.route) },
         shape = RoundedCornerShape(25.dp),
         colors = CardDefaults.cardColors(Color.White),
-        /*
-        * cardElevation(
-            defaultElevation: Dp,
-            pressedElevation: Dp,
-            focusedElevation: Dp,
-            hoveredElevation: Dp,
-            draggedElevation: Dp,
-            disabledElevation: Dp
-        )
-        * */
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp, hoveredElevation = 10.dp),
     )
     {
@@ -611,8 +612,7 @@ fun RoutesCard(navController: NavController, sharedViewModel: SharedViewModel) {
                 Text(
 
                     text = "${
-                        String.format("%.1f", sharedViewModel.mostRecentRouteKm.value).toDouble()
-                    }km",
+                        String.format("%.1f", sharedViewModel.mostRecentRouteKm.value)}km",
                     fontFamily = ManropeFamily,
                     fontSize = 12.sp,
                     color = Color(0, 0, 0, 0x66)
@@ -730,12 +730,16 @@ fun GoalsCard() {
 }
 
 @Composable
-fun LeaderBoardCard() {
+fun LeaderBoardCard(navController: NavController, sharedViewModel: SharedViewModel, viewModel: HomeViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.42f)
             .height(164.dp)
-            .offset(x = 20.dp, y = (-50).dp),
+            .offset(x = 20.dp, y = (-50).dp)
+            .bounceClick {
+                viewModel.onLeaderboardClick(navController, sharedViewModel)
+                navController.navigate(Screen.LeaderboardScreen.route)
+            },
         shape = RoundedCornerShape(25.dp),
         colors = CardDefaults.cardColors(Color.White),
         /*
@@ -753,9 +757,9 @@ fun LeaderBoardCard() {
     {
         Column(
             modifier = Modifier
-                .padding(15.dp)
+                .padding(15.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
             //.padding(top = 4.dp)
-            //horizontalAlignment = Alignment.CenterHorizontally
         )
         {
             Row(
@@ -791,37 +795,120 @@ fun LeaderBoardCard() {
 
             Spacer(
                 modifier = Modifier
-                    .height(6.dp)
+                    .height(8.dp)
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            )
-            {
-//                Text(
-//                    text = "Most Recent",
-//                    fontFamily = ManropeFamily,
-//                    fontSize = 16.sp,
-//                    color = Color(0, 0, 0, 0xBF)
-//                )
-//
-//                Spacer (
-//                    modifier = Modifier
-//                        .width(5.dp)
-//                )
-//
-//                Text(
-//                    text = "18km",
-//                    fontFamily = ManropeFamily,
-//                    fontSize = 12.sp,
-//                    color = Color(0, 0, 0, 0x66)
-//                )
+            if (sharedViewModel.leaderboardList.value.isNotEmpty()) {
 
+                val userInfo: UserInfo = sharedViewModel.getUserDataByID(sharedViewModel.userID.value)
+
+                if (userInfo.position == 1)
+                {
+                    LeaderboardTextField(
+                        user = userInfo,
+                        focused = true
+                    )
+                    Spacer (modifier = Modifier.height(3.dp))
+
+                    if (sharedViewModel.getUserDataByPosition(userInfo.position + 1).position != 0)
+                    {
+                        LeaderboardTextField(
+                            user = sharedViewModel.getUserDataByPosition(2),
+                            focused = false
+                        )
+                        Spacer (modifier = Modifier.height(3.dp))
+
+                        if (userInfo.position + 1 < sharedViewModel.leaderboardList.value.size) {
+                            LeaderboardTextField(
+                                user = sharedViewModel.getUserDataByPosition(3),
+                                focused = false
+                            )
+                        }
+                    }
+
+                }
+                else if (userInfo.position == sharedViewModel.leaderboardList.value.size)
+                {
+                    LeaderboardTextField(
+                        user = sharedViewModel.getUserDataByPosition(userInfo.position - 2),
+                        focused = false
+                    )
+                    Spacer (modifier = Modifier.height(3.dp))
+
+                    LeaderboardTextField(
+                        user = sharedViewModel.getUserDataByPosition(userInfo.position - 1),
+                        focused = false
+                    )
+                    Spacer (modifier = Modifier.height(3.dp))
+
+                    LeaderboardTextField(
+                        user = userInfo,
+                        focused = true
+                    )
+                }
+                else
+                {
+                    LeaderboardTextField(
+                        user = sharedViewModel.getUserDataByPosition(userInfo.position - 1),
+                        focused = false
+                    )
+                    Spacer (modifier = Modifier.height(3.dp))
+
+                    LeaderboardTextField(
+                        user = userInfo,
+                        focused = true
+                    )
+                    Spacer (modifier = Modifier.height(3.dp))
+
+                    if (userInfo.position + 1 < sharedViewModel.leaderboardList.value.size)
+                    {
+                        LeaderboardTextField(
+                            user = sharedViewModel.getUserDataByPosition(userInfo.position + 1),
+                            focused = false
+                        )
+                    }
+                }
             }
         }
     }
+}
+
+@Composable
+fun LeaderboardTextField(
+    user: UserInfo,
+    focused: Boolean
+)
+{
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    )
+    {
+        val fontSize = if (focused) 22.sp else 16.sp
+        val pointsSize = if (focused) 20.sp else 15.sp
+
+        Text(
+            text = "${user.position}",
+            fontFamily = ManropeFamily,
+            fontSize = fontSize,
+            color = Color(0, 0, 0, 0xBF)
+        )
+        Spacer (modifier = Modifier.width(10.dp))
+        Text(
+            text = user.username,
+            fontFamily = ManropeFamily,
+            fontSize = fontSize,
+            color = Color(0, 0, 0, 0xBF)
+        )
+        Spacer (modifier = Modifier.width(10.dp))
+        Text(
+            text = "${user.points}",
+            fontFamily = ManropeFamily,
+            fontSize = pointsSize,
+            color = Color(0, 0, 0, 0x66)
+        )
+
+    }
+
 }
 
 @Composable
@@ -831,7 +918,7 @@ fun SegmentsCard(navController: NavController) {
             .fillMaxWidth(0.88f)
             .height(53.dp)
             .offset(x = 0.dp, y = (-50).dp)
-            .clickable { navController.navigate(Screen.AllSegmentsScreen.route) },
+            .bounceClick { navController.navigate(Screen.AllSegmentsScreen.route) },
         shape = RoundedCornerShape(25.dp),
         /*
         * cardElevation(
@@ -1023,6 +1110,11 @@ fun CircularProgressBar(
                     fontWeight = FontWeight.ExtraBold
                 )
             }
+
         }
+
+
     }
+
+
 }

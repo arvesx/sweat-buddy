@@ -6,5 +6,6 @@ public enum TransmissionObjectType {
     REGISTRATION_MESSAGE,
     LOGIN_MESSAGE,
     USER_DATA,
-    GENERIC_STATS_REQUEST
+    GENERIC_STATS_REQUEST,
+    LEADERBOARD
 }

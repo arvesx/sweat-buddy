@@ -18,4 +18,5 @@ sealed class Screen(val route: String) {
     object NewSegmentScreen : Screen("new_segment_screen")
 
     object StatsScreen: Screen("stats_screen")
+    object LeaderboardScreen : Screen("leaderboard_screen")
 }

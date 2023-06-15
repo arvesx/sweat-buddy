@@ -25,15 +25,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -42,16 +39,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.composeproject.data.DataProvider
+import com.example.composeproject.data.RouteInfo
 import com.example.composeproject.data.UserInfo
 import com.example.composeproject.ui.theme.*
+import com.example.composeproject.viewmodel.HomeViewModel
+import com.example.composeproject.viewmodel.LeaderboardViewModel
+import com.example.composeproject.viewmodel.SharedViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @Composable
-@Preview(showSystemUi = true, showBackground = true)
-fun LeaderboardScreen() {
+//@Preview(showSystemUi = true, showBackground = true)
+fun LeaderboardScreen(navController: NavController, sharedViewModel: SharedViewModel) {
 //    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    val leadUsers = remember { DataProvider.usersList }
+    val viewModel: LeaderboardViewModel = viewModel()
+
+    viewModel.loadLeaderboard(navController, sharedViewModel)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -65,13 +74,29 @@ fun LeaderboardScreen() {
             )
     ) {
         Column( modifier = Modifier.fillMaxSize() ) {
-            LeaderboardBar(leadUsers[0], leadUsers[1], leadUsers[2])
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(10.dp)
-            )
-            UserCardsContent()
+
+            if (viewModel.leadUsers.value.isNotEmpty()) {
+                if (viewModel.leadUsers.value.size < 2)
+                {
+                    LeaderboardBar(navController, viewModel.leadUsers.value[0], UserInfo(0, 0, "", 0), UserInfo(0, 0, "", 0))
+                }
+                else if (viewModel.leadUsers.value.size < 3)
+                {
+                    LeaderboardBar(navController, viewModel.leadUsers.value[0], viewModel.leadUsers.value[1], UserInfo(0, 0, "", 0))
+                }
+                else
+                {
+                    LeaderboardBar(navController, viewModel.leadUsers.value[0], viewModel.leadUsers.value[1], viewModel.leadUsers.value[2])
+                    UserCardsContent(viewModel.leadUsers.value.subList(3, viewModel.leadUsers.value.size))
+                }
+
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(10.dp)
+                )
+
+            }
         }
     }
 
@@ -79,7 +104,7 @@ fun LeaderboardScreen() {
 
 
 @Composable
-fun LeaderboardBar(first: UserInfo, second: UserInfo, third: UserInfo) {
+fun LeaderboardBar(navController: NavController, first: UserInfo, second: UserInfo, third: UserInfo) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -113,7 +138,7 @@ fun LeaderboardBar(first: UserInfo, second: UserInfo, third: UserInfo) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { navController.popBackStack() },
                     modifier = Modifier.clip(CircleShape)
                 ) {
                     Image(
@@ -167,7 +192,7 @@ fun LeaderboardBar(first: UserInfo, second: UserInfo, third: UserInfo) {
                     )
                     Text(text = second.username,color = colorResource(id = R.color.white),
                         fontFamily = ManropeFamily,
-                        fontSize = 9.sp,
+                        fontSize = 14.sp,
                         modifier = Modifier.alpha(0.9f)
                     )
                 }
@@ -198,7 +223,8 @@ fun LeaderboardBar(first: UserInfo, second: UserInfo, third: UserInfo) {
                                 contentDescription = null,
                                 modifier = Modifier
                                     .size(95.dp)
-                                    .offset(0.dp, (-62).dp)
+                                    .offset((18).dp, (-64).dp)
+                                    .rotate(20f)
                             )
                         }
                     }
@@ -211,7 +237,7 @@ fun LeaderboardBar(first: UserInfo, second: UserInfo, third: UserInfo) {
                     )
                     Text(text = first.username,color = colorResource(id = R.color.white),
                         fontFamily = ManropeFamily,
-                        fontSize = 9.sp,
+                        fontSize = 14.sp,
                         modifier = Modifier.alpha(0.9f)
                     )
                 }
@@ -244,7 +270,7 @@ fun LeaderboardBar(first: UserInfo, second: UserInfo, third: UserInfo) {
                     )
                     Text(text = third.username,color = colorResource(id = R.color.white),
                         fontFamily = ManropeFamily,
-                        fontSize = 9.sp,
+                        fontSize = 14.sp,
                         modifier = Modifier.alpha(0.9f)
                     )
                 }
@@ -254,24 +280,14 @@ fun LeaderboardBar(first: UserInfo, second: UserInfo, third: UserInfo) {
 }
 
 @Composable
-fun UserCardsContent() {
-    val users by remember {
-        mutableStateOf(
-            (1..15).map {
-                UserInfo(
-                    username = "User ${it+3}",
-                    points = 354,
-                    position = it+3
-                )
-            }
-        )
-    }
+fun UserCardsContent(restUsers: List<UserInfo>) {
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(start = 18.dp, end = 18.dp)
     ) {
-        items(users) { user ->
+        items(restUsers) { user ->
             UserCard(user)
         }
     }

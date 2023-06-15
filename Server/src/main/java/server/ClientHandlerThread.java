@@ -17,6 +17,9 @@ import user.userdata.DataExchangeHandler;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static server.Utils.*;
 import static user.userdata.DataExchangeHandler.populateGenericStatsObject;
@@ -151,6 +154,29 @@ public class ClientHandlerThread extends Thread {
                     }
                 }
 
+                if (receivedData.type == TransmissionObjectType.LEADERBOARD)
+                {
+                    DataExchangeHandler.userData.sort(Comparator.comparing(UserData::getPoints, Collections.reverseOrder()));
+
+                    try {
+                        TransmissionObject to = new TransmissionObjectBuilder()
+                            .type(TransmissionObjectType.LEADERBOARD)
+                            .leaderboardList(DataExchangeHandler.userData)
+                            .message("Leaderboard")
+                            .success(1)
+                            .craft();
+
+                        String jsonTransmissionObject = gson.toJson(to);
+                        outputStream.writeObject(jsonTransmissionObject);
+                    }
+                    catch (Exception e)
+                    {
+                        /*TODO*/
+                    }
+                    
+                }
+
+
                 if (receivedData.type == TransmissionObjectType.REGISTRATION_MESSAGE) {
                     try {
                         int userId = auth.handleRegistration(receivedData.username, receivedData.password);
@@ -160,7 +186,7 @@ public class ClientHandlerThread extends Thread {
 
                         loggedIn = true;
                         userData = newUserData;
-                        this.clientData.setUsername(receivedData.username);
+                        userData.username = receivedData.username;
 
                         TransmissionObject to = new TransmissionObjectBuilder()
                                 .type(TransmissionObjectType.USER_DATA)
@@ -184,6 +210,7 @@ public class ClientHandlerThread extends Thread {
                         Route newRoute = processGpxResults(results, receivedData);
 
                         userData.routes.add(newRoute);
+                        userData.points += newRoute.points;
                         userData.routesDoneThisMonth++;
                         userData.totalKmThisMonth += results.distanceInKilometers();
                         userData.totalElevation += results.totalAscentInMete();
@@ -258,6 +285,7 @@ public class ClientHandlerThread extends Thread {
     public Route processGpxResults(GpxResults results, TransmissionObject receivedData) {
         Route newRoute = new Route();
         newRoute.routeName = receivedData.message;
+        newRoute.coordinates = receivedData.coordinates;
         newRoute.totalTimeInMinutes = results.totalTimeInMinutes();
         newRoute.totalDistanceInKm = results.distanceInKilometers();
         newRoute.totalElevationInM = results.totalAscentInMete();
