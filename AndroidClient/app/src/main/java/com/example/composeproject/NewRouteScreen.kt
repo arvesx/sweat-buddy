@@ -42,7 +42,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -52,11 +51,12 @@ import com.example.composeproject.ui.theme.Blue1
 import com.example.composeproject.ui.theme.Blue2
 import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.MapStyle
+import com.example.composeproject.ui.theme.Pink1
 import com.example.composeproject.utils.getGpxWaypoints
 import com.example.composeproject.viewmodel.NewRouteViewModel
-import com.example.composeproject.viewmodel.RegisterViewModel
 import com.example.composeproject.viewmodel.SharedViewModel
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.JointType
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
@@ -179,7 +179,7 @@ fun NewRouteScreen(navController: NavController, sharedViewModel: SharedViewMode
 
             ) {
 
-                MapScreen(coordinates, cameraPositionState)
+                MapScreen(coordinates, cameraPositionState, false, sharedViewModel)
             }
         }
         Box(
@@ -255,7 +255,12 @@ fun RouteNameTextField(title: String, text: MutableState<TextFieldValue>) {
 }
 
 @Composable
-fun MapScreen(coordinates: List<LatLng>, cameraPositionState: CameraPositionState) {
+fun MapScreen(
+    coordinates: List<LatLng>,
+    cameraPositionState: CameraPositionState,
+    canSelectSegment: Boolean = false,
+    sharedViewModel: SharedViewModel
+) {
 
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
@@ -273,11 +278,134 @@ fun MapScreen(coordinates: List<LatLng>, cameraPositionState: CameraPositionStat
                 fillColor = Blue2,
                 strokeColor = Blue2
             )
-            Polyline(
-                points = coordinates, color = Blue2, jointType = JointType.ROUND
-            )
+
+
+            if (canSelectSegment) {
+                val secondQuartile = coordinates.size / 4
+                val fourthQuartile = (coordinates.size / 4) * 3
+
+                sharedViewModel.firstSegmentWaypoint.value = coordinates[secondQuartile]
+                sharedViewModel.lastSegmentWaypoint.value = coordinates[fourthQuartile]
+
+                RouteAndSegment(
+                    sharedViewModel = sharedViewModel,
+                    coordinates = coordinates
+                )
+
+            } else {
+                Polyline(
+                    points = coordinates, color = Blue2, jointType = JointType.ROUND
+                )
+            }
         }
 
 
     }
+}
+
+@Composable
+fun RouteAndSegment(sharedViewModel: SharedViewModel, coordinates: List<LatLng>) {
+
+    // Polyline from route start to segment start
+    Polyline(
+        points = coordinates.subList(
+            0, coordinates.indexOf(sharedViewModel.firstSegmentWaypoint.value) + 1
+        ),
+        color = Blue2,
+        jointType = JointType.ROUND,
+        zIndex = 0.0f
+    )
+
+    // Polyline from segment start to segment end
+    Polyline(
+        points = coordinates.subList(
+            coordinates.indexOf(
+                sharedViewModel.firstSegmentWaypoint.value,
+            ),
+            coordinates.indexOf(
+                sharedViewModel.lastSegmentWaypoint.value,
+            ) + 1
+        ),
+        color = Pink1,
+        jointType = JointType.ROUND,
+        zIndex = 0.0f
+    )
+
+    // polyline from segment end to route end
+    Polyline(
+        points = coordinates.subList(
+            coordinates.indexOf(
+                sharedViewModel.lastSegmentWaypoint.value,
+            ), coordinates.lastIndex + 1
+        ),
+        color = Blue2,
+        jointType = JointType.ROUND,
+        zIndex = 0.0f
+    )
+
+    // circles from route start to segment start - 1
+    for (coord in coordinates.subList(
+        0,
+        coordinates.indexOf(sharedViewModel.firstSegmentWaypoint.value)
+    )) {
+        WaypointCircle(center = coord, color = Blue2, onClick = {
+            println(it.center)
+            sharedViewModel.leftExtendSegment(it.center, coordinates)
+        })
+    }
+
+    // circles from segment start to segment end
+    for (coord in coordinates.subList(
+        coordinates.indexOf(
+            sharedViewModel.firstSegmentWaypoint.value,
+        ),
+        coordinates.indexOf(
+            sharedViewModel.lastSegmentWaypoint.value,
+        ) + 1
+    )) {
+        WaypointCircle(center = coord, color = Pink1, onClick = {
+            println(it.center)
+            sharedViewModel.shrinkSegment(it.center, coordinates)
+        })
+    }
+
+    // circles from segment end to route end
+    for (coord in coordinates.subList(
+        coordinates.indexOf(
+            sharedViewModel.lastSegmentWaypoint.value,
+        ) + 1, coordinates.lastIndex + 1
+    )) {
+        WaypointCircle(center = coord, color = Blue2, onClick = {
+            println(it.center)
+            sharedViewModel.rightExtendSegment(it.center, coordinates)
+        })
+    }
+
+
+}
+
+@Composable
+fun WaypointCircle(center: LatLng, color: Color, onClick: (Circle) -> Unit) {
+    Circle(
+        center = center,
+        radius = 30.0,
+        fillColor = Color.Black.copy(alpha = 0.1f),
+        strokeColor = Color.Black.copy(alpha = 0.0f)
+    )
+    Circle(
+        center = center,
+        radius = 12.0,
+        fillColor = Color.White,
+        strokeColor = Color.White,
+        zIndex = 2.0f
+    )
+    Circle(
+        center = center,
+        radius = 9.0,
+        fillColor = color,
+        strokeColor = color,
+        clickable = true,
+        onClick = onClick,
+        zIndex = 3.0f
+    )
 }

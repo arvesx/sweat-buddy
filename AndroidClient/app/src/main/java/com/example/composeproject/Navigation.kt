@@ -1,6 +1,7 @@
 package com.example.composeproject
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,7 +12,6 @@ import com.example.composeproject.viewmodel.SharedViewModel
 fun Navigation() {
     val navController = rememberNavController()
     val sharedViewModel = SharedViewModel()
-
 
     NavHost(navController = navController, startDestination = Screen.SplashScreen.route)
     {
