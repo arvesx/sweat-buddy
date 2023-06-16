@@ -47,7 +47,6 @@ android {
 }
 
 dependencies {
-
     implementation 'com.github.ticofab:android-gpx-parser:2.3.1'
 
     implementation("com.darkrockstudios:mpfilepicker:1.1.0")

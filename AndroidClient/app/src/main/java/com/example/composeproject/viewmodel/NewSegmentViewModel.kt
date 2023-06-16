@@ -1,10 +1,9 @@
-package com.example.composeproject
+package com.example.composeproject.viewmodel
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.composeproject.dependencies.user.Route
-import com.example.composeproject.viewmodel.SharedViewModel
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.*
 

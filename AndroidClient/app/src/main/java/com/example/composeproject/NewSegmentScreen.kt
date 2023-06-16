@@ -1,9 +1,7 @@
 package com.example.composeproject
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -25,10 +23,10 @@ import com.example.composeproject.ui.theme.Blue1
 import com.example.composeproject.ui.theme.Blue2
 import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.utils.calculateCameraPosition
+import com.example.composeproject.viewmodel.NewSegmentViewModel
 import com.example.composeproject.viewmodel.SharedViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
@@ -108,7 +106,12 @@ fun NewSegmentScreen(navController: NavController, sharedViewModel: SharedViewMo
 
             ) {
 
-                MapScreen(coordinates, cameraPositionState)
+                MapScreen(
+                    coordinates,
+                    cameraPositionState,
+                    canSelectSegment = true,
+                    sharedViewModel
+                )
             }
         }
         Box(
@@ -137,10 +140,14 @@ fun NewSegmentScreen(navController: NavController, sharedViewModel: SharedViewMo
                             .fillMaxSize()
                             .background(Color.White)
                             .padding(20.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceEvenly
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
 
                             //Spinner
                             Spinner(
@@ -159,11 +166,18 @@ fun NewSegmentScreen(navController: NavController, sharedViewModel: SharedViewMo
                             Spacer(modifier = Modifier.width(10.dp))
 
                         }
+                        if (viewModel.selectedRoute.value.routeName != null) {
 
-                        Text(
-                            text = "After you select a file your route will appear on the map:",
-                            modifier = Modifier.padding(top = 10.dp)
-                        )
+                            Text(
+                                text = "Adjust your segment:",
+                                modifier = Modifier.padding(top = 10.dp, bottom = 20.dp),
+                                fontFamily = ManropeFamily,
+                                fontSize = 14.sp,
+                                color = Color(0, 0, 0, 0xBF)
+
+                            )
+                        }
+
                     }
 
                 }

@@ -36,6 +36,7 @@ import kotlinx.coroutines.delay
 @Composable
 //@Preview(showSystemUi = true, showBackground = true)
 fun SplashScreen(navController: NavController) {
+
     val scale = remember {
         Animatable(0f)
     }
