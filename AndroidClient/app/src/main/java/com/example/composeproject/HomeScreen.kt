@@ -1,6 +1,7 @@
 package com.example.composeproject
 
 import android.graphics.Paint
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -17,12 +18,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.ExperimentalTextApi
@@ -181,7 +184,7 @@ fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
                 )
                 {
                     UserAvatar(navController)
-                    TrophiesSection(trophies = 1589)
+                    TrophiesSection(trophies = sharedViewModel.getUserDataByID(sharedViewModel.userID.value).points)
                 }
 
                 DateSection()
@@ -354,84 +357,104 @@ fun BarChart(
 fun UserAvatar(navController: NavController) {
     var clicked by remember { mutableStateOf(false) }
 
-    if (!clicked) {
+    val boxWidthOpen by animateFloatAsState(
+        targetValue = if (clicked) 1f else 0.33f,
+        animationSpec = tween(
+            durationMillis = 200,
+            delayMillis = 0,
+            easing = FastOutLinearInEasing
+        )
+    )
+
+    val boxWidthClose by animateFloatAsState(
+        targetValue = if (!clicked) 0.33f else boxWidthOpen,
+        animationSpec = tween(
+            durationMillis = 200,
+            delayMillis = 0,
+            easing = FastOutLinearInEasing
+        )
+    )
+
+    Box(
+        modifier = Modifier
+            .height(73.dp)
+            .padding(start = 25.dp)
+    ) {
         Box(
             modifier = Modifier
-                .height(65.dp)
-                .padding(start = 25.dp)
+                .height(70.dp)
+                //.padding(start = 25.dp)
+                .fillMaxWidth(0.5f)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.manb),
-                contentDescription = null,
+            Surface(
                 modifier = Modifier
-                    .size(65.dp)
-                    .border(1.dp, color = Color.White, CircleShape)
-                    .clip(CircleShape)
-                    .clickable { clicked = true }
+                    .fillMaxWidth(
+                        fraction = if (clicked) boxWidthOpen else boxWidthClose
+                    )
+                    .fillMaxHeight()
+                    .offset(0.dp, (-2).dp),
+                shape = RoundedCornerShape(
+                    bottomStart = 32.dp,
+                    topStart = 35.dp,
+                    topEnd = 28.dp,
+                    bottomEnd = 28.dp
+                ),
+                color = Color.Blue.copy(alpha = 0.1f)
             )
-        }
-    }
-    if (clicked) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(0.57f)
-                .height(65.dp)
-                .padding(start = 25.dp)
-                .clip(
-                    RoundedCornerShape(
-                        bottomStart = 32.dp,
-                        topStart = 35.dp,
-                        topEnd = 28.dp,
-                        bottomEnd = 28.dp
-                    )
-                )
-                .background(
-                    Color.White.copy(alpha = 0.1f)
-                )
-        ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.manb),
-                    contentDescription = null,
+            {
+                Row(
                     modifier = Modifier
-                        .size(65.dp)
-                        .border(1.dp, color = Color.White, CircleShape)
-                        .clip(CircleShape)
-                        .clickable { clicked = false }
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
                 )
-                IconButton(
-                    onClick = { navController.navigate(Screen.StatsScreen.route) },
-                    modifier = Modifier.clip(CircleShape)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.stats),
-                        contentDescription = null,
+                {
+                    Spacer(modifier = Modifier.width(60.dp))
+                    IconButton(
+                        onClick = { navController.navigate(Screen.StatsScreen.route) },
                         modifier = Modifier
-                            .size(50.dp)
-                            .padding(end = 15.dp)
-                            .clip(CircleShape)
-                    )
-                }
-                IconButton(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier.clip(CircleShape)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.logout),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(50.dp)
-                            .padding(end = 15.dp)
-                            .clip(CircleShape)
-                    )
+                            .clip(CircleShape),
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.stats),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(30.dp)
+                            //.padding(end = 15.dp)
+                            //.clip(CircleShape)
+                        )
+                    }
+                    IconButton(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.clip(CircleShape)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.logout),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(23.dp)
+                            //.padding(end = 15.dp)
+                            //.clip(CircleShape)
+                        )
+                    }
+
                 }
             }
         }
+
+        Image(
+            painter = painterResource(id = R.drawable.manb),
+            contentDescription = null,
+            modifier = Modifier
+                .size(65.dp)
+                .border(1.dp, color = Color.White, CircleShape)
+                .clip(CircleShape)
+                .clickable { clicked = !clicked }
+        )
+
     }
+
+
 }
 
 @Composable
@@ -612,7 +635,8 @@ fun RoutesCard(navController: NavController, sharedViewModel: SharedViewModel) {
                 Text(
 
                     text = "${
-                        String.format("%.1f", sharedViewModel.mostRecentRouteKm.value)}km",
+                        String.format("%.1f", sharedViewModel.mostRecentRouteKm.value)
+                    }km",
                     fontFamily = ManropeFamily,
                     fontSize = 12.sp,
                     color = Color(0, 0, 0, 0x66)
@@ -730,7 +754,11 @@ fun GoalsCard() {
 }
 
 @Composable
-fun LeaderBoardCard(navController: NavController, sharedViewModel: SharedViewModel, viewModel: HomeViewModel) {
+fun LeaderBoardCard(
+    navController: NavController,
+    sharedViewModel: SharedViewModel,
+    viewModel: HomeViewModel
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.42f)
@@ -800,23 +828,22 @@ fun LeaderBoardCard(navController: NavController, sharedViewModel: SharedViewMod
 
             if (sharedViewModel.leaderboardList.value.isNotEmpty()) {
 
-                val userInfo: UserInfo = sharedViewModel.getUserDataByID(sharedViewModel.userID.value)
+                val userInfo: UserInfo =
+                    sharedViewModel.getUserDataByID(sharedViewModel.userID.value)
 
-                if (userInfo.position == 1)
-                {
+                if (userInfo.position == 1) {
                     LeaderboardTextField(
                         user = userInfo,
                         focused = true
                     )
-                    Spacer (modifier = Modifier.height(3.dp))
+                    Spacer(modifier = Modifier.height(3.dp))
 
-                    if (sharedViewModel.getUserDataByPosition(userInfo.position + 1).position != 0)
-                    {
+                    if (sharedViewModel.getUserDataByPosition(userInfo.position + 1).position != 0) {
                         LeaderboardTextField(
                             user = sharedViewModel.getUserDataByPosition(2),
                             focused = false
                         )
-                        Spacer (modifier = Modifier.height(3.dp))
+                        Spacer(modifier = Modifier.height(3.dp))
 
                         if (userInfo.position + 1 < sharedViewModel.leaderboardList.value.size) {
                             LeaderboardTextField(
@@ -826,42 +853,37 @@ fun LeaderBoardCard(navController: NavController, sharedViewModel: SharedViewMod
                         }
                     }
 
-                }
-                else if (userInfo.position == sharedViewModel.leaderboardList.value.size)
-                {
+                } else if (userInfo.position == sharedViewModel.leaderboardList.value.size) {
                     LeaderboardTextField(
                         user = sharedViewModel.getUserDataByPosition(userInfo.position - 2),
                         focused = false
                     )
-                    Spacer (modifier = Modifier.height(3.dp))
+                    Spacer(modifier = Modifier.height(3.dp))
 
                     LeaderboardTextField(
                         user = sharedViewModel.getUserDataByPosition(userInfo.position - 1),
                         focused = false
                     )
-                    Spacer (modifier = Modifier.height(3.dp))
+                    Spacer(modifier = Modifier.height(3.dp))
 
                     LeaderboardTextField(
                         user = userInfo,
                         focused = true
                     )
-                }
-                else
-                {
+                } else {
                     LeaderboardTextField(
                         user = sharedViewModel.getUserDataByPosition(userInfo.position - 1),
                         focused = false
                     )
-                    Spacer (modifier = Modifier.height(3.dp))
+                    Spacer(modifier = Modifier.height(3.dp))
 
                     LeaderboardTextField(
                         user = userInfo,
                         focused = true
                     )
-                    Spacer (modifier = Modifier.height(3.dp))
+                    Spacer(modifier = Modifier.height(3.dp))
 
-                    if (userInfo.position + 1 < sharedViewModel.leaderboardList.value.size)
-                    {
+                    if (userInfo.position + 1 < sharedViewModel.leaderboardList.value.size) {
                         LeaderboardTextField(
                             user = sharedViewModel.getUserDataByPosition(userInfo.position + 1),
                             focused = false
@@ -877,8 +899,7 @@ fun LeaderBoardCard(navController: NavController, sharedViewModel: SharedViewMod
 fun LeaderboardTextField(
     user: UserInfo,
     focused: Boolean
-)
-{
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     )
@@ -892,14 +913,14 @@ fun LeaderboardTextField(
             fontSize = fontSize,
             color = Color(0, 0, 0, 0xBF)
         )
-        Spacer (modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = user.username,
             fontFamily = ManropeFamily,
             fontSize = fontSize,
             color = Color(0, 0, 0, 0xBF)
         )
-        Spacer (modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = "${user.points}",
             fontFamily = ManropeFamily,

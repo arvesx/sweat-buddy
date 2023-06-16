@@ -59,7 +59,7 @@ fun NewRouteCreatedScreen(navController: NavController, sharedViewModel: SharedV
                 )
             )
     ) {
-        UpperSection("Route Name", 150, navController)
+        UpperSection(sharedViewModel.routeName.value, sharedViewModel.routePoints.value, navController)
         Box(
             modifier = Modifier
                 .fillMaxSize()

@@ -27,6 +27,7 @@ class SharedViewModel : ViewModel() {
     var avgSpeed = mutableStateOf(0.0f)
     var totalTime = mutableStateOf("0m")
     var routeName = mutableStateOf("")
+    var routePoints = mutableStateOf(0)
 
 
     // about segments
@@ -87,11 +88,16 @@ class SharedViewModel : ViewModel() {
     }
 
     fun updateSpecificRoute(
+        routeName: String,
+        routePoints: Int,
         totalDistance: Double,
         totalElevation: Double,
         avgSpeed: Double,
         totalTime: Long
     ) {
+        this.routeName.value = routeName
+        this.routePoints.value = routePoints
+
         val milliseconds: Long = totalTime
         val minutes = milliseconds / 1000 / 60
         val seconds = milliseconds / 1000 % 60

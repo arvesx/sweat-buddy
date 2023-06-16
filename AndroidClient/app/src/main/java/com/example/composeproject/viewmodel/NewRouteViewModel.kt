@@ -58,18 +58,25 @@ class NewRouteViewModel : ViewModel() {
                     coordinatesLatLng.add(LatLng(item.first, item.second))
                 }
 
+                var currentUserPoints = 0
+                sharedViewModel.routes.value.forEach() { item ->
+                    currentUserPoints += item.points
+                }
+
                 if (answer.success == 1) {
+
+                    val newUserPoints = answer.userData.points - currentUserPoints
+
                     sharedViewModel.updateViewModel(answer)
                     sharedViewModel.updateRouteCoordinates(coordinatesLatLng)
                     sharedViewModel.updateSpecificRoute(
+                        textFieldValue.value.text,
+                        newUserPoints,
                         answer.gpxResults.distanceInKilometers,
                         answer.gpxResults.totalAscentInMete,
                         answer.gpxResults.avgSpeedInKilometersPerHour,
                         answer.gpxResults.totalTimeInMillis
                     )
-
-                    // keep map information
-                    //sharedViewModel.routes.value.last().coordinates = coordinates
 
                     withContext(Dispatchers.Main) {
                         navController.navigate(Screen.RouteScreen.route) {
