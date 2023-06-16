@@ -1,6 +1,90 @@
-22:18:26.754 [main] INFO  server.Server - Starting Server...
-22:18:26.819 [main] INFO  server.Server - Generic data have been read from file
-22:18:26.820 [main] INFO  server.Server - Avg total distance: 1.8266324, Avg total elevation: 3.9, Avg total time: 1534000
-22:18:26.820 [main] INFO  server.Server - Listening for new clients on port 1234
-22:18:26.821 [main] INFO  server.Server - Listening for new workers on port 2345
-22:18:39.735 [Thread-1] INFO  server.Server - Worker node added
+14:25:56.709 [main] INFO  server.Server - Starting Server...
+14:25:56.860 [main] INFO  server.Server - Generic data have been read from file
+14:25:56.860 [main] INFO  server.Server - Avg total distance: 3.9234369, Avg total elevation: 10.365, Avg total time: 4837000
+14:25:56.860 [main] INFO  server.Server - Listening for new clients on port 1234
+14:25:56.869 [main] INFO  server.Server - Listening for new workers on port 2345
+14:25:59.378 [Thread-1] INFO  server.Server - Worker node added
+14:26:25.850 [Thread-0] INFO  server.Server - Client#0: Connected
+14:41:04.673 [Thread-0] INFO  server.Server - Client#1: Connected
+14:45:07.202 [Thread-0] INFO  server.Server - Client#2: Connected
+14:46:42.138 [Thread-0] INFO  server.Server - Client#3: Connected
+14:47:43.588 [Thread-0] INFO  server.Server - Client#4: Connected
+14:49:09.905 [Thread-0] INFO  server.Server - Client#5: Connected
+14:50:04.675 [Thread-0] INFO  server.Server - Client#6: Connected
+14:51:32.160 [Thread-0] INFO  server.Server - Client#7: Connected
+14:53:19.077 [Thread-0] INFO  server.Server - Client#8: Connected
+14:53:50.780 [Thread-0] INFO  server.Server - Client#9: Connected
+14:56:28.390 [Thread-0] INFO  server.Server - Client#10: Connected
+14:57:15.212 [Thread-0] INFO  server.Server - Client#11: Connected
+14:57:45.157 [Thread-0] INFO  server.Server - Client#12: Connected
+14:58:45.119 [Thread-0] INFO  server.Server - Client#13: Connected
+14:59:49.767 [Thread-0] INFO  server.Server - Client#14: Connected
+15:00:40.746 [Thread-0] INFO  server.Server - Client#15: Connected
+15:01:13.205 [Thread-0] INFO  server.Server - Client#16: Connected
+15:05:24.986 [Thread-0] INFO  server.Server - Client#17: Connected
+15:06:15.697 [Thread-0] INFO  server.Server - Client#18: Connected
+15:08:48.012 [Thread-0] INFO  server.Server - Client#19: Connected
+15:10:45.787 [Thread-0] INFO  server.Server - Client#20: Connected
+15:11:35.497 [Thread-0] INFO  server.Server - Client#21: Connected
+15:13:11.804 [Thread-0] INFO  server.Server - Client#22: Connected
+15:16:05.115 [Thread-0] INFO  server.Server - Client#23: Connected
+15:16:58.102 [Thread-0] INFO  server.Server - Client#24: Connected
+15:18:23.944 [Thread-0] INFO  server.Server - Client#25: Connected
+15:42:24.243 [Thread-0] INFO  server.Server - Client#26: Connected
+15:43:08.878 [Thread-0] INFO  server.Server - Client#27: Connected
+15:44:05.472 [Thread-0] INFO  server.Server - Client#28: Connected
+15:47:47.656 [Thread-0] INFO  server.Server - Client#29: Connected
+15:51:49.522 [Thread-0] INFO  server.Server - Client#30: Connected
+15:52:42.344 [Thread-0] INFO  server.Server - Client#31: Connected
+15:53:35.504 [Thread-0] INFO  server.Server - Client#32: Connected
+15:54:07.378 [Thread-0] INFO  server.Server - Client#33: Connected
+15:55:25.931 [Thread-0] INFO  server.Server - Client#34: Connected
+15:56:51.546 [Thread-0] INFO  server.Server - Client#35: Connected
+15:57:29.595 [Thread-0] INFO  server.Server - Client#36: Connected
+15:58:01.422 [Thread-0] INFO  server.Server - Client#37: Connected
+15:58:44.541 [Thread-0] INFO  server.Server - Client#38: Connected
+15:59:58.676 [Thread-0] INFO  server.Server - Client#39: Connected
+16:01:09.848 [Thread-0] INFO  server.Server - Client#40: Connected
+16:02:33.916 [Thread-0] INFO  server.Server - Client#41: Connected
+16:03:11.900 [Thread-0] INFO  server.Server - Client#42: Connected
+16:04:09.216 [Thread-0] INFO  server.Server - Client#43: Connected
+16:04:41.376 [Thread-0] INFO  server.Server - Client#44: Connected
+16:07:14.843 [Thread-0] INFO  server.Server - Client#45: Connected
+16:08:08.710 [Thread-0] INFO  server.Server - Client#46: Connected
+16:08:48.142 [Thread-0] INFO  server.Server - Client#47: Connected
+16:10:49.967 [Thread-0] INFO  server.Server - Client#48: Connected
+16:11:29.993 [Thread-0] INFO  server.Server - Client#49: Connected
+16:12:02.529 [Thread-0] INFO  server.Server - Client#50: Connected
+16:12:42.874 [Thread-0] INFO  server.Server - Client#51: Connected
+16:13:25.139 [Thread-0] INFO  server.Server - Client#52: Connected
+16:14:23.552 [Thread-0] INFO  server.Server - Client#53: Connected
+16:15:13.779 [Thread-0] INFO  server.Server - Client#54: Connected
+16:15:48.597 [Thread-0] INFO  server.Server - Client#55: Connected
+16:16:27.256 [Thread-0] INFO  server.Server - Client#56: Connected
+16:22:32.023 [Thread-0] INFO  server.Server - Client#57: Connected
+16:23:16.102 [Thread-0] INFO  server.Server - Client#58: Connected
+16:24:13.827 [Thread-0] INFO  server.Server - Client#59: Connected
+16:25:00.406 [Thread-0] INFO  server.Server - Client#60: Connected
+16:25:34.401 [Thread-0] INFO  server.Server - Client#61: Connected
+16:26:06.964 [Thread-0] INFO  server.Server - Client#62: Connected
+16:26:43.627 [Thread-0] INFO  server.Server - Client#63: Connected
+16:29:29.034 [Thread-0] INFO  server.Server - Client#64: Connected
+16:30:32.412 [Thread-0] INFO  server.Server - Client#65: Connected
+16:31:20.824 [Thread-0] INFO  server.Server - Client#66: Connected
+16:32:06.004 [Thread-0] INFO  server.Server - Client#67: Connected
+16:33:01.206 [Thread-0] INFO  server.Server - Client#68: Connected
+16:33:41.225 [Thread-0] INFO  server.Server - Client#69: Connected
+16:34:33.460 [Thread-0] INFO  server.Server - Client#70: Connected
+16:35:27.318 [Thread-0] INFO  server.Server - Client#71: Connected
+16:36:07.959 [Thread-0] INFO  server.Server - Client#72: Connected
+16:37:58.630 [Thread-0] INFO  server.Server - Client#73: Connected
+16:38:44.814 [Thread-0] INFO  server.Server - Client#74: Connected
+16:39:22.665 [Thread-0] INFO  server.Server - Client#75: Connected
+16:40:53.267 [Thread-0] INFO  server.Server - Client#76: Connected
+16:43:14.462 [Thread-0] INFO  server.Server - Client#77: Connected
+16:47:51.630 [Thread-0] INFO  server.Server - Client#78: Connected
+16:49:44.801 [Thread-0] INFO  server.Server - Client#79: Connected
+16:50:30.099 [Thread-0] INFO  server.Server - Client#80: Connected
+16:51:11.008 [Thread-0] INFO  server.Server - Client#81: Connected
+16:51:52.396 [Thread-0] INFO  server.Server - Client#82: Connected
+16:53:36.465 [Thread-0] INFO  server.Server - Client#83: Connected
