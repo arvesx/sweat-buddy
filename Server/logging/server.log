@@ -1,1 +1,25 @@
+02:01:58.785 [main] INFO  server.Server - Starting Server...
+02:01:58.889 [main] INFO  server.Server - Generic data have been read from file
+02:01:58.902 [main] INFO  server.Server - Avg total distance: 8.545809, Avg total elevation: 25.039999, Avg total time: 11876000
+02:01:58.906 [main] INFO  server.Server - Listening for new clients on port 1234
+02:01:58.908 [main] INFO  server.Server - Listening for new workers on port 2345
+02:02:20.118 [Thread-1] INFO  server.Server - Worker node added
+02:02:51.698 [Thread-0] INFO  server.Server - Client#0: Connected
+02:04:28.555 [Thread-5] INFO  server.Server - Client#0: Received GPX File
+02:04:28.644 [Thread-5] DEBUG server.Server - GPX File ID: Key[gpxFileId=1], Total Distance: 2.7957391950078954, Total Ascent: 8.619999999999997, Total Time: 18.35, Average Speed: 9.141381564058513
 
+02:04:28.644 [Thread-5] INFO  server.Server - New avg total distance: 9.244743, New avg total elevation: 27.195, New avg total time: 12977000
+02:04:28.647 [Thread-5] INFO  server.Server - Generic data file has been updated with new data
+02:06:00.389 [Thread-0] INFO  server.Server - Client#1: Connected
+02:06:09.779 [Thread-6] INFO  server.Server - Client#1: Received GPX File
+02:06:09.785 [Thread-6] DEBUG server.Server - GPX File ID: Key[gpxFileId=2], Total Distance: 2.7957391950078954, Total Ascent: 8.619999999999997, Total Time: 18.35, Average Speed: 9.141381564058513
+
+02:06:09.786 [Thread-6] INFO  server.Server - New avg total distance: 9.943678, New avg total elevation: 29.35, New avg total time: 14078000
+02:06:09.787 [Thread-6] INFO  server.Server - Generic data file has been updated with new data
+02:06:47.020 [Thread-0] INFO  server.Server - Client#2: Connected
+02:07:16.399 [Thread-7] INFO  server.Server - Client#2: Received GPX File
+02:07:16.405 [Thread-7] DEBUG server.Server - GPX File ID: Key[gpxFileId=3], Total Distance: 2.7957391950078954, Total Ascent: 8.619999999999997, Total Time: 18.35, Average Speed: 9.141381564058513
+
+02:07:16.406 [Thread-7] INFO  server.Server - New avg total distance: 10.642612, New avg total elevation: 31.505001, New avg total time: 15179000
+02:07:16.408 [Thread-7] INFO  server.Server - Generic data file has been updated with new data
+02:14:44.737 [Thread-0] INFO  server.Server - Client#3: Connected

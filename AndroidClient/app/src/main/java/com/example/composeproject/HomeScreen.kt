@@ -360,7 +360,7 @@ fun UserAvatar(navController: NavController) {
     val boxWidthOpen by animateFloatAsState(
         targetValue = if (clicked) 1f else 0.33f,
         animationSpec = tween(
-            durationMillis = 200,
+            durationMillis = 100,
             delayMillis = 0,
             easing = FastOutLinearInEasing
         )
@@ -369,7 +369,7 @@ fun UserAvatar(navController: NavController) {
     val boxWidthClose by animateFloatAsState(
         targetValue = if (!clicked) 0.33f else boxWidthOpen,
         animationSpec = tween(
-            durationMillis = 200,
+            durationMillis = 100,
             delayMillis = 0,
             easing = FastOutLinearInEasing
         )

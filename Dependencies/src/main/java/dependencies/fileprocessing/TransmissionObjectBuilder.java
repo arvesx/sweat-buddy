@@ -1,6 +1,7 @@
 package dependencies.fileprocessing;
 
 import dependencies.user.GenericStats;
+
 import java.util.List;
 
 import ch.qos.logback.core.joran.sanity.Pair;
@@ -28,10 +29,15 @@ public class TransmissionObjectBuilder {
         return this;
     }
 
+    public TransmissionObjectBuilder segmentFile(String segmentFile) {
+        to.segmentFile = segmentFile;
+        return this;
+    }
+
     public TransmissionObjectBuilder coordinates(List<Pair<Double, Double>> coordinates) {
-            to.coordinates = coordinates;
-            return this;
-        }
+        to.coordinates = coordinates;
+        return this;
+    }
 
     public TransmissionObjectBuilder username(String username) {
         to.username = username;

@@ -252,6 +252,23 @@ public class ClientHandlerThread extends Thread {
                         String jsonTransmissionObject = gson.toJson(to);
                         outputStream.writeObject(jsonTransmissionObject);
                     }
+                    // If a user requests a new state of his data
+                    if(receivedData.type == TransmissionObjectType.USER_DATA) {
+                        TransmissionObject to = new TransmissionObjectBuilder()
+                                .type(TransmissionObjectType.USER_DATA)
+                                .userData(userData)
+                                .message("New state of user data")
+                                .success(1)
+                                .craft();
+
+                        String jsonTransmissionObject = gson.toJson(to);
+                        outputStream.writeObject(jsonTransmissionObject);
+                    }
+
+                    // if we receive a new segment
+                    if(receivedData.type == TransmissionObjectType.SEGMENT) {
+
+                    }
                 }
             }
         } catch (IOException | ClassNotFoundException e) {

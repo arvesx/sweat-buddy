@@ -12,6 +12,8 @@ public class TransmissionObject {
     public TransmissionObjectType type;
     public int userId;
     public String gpxFile;
+
+    public String segmentFile;
     public UserData userData;
     public GpxResults gpxResults;
 
