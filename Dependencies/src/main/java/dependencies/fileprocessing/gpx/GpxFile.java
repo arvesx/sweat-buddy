@@ -20,6 +20,11 @@ public class GpxFile implements Serializable {
 
     private final ArrayList<Chunk> chunks;
 
+    public GpxFile(ArrayList<WaypointImpl> wps) {
+        this.wps = wps;
+        this.chunks = new ArrayList<>();
+    }
+
     public GpxFile(String file_name) {
         this.initVariables();
         this.initGpxObject(file_name);

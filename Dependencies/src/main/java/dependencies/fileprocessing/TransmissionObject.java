@@ -14,6 +14,13 @@ public class TransmissionObject {
     public String gpxFile;
 
     public String segmentFile;
+    public int segmentId;
+    public int segmentStart;
+    public int segmentEnd;
+
+
+    public int routeId;
+
     public UserData userData;
     public GpxResults gpxResults;
 

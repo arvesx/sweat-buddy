@@ -6,9 +6,11 @@ import dependencies.fileprocessing.TransmissionObjectBuilder;
 import dependencies.fileprocessing.TransmissionObjectType;
 import dependencies.fileprocessing.gpx.GpxFile;
 import dependencies.fileprocessing.gpx.GpxResults;
+import dependencies.fileprocessing.gpx.WaypointImpl;
 import dependencies.mapper.Map;
 import dependencies.user.GenericStats;
 import dependencies.user.Route;
+import dependencies.user.Segment;
 import dependencies.user.UserData;
 import fileprocessing.ClientData;
 import user.Authentication;
@@ -45,9 +47,8 @@ public class ClientHandlerThread extends Thread {
         this.clientData = new ClientData(clientId);
     }
 
-    private GpxResults analyzeGpxFile(InputStream gpxInputStream) throws InterruptedException {
+    private GpxResults analyzeGpxFile(GpxFile gpxFile) throws InterruptedException {
 
-        GpxFile gpxFile = new GpxFile(gpxInputStream);
         this.clientData.setGpxFile(gpxFile);
 
         LOGGER.info("Client#" + this.clientData.getID() + ": Received GPX File");
@@ -154,26 +155,23 @@ public class ClientHandlerThread extends Thread {
                     }
                 }
 
-                if (receivedData.type == TransmissionObjectType.LEADERBOARD)
-                {
+                if (receivedData.type == TransmissionObjectType.LEADERBOARD) {
                     DataExchangeHandler.userData.sort(Comparator.comparing(UserData::getPoints, Collections.reverseOrder()));
 
                     try {
                         TransmissionObject to = new TransmissionObjectBuilder()
-                            .type(TransmissionObjectType.LEADERBOARD)
-                            .leaderboardList(DataExchangeHandler.userData)
-                            .message("Leaderboard")
-                            .success(1)
-                            .craft();
+                                .type(TransmissionObjectType.LEADERBOARD)
+                                .leaderboardList(DataExchangeHandler.userData)
+                                .message("Leaderboard")
+                                .success(1)
+                                .craft();
 
                         String jsonTransmissionObject = gson.toJson(to);
                         outputStream.writeObject(jsonTransmissionObject);
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         /*TODO*/
                     }
-                    
+
                 }
 
 
@@ -205,9 +203,13 @@ public class ClientHandlerThread extends Thread {
                 if (loggedIn) {
                     if (receivedData.type == TransmissionObjectType.GPX_FILE) {
                         System.out.println("Received gpx file from " + this.clientData.getUsername());
-                        GpxResults results = analyzeGpxFile(new ByteArrayInputStream(receivedData.gpxFile.getBytes()));
+                        GpxFile gpxFile = new GpxFile(new ByteArrayInputStream(receivedData.gpxFile.getBytes()));
+
+                        GpxResults results = analyzeGpxFile(gpxFile);
 
                         Route newRoute = processGpxResults(results, receivedData);
+                        newRoute.routeWaypoints = gpxFile.getWps();
+                        newRoute.routeId = userData.routes.size();
 
                         userData.routes.add(newRoute);
                         userData.points += newRoute.points;
@@ -253,7 +255,7 @@ public class ClientHandlerThread extends Thread {
                         outputStream.writeObject(jsonTransmissionObject);
                     }
                     // If a user requests a new state of his data
-                    if(receivedData.type == TransmissionObjectType.USER_DATA) {
+                    if (receivedData.type == TransmissionObjectType.USER_DATA) {
                         TransmissionObject to = new TransmissionObjectBuilder()
                                 .type(TransmissionObjectType.USER_DATA)
                                 .userData(userData)
@@ -266,8 +268,20 @@ public class ClientHandlerThread extends Thread {
                     }
 
                     // if we receive a new segment
-                    if(receivedData.type == TransmissionObjectType.SEGMENT) {
+                    if (receivedData.type == TransmissionObjectType.SEGMENT) {
 
+                        GpxFile gpxFile = new GpxFile(
+                                (ArrayList<WaypointImpl>) receivedData.userData.routes
+                                        .get(receivedData.routeId)
+                                        .routeWaypoints
+                                        .subList(receivedData.segmentStart, receivedData.segmentEnd)
+                        );
+
+                        Segment newSegment = new Segment();
+                        newSegment.waypoints = gpxFile.getWps();
+
+
+                        GpxResults gpxResults = analyzeGpxFile(gpxFile);
                     }
                 }
             }

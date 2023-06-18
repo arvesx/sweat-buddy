@@ -1,9 +1,7 @@
 package dependencies.user;
 
-public class SegmentEntry {
+public class SegmentLeaderboardEntry {
     public int userId;
-    public String username;
-
     public float totalDistance;
     public float elevation;
     public long totalTime;

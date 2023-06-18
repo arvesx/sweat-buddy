@@ -6,7 +6,7 @@ public class UserData {
     public int userId;
     public String username;
     public ArrayList<Route> routes;
-    public ArrayList<Segment> segments;
+    public ArrayList<SegmentLeaderboardEntry> segments;
     public int points;
     public float mostRecentRouteKm;
 
