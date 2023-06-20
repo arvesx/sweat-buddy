@@ -1,1 +1,5 @@
-
+18:36:19.336 [main] INFO  server.Server - Starting Server...
+18:36:19.407 [main] INFO  server.Server - Generic data have been read from file
+18:36:19.407 [main] INFO  server.Server - Avg total distance: 3.9234369, Avg total elevation: 10.365, Avg total time: 4837000
+18:36:19.407 [main] INFO  server.Server - Listening for new clients on port 1234
+18:36:19.409 [main] INFO  server.Server - Listening for new workers on port 2345

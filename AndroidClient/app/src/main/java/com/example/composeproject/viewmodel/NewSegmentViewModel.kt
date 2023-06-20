@@ -34,6 +34,14 @@ class NewSegmentViewModel : ViewModel()
 
     }
 
+    fun onCreate(
+        navController: NavController,
+
+    )
+    {
+
+    }
+
 
 
 }

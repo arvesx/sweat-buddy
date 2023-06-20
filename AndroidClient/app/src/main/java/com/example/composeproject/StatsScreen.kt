@@ -95,6 +95,7 @@ fun StatsScreen(navController: NavController, sharedViewModel: SharedViewModel) 
                     Bar(viewModel.totalDistance.value),
                     Bar(viewModel.avgTotalDistance.value)
                 )
+
                 val timed = listOf(
                     Bar(viewModel.totalTimeMillis.value.toFloat()),
                     Bar(viewModel.avgTotalTimeMillis.value.toFloat())
@@ -103,31 +104,32 @@ fun StatsScreen(navController: NavController, sharedViewModel: SharedViewModel) 
                     Bar(viewModel.totalElevation.value),
                     Bar(viewModel.avgTotalElevation.value)
                 )
-//                val distanced = listOf(
-//                    Bar(45.0f),
-//                    Bar(20.0f)
-//                )
-//                val timed = listOf(
-//                    Bar(54.0f),
-//                    Bar(23.0f)
-//                )
-//                val elevationd = listOf(
-//                    Bar(13.0f),
-//                    Bar(26.0f)
-//                )
 
-                Bars(
-                    data = distanced,
-                    description = "Total Distance"
-                )
-                Bars(
-                    data = timed,
-                    description = "Total Time"
-                )
-                Bars(
-                    data = elevationd,
-                    description = "Total Elevation"
-                )
+                if (viewModel.totalDistance.value != 0f || viewModel.avgTotalDistance.value != 0f)
+                {
+                    Bars(
+                        data = distanced,
+                        description = "Total Distance"
+                    )
+                }
+
+                if (viewModel.totalDistance.value != 0f || viewModel.avgTotalDistance.value != 0f)
+                {
+                    Bars(
+                        data = timed,
+                        description = "Total Time"
+                    )
+                }
+
+                if (viewModel.totalDistance.value != 0f || viewModel.avgTotalDistance.value != 0f)
+                {
+                    Bars(
+                        data = elevationd,
+                        description = "Total Elevation"
+                    )
+                }
+
+
             }
         }
     }
@@ -225,7 +227,7 @@ fun StatsCard(
 @Composable
 fun Bars(
     maxBarSize: Dp = 300.dp,
-    animDuration: Int = 1000,
+    animDuration: Int = 1300,
     animDelay: Int = 20,
     data: List<Bar>,
     description: String

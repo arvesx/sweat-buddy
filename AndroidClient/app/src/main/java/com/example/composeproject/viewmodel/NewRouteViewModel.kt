@@ -59,7 +59,7 @@ class NewRouteViewModel : ViewModel() {
                 }
 
                 var currentUserPoints = 0
-                sharedViewModel.routes.value.forEach() { item ->
+                sharedViewModel.routes.value.forEach { item ->
                     currentUserPoints += item.points
                 }
 
