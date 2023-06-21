@@ -8,12 +8,10 @@ import dependencies.fileprocessing.gpx.GpxFile;
 import dependencies.fileprocessing.gpx.GpxResults;
 import dependencies.fileprocessing.gpx.WaypointImpl;
 import dependencies.mapper.Map;
-import dependencies.user.GenericStats;
-import dependencies.user.Route;
-import dependencies.user.Segment;
-import dependencies.user.UserData;
+import dependencies.user.*;
 import fileprocessing.ClientData;
 import user.Authentication;
+import user.segments.SegmentsHandler;
 import user.userdata.DataExchangeHandler;
 
 import java.io.*;
@@ -277,11 +275,21 @@ public class ClientHandlerThread extends Thread {
                                         .subList(receivedData.segmentStart, receivedData.segmentEnd)
                         );
 
-                        Segment newSegment = new Segment();
-                        newSegment.waypoints = gpxFile.getWps();
-
-
                         GpxResults gpxResults = analyzeGpxFile(gpxFile);
+                        this.addSegmentToUser(this.userData, gpxResults, receivedData.message, gpxFile.getWps());
+
+                        this.updateAllUserSegments(userData.userId, gpxFile.getWps(), receivedData.message);
+
+                        TransmissionObject to = new TransmissionObjectBuilder()
+                                .type(TransmissionObjectType.USER_DATA)
+                                .userData(userData)
+                                .message("Segment has been processed.")
+                                .success(1)
+                                .craft();
+
+                        String jsonTransmissionObject = gson.toJson(to);
+                        outputStream.writeObject(jsonTransmissionObject);
+
                     }
                 }
             }
@@ -336,4 +344,60 @@ public class ClientHandlerThread extends Thread {
         return 1;
 
     }
+
+    public void updateAllUserSegments(int id, ArrayList<WaypointImpl> segment, String segmentName) {
+        new Thread(() -> {
+
+            for (var userData : DataExchangeHandler.userData) {
+                if (userData.userId == id) continue;
+
+                try {
+                    this.updateUserSegments(userData, segment, segmentName);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+        }).start();
+    }
+
+
+    public void updateUserSegments(
+            UserData userData, ArrayList<WaypointImpl> segmentWps,
+            String segmentName) throws InterruptedException {
+
+        for (var route : userData.routes) {
+            ArrayList<WaypointImpl> sublist;
+            if ((sublist = SegmentsHandler.isSegmentPresentInRoute(segmentWps, route.routeWaypoints)) != null) {
+
+                GpxResults results = this.analyzeGpxFile(new GpxFile(sublist));
+                this.addSegmentToUser(userData, results, segmentName, sublist);
+
+            }
+        }
+
+    }
+
+    private void addSegmentToUser(UserData userData, GpxResults results, String segmentName, ArrayList<WaypointImpl> sublist) {
+
+
+        SegmentAttempt segmentAttempt = new SegmentAttempt();
+        segmentAttempt.segmentName = segmentName;
+
+        synchronized (SegmentsHandler.ALL_SEGMENTS_LIST_LOCK) {
+            segmentAttempt.segmentId = SegmentsHandler.allSegments.size();
+        }
+        segmentAttempt.waypoints = sublist;
+        segmentAttempt.totalTime = results.totalTimeInMillis();
+        segmentAttempt.totalDistance = (float) results.distanceInKilometers();
+        segmentAttempt.avgSpeed = (float) results.avgSpeedInKilometersPerHour();
+        segmentAttempt.elevation = (float) results.totalAscentInMete();
+
+        if (userData.segments == null) {
+            userData.segments = new ArrayList<>();
+        }
+
+        userData.segments.add(segmentAttempt);
+    }
 }
+
