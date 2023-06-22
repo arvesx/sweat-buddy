@@ -1,5 +1,6 @@
 package dependencies.fileprocessing;
 
+import dependencies.fileprocessing.gpx.GpxResults;
 import dependencies.user.GenericStats;
 
 import java.util.List;
@@ -59,13 +60,38 @@ public class TransmissionObjectBuilder {
         return this;
     }
 
+    public TransmissionObjectBuilder routeId(int routeId) {
+        to.routeId = routeId;
+        return this;
+    }
+
     public TransmissionObjectBuilder userId(int userId) {
         to.userId = userId;
         return this;
     }
 
+    public TransmissionObjectBuilder segmentId(int segmentId) {
+        to.segmentId = segmentId;
+        return this;
+    }
+
+    public TransmissionObjectBuilder segmentStart(int segmentStart) {
+        to.segmentStart = segmentStart;
+        return this;
+    }
+
+    public TransmissionObjectBuilder segmentEnd(int segmentEnd) {
+        to.segmentEnd = segmentEnd;
+        return this;
+    }
+
     public TransmissionObjectBuilder gpxFile(String gpxFile) {
         to.gpxFile = gpxFile;
+        return this;
+    }
+
+    public TransmissionObjectBuilder gpxResults(GpxResults gpxResults) {
+        to.gpxResults = gpxResults;
         return this;
     }
 

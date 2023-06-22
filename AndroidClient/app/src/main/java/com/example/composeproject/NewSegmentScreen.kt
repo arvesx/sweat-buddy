@@ -86,7 +86,7 @@ fun NewSegmentScreen(navController: NavController, sharedViewModel: SharedViewMo
 
                     TextButton(
                         onClick = {
-                            //viewModel.onCreate(navController, sharedViewModel, context)
+                            viewModel.onCreate(navController, sharedViewModel)
                         },
                         modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
                     ) {
@@ -162,6 +162,19 @@ fun NewSegmentScreen(navController: NavController, sharedViewModel: SharedViewMo
                                 cameraPositionState.position =
                                     CameraPosition.fromLatLngZoom(newCameraLatLng, cameraNewZoom)
                             }
+
+                            Spacer(modifier = Modifier.width(10.dp))
+
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            RouteNameTextField(
+                                title = "Give your route a name",
+                                viewModel.textFieldValue
+                            )
 
                             Spacer(modifier = Modifier.width(10.dp))
 

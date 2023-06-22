@@ -1,5 +1,6 @@
 package com.example.composeproject.dependencies.fileprocessing;
 
+import com.example.composeproject.dependencies.fileprocessing.gpx.GpxResults;
 import com.example.composeproject.dependencies.user.GenericStats;
 import com.example.composeproject.dependencies.user.UserData;
 
@@ -29,10 +30,16 @@ public class TransmissionObjectBuilder {
         return this;
     }
 
+    public TransmissionObjectBuilder segmentFile(String segmentFile) {
+        to.segmentFile = segmentFile;
+        return this;
+    }
+
     public TransmissionObjectBuilder coordinates(List<Pair<Double, Double>> coordinates) {
         to.coordinates = coordinates;
         return this;
     }
+
     public TransmissionObjectBuilder username(String username) {
         to.username = username;
         return this;
@@ -53,13 +60,38 @@ public class TransmissionObjectBuilder {
         return this;
     }
 
+    public TransmissionObjectBuilder routeId(int routeId) {
+        to.routeId = routeId;
+        return this;
+    }
+
     public TransmissionObjectBuilder userId(int userId) {
         to.userId = userId;
         return this;
     }
 
+    public TransmissionObjectBuilder segmentId(int segmentId) {
+        to.segmentId = segmentId;
+        return this;
+    }
+
+    public TransmissionObjectBuilder segmentStart(int segmentStart) {
+        to.segmentStart = segmentStart;
+        return this;
+    }
+
+    public TransmissionObjectBuilder segmentEnd(int segmentEnd) {
+        to.segmentEnd = segmentEnd;
+        return this;
+    }
+
     public TransmissionObjectBuilder gpxFile(String gpxFile) {
         to.gpxFile = gpxFile;
+        return this;
+    }
+
+    public TransmissionObjectBuilder gpxResults(GpxResults gpxResults) {
+        to.gpxResults = gpxResults;
         return this;
     }
 

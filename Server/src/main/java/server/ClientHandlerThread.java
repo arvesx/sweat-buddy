@@ -272,7 +272,7 @@ public class ClientHandlerThread extends Thread {
                                 (ArrayList<WaypointImpl>) receivedData.userData.routes
                                         .get(receivedData.routeId)
                                         .routeWaypoints
-                                        .subList(receivedData.segmentStart, receivedData.segmentEnd)
+                                        .subList(receivedData.segmentStart, receivedData.segmentEnd + 1)
                         );
 
                         GpxResults gpxResults = analyzeGpxFile(gpxFile);
@@ -283,9 +283,11 @@ public class ClientHandlerThread extends Thread {
                         TransmissionObject to = new TransmissionObjectBuilder()
                                 .type(TransmissionObjectType.USER_DATA)
                                 .userData(userData)
+                                .gpxResults(gpxResults)
                                 .message("Segment has been processed.")
                                 .success(1)
                                 .craft();
+
 
                         String jsonTransmissionObject = gson.toJson(to);
                         outputStream.writeObject(jsonTransmissionObject);

@@ -213,7 +213,7 @@ fun NewRouteScreen(navController: NavController, sharedViewModel: SharedViewMode
                     ) {
                         Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
                             RouteNameTextField(
-                                title = "Give your route a name",
+                                title = "Give your segment a name",
                                 viewModel.textFieldValue
                             )
                             Spacer(modifier = Modifier.width(10.dp))
@@ -286,6 +286,9 @@ fun MapScreen(
 
                 sharedViewModel.firstSegmentWaypoint.value = coordinates[secondQuartile]
                 sharedViewModel.lastSegmentWaypoint.value = coordinates[fourthQuartile]
+                sharedViewModel.firstSegmentWaypointIndex = secondQuartile
+                sharedViewModel.lastSegmentWaypointIndex = fourthQuartile
+
 
                 RouteAndSegment(
                     sharedViewModel = sharedViewModel,

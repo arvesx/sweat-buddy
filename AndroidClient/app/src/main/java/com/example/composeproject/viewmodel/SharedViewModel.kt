@@ -30,9 +30,20 @@ class SharedViewModel : ViewModel() {
     var routePoints = mutableStateOf(0)
 
 
+    // specific segment info
+    var totalDistanceS = mutableStateOf(0.0f)
+    var totalElevationS = mutableStateOf(0.0f)
+    var avgSpeedS = mutableStateOf(0.0f)
+    var totalTimeS = mutableStateOf("0m")
+    var routeNameS = mutableStateOf("")
+
+
     // about segments
     var firstSegmentWaypoint = mutableStateOf(LatLng(0.0, 0.0))
     var lastSegmentWaypoint = mutableStateOf(LatLng(0.0, 0.0))
+
+    var firstSegmentWaypointIndex = 0
+    var lastSegmentWaypointIndex = 0
 
     var selectedSegmentLatLngList: List<LatLng> = listOf()
 
@@ -62,11 +73,13 @@ class SharedViewModel : ViewModel() {
     }
 
     fun updateSegment(coordinates: List<LatLng>) {
-        selectedSegmentLatLngList = coordinates.subList(
-            coordinates.indexOf(firstSegmentWaypoint.value),
-            coordinates.indexOf(lastSegmentWaypoint.value) + 1
-        )
-        print(selectedSegmentLatLngList)
+        val startIndex = coordinates.indexOf(firstSegmentWaypoint.value)
+        val lastIndex = coordinates.indexOf(lastSegmentWaypoint.value) + 1
+        firstSegmentWaypointIndex = startIndex
+        lastSegmentWaypointIndex = lastIndex
+        selectedSegmentLatLngList = coordinates.subList(startIndex, lastIndex)
+        println("Start Wp index: $firstSegmentWaypointIndex")
+        println("End Wp index: $lastSegmentWaypointIndex")
     }
 
     fun updateRouteCoordinates(coordinatesLatLng: List<LatLng>) {
@@ -107,6 +120,25 @@ class SharedViewModel : ViewModel() {
         this.totalElevation.value = totalElevation.toFloat()
         this.avgSpeed.value = avgSpeed.toFloat()
         this.totalTime.value = "${minutes}m${seconds}s"
+    }
+
+    fun updateSpecificSegment(
+        routeNameS: String,
+        totalDistanceS: Double,
+        totalElevationS: Double,
+        avgSpeedS: Double,
+        totalTimeS: Long
+    ) {
+        this.routeNameS.value = routeNameS
+
+        val milliseconds: Long = totalTimeS
+        val minutes = milliseconds / 1000 / 60
+        val seconds = milliseconds / 1000 % 60
+
+        this.totalDistanceS.value = totalDistanceS.toFloat()
+        this.totalElevationS.value = totalElevationS.toFloat()
+        this.avgSpeedS.value = avgSpeedS.toFloat()
+        this.totalTimeS.value = "${minutes}m${seconds}s"
     }
 
     fun getUserDataByID(userID: Int): UserInfo {
