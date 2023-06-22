@@ -1,5 +1,7 @@
 package com.example.composeproject;
 
+import android.util.JsonReader;
+
 import com.example.composeproject.dependencies.Utilities;
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObject;
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectType;
@@ -8,6 +10,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StringReader;
 import java.net.Socket;
 
 
@@ -27,7 +30,7 @@ public class BackendCommunicator {
 
     public void attemptConnection() {
         try {
-            this.socket = new Socket("192.168.42.229", Utilities.CLIENTS_PORT);
+            this.socket = new Socket("192.168.1.11", Utilities.CLIENTS_PORT);
             this.outputStream = new ObjectOutputStream(socket.getOutputStream());
             this.inputStream = new ObjectInputStream(socket.getInputStream());
             this.connectionEstablished = true;

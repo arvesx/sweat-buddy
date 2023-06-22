@@ -33,6 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.composeproject.data.UserInfo
@@ -749,16 +750,17 @@ fun GoalsCard() {
 
 
         }
-
     }
 }
+
 
 @Composable
 fun LeaderBoardCard(
     navController: NavController,
     sharedViewModel: SharedViewModel,
     viewModel: HomeViewModel
-) {
+)
+{
     Card(
         modifier = Modifier
             .fillMaxWidth(0.42f)

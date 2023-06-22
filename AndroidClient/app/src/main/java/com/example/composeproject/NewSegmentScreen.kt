@@ -84,7 +84,7 @@ fun NewSegmentScreen(navController: NavController, sharedViewModel: SharedViewMo
                         fontSize = 18.sp,
                     )
 
-                    TextButton(
+                    TextButton (
                         onClick = {
                             viewModel.onCreate(navController, sharedViewModel)
                         },

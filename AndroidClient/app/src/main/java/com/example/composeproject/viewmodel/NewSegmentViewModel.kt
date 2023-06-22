@@ -1,9 +1,12 @@
 package com.example.composeproject.viewmodel
 
+import android.content.Context
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.example.composeproject.Navigation
+import com.example.composeproject.Screen
 import com.example.composeproject.BackendCommunicator
 import com.example.composeproject.Screen
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectBuilder

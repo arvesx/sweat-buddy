@@ -66,7 +66,7 @@ public class DataExchangeHandler {
         for (var user : userData) {
             totalTime += user.totalTime;
         }
-        return totalTime;
+        return totalTime / userData.size();
     }
 
 

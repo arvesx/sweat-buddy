@@ -41,8 +41,13 @@ fun Navigation() {
         composable(Screen.SignUpScreen.route) {
             Signup(navController = navController, sharedViewModel)
         }
+
         composable(Screen.RouteScreen.route) {
             NewRouteCreatedScreen(navController, sharedViewModel)
+        }
+
+        composable(Screen.SegmentScreen.route) {
+            NewSegmentCreatedScreen(navController, sharedViewModel)
         }
 
         composable(Screen.AllSegmentsScreen.route) {
