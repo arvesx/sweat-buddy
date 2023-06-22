@@ -1,11 +1,15 @@
 package com.example.composeproject.viewmodel
 
+import android.content.Context
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.example.composeproject.Navigation
+import com.example.composeproject.Screen
 import com.example.composeproject.dependencies.user.Route
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.*
+import okhttp3.Dispatcher
 
 
 class NewSegmentViewModel : ViewModel()
@@ -36,12 +40,25 @@ class NewSegmentViewModel : ViewModel()
 
     fun onCreate(
         navController: NavController,
-
+        sharedViewModel: SharedViewModel
     )
     {
+        val scope = CoroutineScope(Dispatchers.IO)
+        scope.launch {
+
+            withContext(Dispatchers.Main)
+            {
+                navController.navigate(Screen.SegmentScreen.route) {
+                    popUpTo(0)
+                }
+            }
+
+        }
 
     }
 
+    fun onLeaderboardClick(navController: NavController, sharedViewModel: SharedViewModel) {
 
+    }
 
 }

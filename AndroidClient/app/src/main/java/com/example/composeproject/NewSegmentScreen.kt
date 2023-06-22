@@ -84,9 +84,9 @@ fun NewSegmentScreen(navController: NavController, sharedViewModel: SharedViewMo
                         fontSize = 18.sp,
                     )
 
-                    TextButton(
+                    TextButton (
                         onClick = {
-                            //viewModel.onCreate(navController, sharedViewModel, context)
+                            viewModel.onCreate(navController, sharedViewModel)
                         },
                         modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
                     ) {
