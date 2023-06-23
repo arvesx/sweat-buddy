@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.composeproject.BackendCommunicator
+import com.example.composeproject.Screen
 import com.example.composeproject.data.UserInfo
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectBuilder
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectType
@@ -15,7 +16,25 @@ import okhttp3.Dispatcher
 
 class HomeViewModel : ViewModel() {
 
-    fun onLeaderboardClick(navController: NavController, sharedViewModel: SharedViewModel){
+    fun onLogoutClick(navController: NavController) {
+
+        val to = TransmissionObjectBuilder()
+            .type(TransmissionObjectType.LOGOUT_REQUEST)
+            .craft()
+
+        val backendCommunicator = BackendCommunicator.getInstance()
+        val answer = backendCommunicator.sendClientInfo(to)
+
+        if (answer.success == 1) {
+
+            navController.navigate(Screen.AuthenticationScreen.route) {
+                popUpTo(0)
+            }
+        }
+
+    }
+
+    fun onLeaderboardClick(navController: NavController, sharedViewModel: SharedViewModel) {
 
         val scope = CoroutineScope(Dispatchers.IO)
         scope.launch {
@@ -26,18 +45,17 @@ class HomeViewModel : ViewModel() {
             val backendCommunicator = BackendCommunicator.getInstance()
             val answer = backendCommunicator.sendClientInfo(to)
 
-            if (answer.success == 1)
-            {
+            if (answer.success == 1) {
                 var position = 1
                 val newList = mutableListOf<UserInfo>()
-                answer.leaderboardList.forEach {item ->
+                answer.leaderboardList.forEach { item ->
                     newList.add(UserInfo(0, position, item.name, item.points))
                     position++
                 }
 
                 withContext(Dispatchers.Main)
                 {
-                    sharedViewModel.leaderboardList = mutableStateOf(newList)
+                    sharedViewModel.leaderboardList.value = newList
                 }
             }
         }

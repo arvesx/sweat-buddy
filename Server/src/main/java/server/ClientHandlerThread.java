@@ -118,7 +118,6 @@ public class ClientHandlerThread extends Thread {
 
 
             while (true) {
-
                 String receivedJsonString = (String) this.inputStream.readObject();
                 TransmissionObject receivedData = gson.fromJson(receivedJsonString, TransmissionObject.class);
 
@@ -197,6 +196,19 @@ public class ClientHandlerThread extends Thread {
                     }
                 }
                 if (loggedIn) {
+                    if (receivedData.type == TransmissionObjectType.LOGOUT_REQUEST) {
+                        loggedIn = false;
+                        TransmissionObject to = new TransmissionObjectBuilder()
+                                .type(TransmissionObjectType.LOGOUT_REQUEST)
+                                .message("logging out")
+                                .success(1)
+                                .craft();
+
+                        String jsonTransmissionObject = gson.toJson(to);
+                        outputStream.writeObject(jsonTransmissionObject);
+                        System.out.println("Logged out.");
+                    }
+
                     if (receivedData.type == TransmissionObjectType.GPX_FILE) {
                         System.out.println("Received gpx file from " + this.clientData.getUsername());
                         GpxFile gpxFile = new GpxFile(new ByteArrayInputStream(receivedData.gpxFile.getBytes()));

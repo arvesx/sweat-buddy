@@ -6,6 +6,8 @@ public enum TransmissionObjectType {
     SEGMENT,
     REGISTRATION_MESSAGE,
     LOGIN_MESSAGE,
+
+    LOGOUT_REQUEST,
     USER_DATA,
     GENERIC_STATS_REQUEST,
     LEADERBOARD

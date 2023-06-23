@@ -184,7 +184,7 @@ fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 )
                 {
-                    UserAvatar(navController)
+                    UserAvatar(navController, viewModel)
                     TrophiesSection(trophies = sharedViewModel.userData.points)
                 }
 
@@ -355,7 +355,7 @@ fun BarChart(
 }
 
 @Composable
-fun UserAvatar(navController: NavController) {
+fun UserAvatar(navController: NavController, homeViewModel: HomeViewModel) {
     var clicked by remember { mutableStateOf(false) }
 
     val boxWidthOpen by animateFloatAsState(
@@ -426,7 +426,7 @@ fun UserAvatar(navController: NavController) {
                         )
                     }
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = { homeViewModel.onLogoutClick(navController) },
                         modifier = Modifier.clip(CircleShape)
                     ) {
                         Image(
@@ -759,8 +759,7 @@ fun LeaderBoardCard(
     navController: NavController,
     sharedViewModel: SharedViewModel,
     viewModel: HomeViewModel
-)
-{
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.42f)
