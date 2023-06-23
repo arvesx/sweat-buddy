@@ -8,7 +8,6 @@ import androidx.navigation.NavController
 import com.example.composeproject.Navigation
 import com.example.composeproject.Screen
 import com.example.composeproject.BackendCommunicator
-import com.example.composeproject.Screen
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectBuilder
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectType
 import com.example.composeproject.dependencies.user.Route
@@ -47,6 +46,7 @@ class NewSegmentViewModel : ViewModel() {
         scope.launch {
             val to = TransmissionObjectBuilder()
                 .type(TransmissionObjectType.SEGMENT)
+                .routeId(selectedRoute.value.routeId)
                 .segmentStart(sharedViewModel.firstSegmentWaypointIndex)
                 .segmentEnd(sharedViewModel.lastSegmentWaypointIndex)
                 .craft()
@@ -65,7 +65,7 @@ class NewSegmentViewModel : ViewModel() {
                 )
 
                 withContext(Dispatchers.Main) {
-                    navController.navigate(Screen.RouteScreen.route) {
+                    navController.navigate(Screen.SegmentScreen.route) {
                         popUpTo(0)
                     }
                 }

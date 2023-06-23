@@ -79,10 +79,10 @@ fun NewSegmentCreatedScreen(navController: NavController, sharedViewModel: Share
                 SegmentsLeaderBoardCard(navController, sharedViewModel, viewModel)
                 Spacer(modifier = Modifier.height(50.dp))
                 CardSegmentInMiddle(
-                    totalDistance = sharedViewModel.totalDistance.value,
-                    totalElevation = sharedViewModel.totalElevation.value,
-                    avgSpeed = sharedViewModel.avgSpeed.value,
-                    totalTime = sharedViewModel.totalTime.value
+                    totalDistance = sharedViewModel.totalDistanceS.value,
+                    totalElevation = sharedViewModel.totalElevationS.value,
+                    avgSpeed = sharedViewModel.avgSpeedS.value,
+                    totalTime = sharedViewModel.totalTimeS.value
                 )
             }
 
@@ -181,7 +181,7 @@ fun SegmentsLeaderBoardCard(
             .height(200.dp)
             .offset(y = (-40).dp)
             .bounceClick {
-                viewModel.onLeaderboardClick(navController, sharedViewModel)
+//                viewModel.onLeaderboardClick(navController, sharedViewModel)
                 navController.navigate(Screen.LeaderboardScreen.route)
             },
         shape = RoundedCornerShape(25.dp),

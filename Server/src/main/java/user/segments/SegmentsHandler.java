@@ -2,19 +2,14 @@ package user.segments;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import dependencies.fileprocessing.gpx.GpxFile;
-import dependencies.fileprocessing.gpx.GpxResults;
 import dependencies.fileprocessing.gpx.WaypointImpl;
-import dependencies.user.Segment;
-import dependencies.user.SegmentAttempt;
-import dependencies.user.UserData;
+import dependencies.user.*;
 import user.userdata.DataExchangeHandler;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 import static server.Utils.LOGGER;
 
@@ -54,13 +49,40 @@ public class SegmentsHandler {
     }
 
 
+    public static void updateLeaderboardOfSegment(Segment segment) {
+        segment.leaderboard = new ArrayList<>();
+        for (var user : DataExchangeHandler.userData) {
+            SegmentAttempt segmentAttempt;
+            if ((segmentAttempt = hasUserDoneSegment(user, segment.segmentId)) != null) {
+                SegmentLeaderboardEntry entry = new SegmentLeaderboardEntry();
+                entry.userId = user.userId;
+                entry.username = user.username;
+                entry.totalTime = segmentAttempt.totalTime;
+                entry.totalDistance = segmentAttempt.totalDistance;
+                entry.avgSpeed = segmentAttempt.avgSpeed;
+                entry.elevation = segmentAttempt.elevation;
+                segment.leaderboard.add(entry);
+            }
+        }
+
+        segment.leaderboard.sort(new SegmentLeaderboardEntryComparator());
+        writeAllSegmentsToJson();
+    }
+
+    public static SegmentAttempt hasUserDoneSegment(UserData user, int segId) {
+        for (var i : user.segments) {
+            if (i.segmentId == segId) return i;
+        }
+        return null;
+    }
+
     public static void readAllSegments() {
         Gson gson = new Gson();
         synchronized (ALL_SEGMENTS_LIST_LOCK) {
             try (FileReader fileReader = new FileReader(segmentsFilePath)) {
                 allSegments = gson.fromJson(fileReader, new TypeToken<ArrayList<Segment>>() {
                 }.getType());
-                LOGGER.info("All existing segments and leaderboards have been read from file");
+                LOGGER.info("All existing segments and leaderboards have been read from file...");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -73,16 +95,10 @@ public class SegmentsHandler {
         synchronized (ALL_SEGMENTS_LIST_LOCK) {
             try (FileWriter writer = new FileWriter(segmentsFilePath)) {
                 writer.write(jsonString);
-                LOGGER.info("All segments in memory have been written to json file");
+                LOGGER.info("All segments in memory have been written to json file...");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-
-    public static void main(String[] args) {
-
-
     }
 }

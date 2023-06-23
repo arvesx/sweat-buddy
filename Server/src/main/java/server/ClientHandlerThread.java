@@ -17,7 +17,6 @@ import user.userdata.DataExchangeHandler;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -216,6 +215,18 @@ public class ClientHandlerThread extends Thread {
                         userData.totalElevation += results.totalAscentInMete();
                         userData.totalTime += results.totalTimeInMillis();
 
+                        // Check if new route contains any existing segment. If so, add it to user
+                        synchronized (SegmentsHandler.ALL_SEGMENTS_LIST_LOCK) {
+                            for (var seg : SegmentsHandler.allSegments) {
+                                ArrayList<WaypointImpl> sublist;
+                                if ((sublist = SegmentsHandler.isSegmentPresentInRoute(seg.waypoints, newRoute.routeWaypoints)) != null) {
+                                    GpxResults segmentResults = this.analyzeGpxFile(new GpxFile(sublist));
+                                    this.createSegmentAttemptForUser(userData, segmentResults, seg.segmentName, sublist, seg.segmentId);
+                                    SegmentsHandler.updateLeaderboardOfSegment(seg);
+                                }
+                            }
+                        }
+
                         DataExchangeHandler.updateAverageMetrics();
 
                         DataExchangeHandler.writeAllUserDataToJson();
@@ -268,18 +279,36 @@ public class ClientHandlerThread extends Thread {
                     // if we receive a new segment
                     if (receivedData.type == TransmissionObjectType.SEGMENT) {
 
+                        var sublist = this.userData.routes
+                                .get(receivedData.routeId)
+                                .routeWaypoints
+                                .subList(receivedData.segmentStart, receivedData.segmentEnd + 1);
+
+                        ArrayList<WaypointImpl> segmentWaypoints = new ArrayList<>(sublist);
+
                         GpxFile gpxFile = new GpxFile(
-                                (ArrayList<WaypointImpl>) receivedData.userData.routes
-                                        .get(receivedData.routeId)
-                                        .routeWaypoints
-                                        .subList(receivedData.segmentStart, receivedData.segmentEnd + 1)
+                                segmentWaypoints
                         );
 
                         GpxResults gpxResults = analyzeGpxFile(gpxFile);
-                        this.addSegmentToUser(this.userData, gpxResults, receivedData.message, gpxFile.getWps());
 
-                        this.updateAllUserSegments(userData.userId, gpxFile.getWps(), receivedData.message);
+                        Segment segment = new Segment();
+                        segment.leaderboard = new ArrayList<>();
+                        segment.segmentName = receivedData.message;
+                        segment.waypoints = gpxFile.getWps();
+                        synchronized (SegmentsHandler.ALL_SEGMENTS_LIST_LOCK) {
+                            segment.segmentId = SegmentsHandler.allSegments.size();
+                            SegmentsHandler.allSegments.add(segment);
+                        }
 
+                        createSegmentAttemptForUser(
+                                this.userData, gpxResults, receivedData.message, gpxFile.getWps(), segment.segmentId);
+
+                        // because we have introduced a new segment to our system
+                        checkEveryUserIfTheyCompletedSegment(userData.userId, segment);
+
+
+                        DataExchangeHandler.writeAllUserDataToJson();
                         TransmissionObject to = new TransmissionObjectBuilder()
                                 .type(TransmissionObjectType.USER_DATA)
                                 .userData(userData)
@@ -347,48 +376,45 @@ public class ClientHandlerThread extends Thread {
 
     }
 
-    public void updateAllUserSegments(int id, ArrayList<WaypointImpl> segment, String segmentName) {
+    public void checkEveryUserIfTheyCompletedSegment(int ignoreUserId, Segment segment) {
         new Thread(() -> {
 
             for (var userData : DataExchangeHandler.userData) {
-                if (userData.userId == id) continue;
+                if (userData.userId == ignoreUserId) continue;
 
                 try {
-                    this.updateUserSegments(userData, segment, segmentName);
+                    hasUserCompletedSegment(userData, segment);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
-
+            SegmentsHandler.updateLeaderboardOfSegment(segment);
         }).start();
     }
 
 
-    public void updateUserSegments(
-            UserData userData, ArrayList<WaypointImpl> segmentWps,
-            String segmentName) throws InterruptedException {
+    public void hasUserCompletedSegment(
+            UserData userData, Segment segment) throws InterruptedException {
 
         for (var route : userData.routes) {
             ArrayList<WaypointImpl> sublist;
-            if ((sublist = SegmentsHandler.isSegmentPresentInRoute(segmentWps, route.routeWaypoints)) != null) {
+            if (route == null) continue;
+            if (route.routeWaypoints == null) continue;
+            if ((sublist = SegmentsHandler.isSegmentPresentInRoute(segment.waypoints, route.routeWaypoints)) != null) {
 
                 GpxResults results = this.analyzeGpxFile(new GpxFile(sublist));
-                this.addSegmentToUser(userData, results, segmentName, sublist);
-
+                createSegmentAttemptForUser(userData, results, segment.segmentName, sublist, segment.segmentId);
             }
         }
 
     }
 
-    private void addSegmentToUser(UserData userData, GpxResults results, String segmentName, ArrayList<WaypointImpl> sublist) {
-
-
+    private void createSegmentAttemptForUser(UserData userData, GpxResults results, String segmentName, ArrayList<WaypointImpl> sublist, int segId) {
         SegmentAttempt segmentAttempt = new SegmentAttempt();
         segmentAttempt.segmentName = segmentName;
 
-        synchronized (SegmentsHandler.ALL_SEGMENTS_LIST_LOCK) {
-            segmentAttempt.segmentId = SegmentsHandler.allSegments.size();
-        }
+        segmentAttempt.segmentId = segId;
+
         segmentAttempt.waypoints = sublist;
         segmentAttempt.totalTime = results.totalTimeInMillis();
         segmentAttempt.totalDistance = (float) results.distanceInKilometers();
@@ -401,5 +427,6 @@ public class ClientHandlerThread extends Thread {
 
         userData.segments.add(segmentAttempt);
     }
+
 }
 

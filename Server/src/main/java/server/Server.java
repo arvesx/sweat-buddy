@@ -3,6 +3,7 @@ package server;
 import dependencies.Utilities;
 import dependencies.fileprocessing.gpx.Chunk;
 import user.Authentication;
+import user.segments.SegmentsHandler;
 import user.userdata.DataExchangeHandler;
 
 import static server.Utils.*;
@@ -39,6 +40,7 @@ public class Server {
             Authentication.readAllUserCredentialsFromJson();
             DataExchangeHandler.readAllUserDataFromJson();
             DataExchangeHandler.readGenericData();
+            SegmentsHandler.readAllSegments();
         } catch (IOException e) {
             e.printStackTrace();
         }
