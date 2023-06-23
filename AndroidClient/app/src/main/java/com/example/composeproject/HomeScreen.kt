@@ -185,7 +185,7 @@ fun HomeScreen(navController: NavController, sharedViewModel: SharedViewModel) {
                 )
                 {
                     UserAvatar(navController)
-                    TrophiesSection(trophies = sharedViewModel.getUserDataByID(sharedViewModel.userID.value).points)
+                    TrophiesSection(trophies = sharedViewModel.userData.points)
                 }
 
                 DateSection()

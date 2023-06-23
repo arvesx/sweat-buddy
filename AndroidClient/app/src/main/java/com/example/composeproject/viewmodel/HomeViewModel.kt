@@ -31,7 +31,7 @@ class HomeViewModel : ViewModel() {
                 var position = 1
                 val newList = mutableListOf<UserInfo>()
                 answer.leaderboardList.forEach {item ->
-                    newList.add(UserInfo(item.userId, position, item.username, item.points))
+                    newList.add(UserInfo(0, position, item.name, item.points))
                     position++
                 }
 

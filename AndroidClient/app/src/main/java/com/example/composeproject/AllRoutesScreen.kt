@@ -100,7 +100,7 @@ fun RoutesScreen(navController: NavController, sharedViewModel: SharedViewModel)
                         .fillMaxWidth()
                         .height(10.dp)
                 )
-                ContentList(SectionContent.ROUTES, sharedViewModel)
+                ContentList(SectionContent.ROUTES, sharedViewModel, navController)
             }
         }
     }

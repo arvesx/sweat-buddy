@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.composeproject.data.ContentCardType
 import com.example.composeproject.data.Info
 import com.example.composeproject.data.RouteInfo
 import com.example.composeproject.data.SegmentInfo
@@ -52,12 +53,18 @@ enum class SectionContent {
 }
 
 @Composable
-fun <T: Info> ContentCard(item: T) {
+fun <T : Info> ContentCard(
+    item: T,
+    type: ContentCardType,
+    sharedViewModel: SharedViewModel,
+    navController: NavController
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
-            .padding(top = 10.dp),
+            .padding(top = 10.dp)
+            .bounceClick { sharedViewModel.handleContentCardClick(type, navController, item.id) },
         shape = RoundedCornerShape(25.dp),
         colors = CardDefaults.cardColors(Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp, hoveredElevation = 10.dp),
@@ -187,24 +194,22 @@ fun <T: Info> ContentCard(item: T) {
 @Composable
 fun ContentList(
     content: SectionContent,
-    sharedViewModel: SharedViewModel
-)
-{
-    if (content == SectionContent.ROUTES)
-    {
+    sharedViewModel: SharedViewModel,
+    navController: NavController
+) {
+    if (content == SectionContent.ROUTES) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(sharedViewModel.routes.value) { route ->
-                val routeInfo = RouteInfo(1, route.routeName, route.routeType, 5)
-                ContentCard(routeInfo)
+                val routeInfo = RouteInfo(route.routeId, route.routeName, route.routeType, 5)
+                ContentCard(routeInfo, ContentCardType.ROUTE, sharedViewModel, navController)
             }
         }
-    }
-    else
-    {
+    } else {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(sharedViewModel.segments.value) { segment ->
-                val segmentInfo = SegmentInfo(1, segment.segmentName, segment.segmentType, 5)
-                ContentCard(segmentInfo)
+                val segmentInfo =
+                    SegmentInfo(segment.segmentId, segment.segmentName, segment.segmentType, 5)
+                ContentCard(segmentInfo, ContentCardType.SEGMENT, sharedViewModel, navController)
             }
         }
     }
@@ -215,8 +220,7 @@ fun ScreenUpperSection(
     content: SectionContent,
     height: Dp,
     navController: NavController
-)
-{
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -252,18 +256,17 @@ fun ScreenUpperSection(
                 )
             }
             Text(
-                text = content.toString().substring(0,1)+content.toString().substring(1).lowercase(), color = colorResource(id = R.color.white),
+                text = content.toString().substring(0, 1) + content.toString().substring(1)
+                    .lowercase(),
+                color = colorResource(id = R.color.white),
                 fontFamily = ManropeFamily,
                 fontSize = 18.sp,
             )
             IconButton(
                 onClick = {
-                    if (content == SectionContent.ROUTES)
-                    {
+                    if (content == SectionContent.ROUTES) {
                         navController.navigate(Screen.NewRouteScreen.route)
-                    }
-                    else
-                    {
+                    } else {
                         navController.navigate(Screen.NewSegmentScreen.route)
                     }
                 },
@@ -283,12 +286,12 @@ fun ScreenUpperSection(
 
 
 // Pulsate effect
-enum class CardState{
+enum class CardState {
     IDLE,
     PRESSED
 }
 
-fun Modifier.bounceClick(onClick: () -> Unit ) = composed {
+fun Modifier.bounceClick(onClick: () -> Unit) = composed {
 
     val interactionSource = remember { MutableInteractionSource() }
     var state by remember { mutableStateOf(CardState.IDLE) }
@@ -323,7 +326,7 @@ fun Modifier.bounceClick(onClick: () -> Unit ) = composed {
             indication = null,
             onClick = {
                 val scope = CoroutineScope(Dispatchers.Main)
-                scope.launch{
+                scope.launch {
                     delay(100L)
                     state = CardState.IDLE
                     delay(130L)

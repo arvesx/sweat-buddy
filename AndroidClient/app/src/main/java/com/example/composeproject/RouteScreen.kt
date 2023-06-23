@@ -59,20 +59,46 @@ fun NewRouteCreatedScreen(navController: NavController, sharedViewModel: SharedV
                 )
             )
     ) {
-        UpperSection(sharedViewModel.routeName.value, sharedViewModel.routePoints.value, navController)
-        Box(
+        UpperSection(
+            sharedViewModel.routeName.value,
+            sharedViewModel.routePoints.value,
+            navController
+        )
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp),
-            contentAlignment = Alignment.Center
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom
         ) {
-            CardInMiddle(
-                totalDistance = sharedViewModel.totalDistance.value,
-                totalElevation = sharedViewModel.totalElevation.value,
-                avgSpeed = sharedViewModel.avgSpeed.value,
-                totalTime = sharedViewModel.totalTime.value
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                contentAlignment = Alignment.Center
+            ) {
+
+                CardInMiddle(
+                    totalDistance = sharedViewModel.totalDistance.value,
+                    totalElevation = sharedViewModel.totalElevation.value,
+                    avgSpeed = sharedViewModel.avgSpeed.value,
+                    totalTime = sharedViewModel.totalTime.value
+                )
+
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp).alpha(0.9f)
+                    .clip(RoundedCornerShape(topEnd = 45.dp, topStart = 45.dp))
+            ) {
+                MapScreen(
+                    coordinates = sharedViewModel.routeWaypoints.value,
+                    cameraPositionState = sharedViewModel.cameraPositionState.value,
+                    sharedViewModel = sharedViewModel
+                )
+            }
         }
+
+
     }
 }
 

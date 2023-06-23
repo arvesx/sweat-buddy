@@ -76,7 +76,7 @@ fun SegmentsScreen(navController: NavController, sharedViewModel: SharedViewMode
                         .fillMaxWidth()
                         .height(10.dp)
                 )
-                ContentList(SectionContent.SEGMENTS, sharedViewModel)
+                ContentList(SectionContent.SEGMENTS, sharedViewModel, navController)
             }
         }
     }

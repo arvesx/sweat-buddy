@@ -3,9 +3,11 @@ package dependencies.fileprocessing;
 import dependencies.fileprocessing.gpx.GpxResults;
 import dependencies.user.GenericStats;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.qos.logback.core.joran.sanity.Pair;
+import dependencies.user.LeaderboardEntry;
 import dependencies.user.UserData;
 
 public class TransmissionObjectBuilder {
@@ -25,7 +27,7 @@ public class TransmissionObjectBuilder {
         return this;
     }
 
-    public TransmissionObjectBuilder leaderboardList(List<UserData> leaderboardList) {
+    public TransmissionObjectBuilder leaderboardList(ArrayList<LeaderboardEntry> leaderboardList) {
         to.leaderboardList = leaderboardList;
         return this;
     }

@@ -2,12 +2,24 @@ package com.example.composeproject.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import com.example.composeproject.Screen
+import com.example.composeproject.data.ContentCardType
 import com.example.composeproject.data.UserInfo
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObject
+import com.example.composeproject.dependencies.fileprocessing.gpx.WaypointImpl
 import com.example.composeproject.dependencies.user.Route
 import com.example.composeproject.dependencies.user.Segment
 import com.example.composeproject.dependencies.user.UserData
+import com.example.composeproject.utils.calculateCameraPosition
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
+import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.abs
 
 class SharedViewModel : ViewModel() {
@@ -28,6 +40,8 @@ class SharedViewModel : ViewModel() {
     var totalTime = mutableStateOf("0m")
     var routeName = mutableStateOf("")
     var routePoints = mutableStateOf(0)
+    var routeWaypoints = mutableStateOf(listOf<LatLng>())
+    var cameraPositionState = mutableStateOf(CameraPositionState())
 
 
     // specific segment info
@@ -46,6 +60,8 @@ class SharedViewModel : ViewModel() {
     var lastSegmentWaypointIndex = 0
 
     var selectedSegmentLatLngList: List<LatLng> = listOf()
+
+    lateinit var userData: UserData
 
     fun rightExtendSegment(wp: LatLng, coordinates: List<LatLng>) {
         lastSegmentWaypoint.value = wp
@@ -95,6 +111,7 @@ class SharedViewModel : ViewModel() {
             mostRecentRouteKm.value = routes.value.last().totalDistanceInKm
             totalNumberOfRoutes.value = to.userData.routesDoneThisMonth
             totalKilometeres.value = to.userData.totalKmThisMonth
+            this.userData = to.userData
         }
 
 
@@ -106,7 +123,8 @@ class SharedViewModel : ViewModel() {
         totalDistance: Double,
         totalElevation: Double,
         avgSpeed: Double,
-        totalTime: Long
+        totalTime: Long,
+        routeWps: List<WaypointImpl>
     ) {
         this.routeName.value = routeName
         this.routePoints.value = routePoints
@@ -120,6 +138,47 @@ class SharedViewModel : ViewModel() {
         this.totalElevation.value = totalElevation.toFloat()
         this.avgSpeed.value = avgSpeed.toFloat()
         this.totalTime.value = "${minutes}m${seconds}s"
+
+        val wps = mutableListOf<LatLng>()
+        for (i in routeWps) {
+            wps.add(LatLng(i.latitude, i.longitude))
+        }
+        routeWaypoints.value = wps
+        cameraPositionState.value = CameraPositionState(
+            position = CameraPosition.fromLatLngZoom(
+                calculateCameraPosition(wps),
+                14.0f
+            )
+        )
+    }
+
+    fun handleContentCardClick(
+        cardType: ContentCardType,
+        navController: NavController,
+        itemId: Int
+    ) {
+
+        val scope = CoroutineScope(Dispatchers.Default)
+        scope.launch {
+            if (cardType == ContentCardType.ROUTE) {
+                val route: Route = getRouteByID(itemId)
+                updateSpecificRoute(
+                    route.routeName,
+                    route.points,
+                    route.totalDistanceInKm,
+                    route.totalElevationInM,
+                    route.averageSpeedInKmH,
+                    route.totalTimeInMillis,
+                    route.routeWaypoints
+                )
+
+                withContext(Dispatchers.Main) {
+                    navController.navigate(Screen.RouteScreen.route) {
+                        popUpTo(0)
+                    }
+                }
+            }
+        }
     }
 
     fun updateSpecificSegment(
@@ -139,6 +198,13 @@ class SharedViewModel : ViewModel() {
         this.totalElevationS.value = totalElevationS.toFloat()
         this.avgSpeedS.value = avgSpeedS.toFloat()
         this.totalTimeS.value = "${minutes}m${seconds}s"
+    }
+
+    fun getRouteByID(routeId: Int): Route {
+        for (route in userData.routes) {
+            if (route.routeId == routeId) return route
+        }
+        return Route()
     }
 
     fun getUserDataByID(userID: Int): UserInfo {

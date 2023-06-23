@@ -13,6 +13,7 @@ import com.example.composeproject.BackendCommunicator
 import com.example.composeproject.Screen
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectBuilder
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectType
+import com.example.composeproject.dependencies.fileprocessing.gpx.WaypointImpl
 import com.example.composeproject.dependencies.user.UserData
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -67,6 +68,12 @@ class NewRouteViewModel : ViewModel() {
 
                     val newUserPoints = answer.userData.points - currentUserPoints
 
+                    val temporaryWps = mutableListOf<WaypointImpl>()
+                    for (i in coordinates) {
+                        temporaryWps.add(WaypointImpl(i.longitude, i.latitude, 0.0, 0))
+                    }
+
+
                     sharedViewModel.updateViewModel(answer)
                     sharedViewModel.updateRouteCoordinates(coordinatesLatLng)
                     sharedViewModel.updateSpecificRoute(
@@ -75,7 +82,8 @@ class NewRouteViewModel : ViewModel() {
                         answer.gpxResults.distanceInKilometers,
                         answer.gpxResults.totalAscentInMete,
                         answer.gpxResults.avgSpeedInKilometersPerHour,
-                        answer.gpxResults.totalTimeInMillis
+                        answer.gpxResults.totalTimeInMillis,
+                        temporaryWps
                     )
 
                     withContext(Dispatchers.Main) {

@@ -216,9 +216,9 @@ fun StatsCard(
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                RouteInfoElement("${totalDistance.value}km", "Total Distance")
+                RouteInfoElement("${String.format("%.1f", totalDistance.value)}km", "Total Distance")
                 RouteInfoElement(totalTime.value, "Total Time")
-                RouteInfoElement("${totalElevation.value}m", "Total Elevation")
+                RouteInfoElement("${String.format("%.1f", totalElevation.value)}m", "Total Elevation")
             }
         }
     }

@@ -2,8 +2,10 @@ package com.example.composeproject.dependencies.fileprocessing;
 
 import com.example.composeproject.dependencies.fileprocessing.gpx.GpxResults;
 import com.example.composeproject.dependencies.user.GenericStats;
+import com.example.composeproject.dependencies.user.LeaderboardEntry;
 import com.example.composeproject.dependencies.user.UserData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kotlin.Pair;
@@ -25,7 +27,7 @@ public class TransmissionObjectBuilder {
         return this;
     }
 
-    public TransmissionObjectBuilder leaderboardList(List<UserData> leaderboardList) {
+    public TransmissionObjectBuilder leaderboardList(ArrayList<LeaderboardEntry> leaderboardList) {
         to.leaderboardList = leaderboardList;
         return this;
     }

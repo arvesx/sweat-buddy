@@ -153,12 +153,11 @@ public class ClientHandlerThread extends Thread {
                 }
 
                 if (receivedData.type == TransmissionObjectType.LEADERBOARD) {
-                    DataExchangeHandler.userData.sort(Comparator.comparing(UserData::getPoints, Collections.reverseOrder()));
-
+                    ArrayList<LeaderboardEntry> leaderboard = DataExchangeHandler.fetchGenericLeaderboard();
                     try {
                         TransmissionObject to = new TransmissionObjectBuilder()
                                 .type(TransmissionObjectType.LEADERBOARD)
-                                .leaderboardList(DataExchangeHandler.userData)
+                                .leaderboardList(leaderboard)
                                 .message("Leaderboard")
                                 .success(1)
                                 .craft();
@@ -217,6 +216,9 @@ public class ClientHandlerThread extends Thread {
 
                         // Check if new route contains any existing segment. If so, add it to user
                         synchronized (SegmentsHandler.ALL_SEGMENTS_LIST_LOCK) {
+                            if (SegmentsHandler.allSegments == null) {
+                                SegmentsHandler.allSegments = new ArrayList<>();
+                            }
                             for (var seg : SegmentsHandler.allSegments) {
                                 ArrayList<WaypointImpl> sublist;
                                 if ((sublist = SegmentsHandler.isSegmentPresentInRoute(seg.waypoints, newRoute.routeWaypoints)) != null) {
@@ -357,6 +359,7 @@ public class ClientHandlerThread extends Thread {
         newRoute.routeName = receivedData.message;
         newRoute.coordinates = receivedData.coordinates;
         newRoute.totalTimeInMinutes = results.totalTimeInMinutes();
+        newRoute.totalTimeInMillis = results.totalTimeInMillis();
         newRoute.totalDistanceInKm = results.distanceInKilometers();
         newRoute.totalElevationInM = results.totalAscentInMete();
         newRoute.averageSpeedInKmH = results.avgSpeedInKilometersPerHour();

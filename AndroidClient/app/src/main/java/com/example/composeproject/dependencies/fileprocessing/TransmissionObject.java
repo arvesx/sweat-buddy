@@ -2,9 +2,11 @@ package com.example.composeproject.dependencies.fileprocessing;
 
 import com.example.composeproject.dependencies.fileprocessing.gpx.GpxResults;
 import com.example.composeproject.dependencies.user.GenericStats;
+import com.example.composeproject.dependencies.user.LeaderboardEntry;
 import com.example.composeproject.dependencies.user.UserData;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kotlin.Pair;
@@ -29,7 +31,8 @@ public class TransmissionObject {
     public GenericStats genericStats;
 
     public List<Pair<Double, Double>> coordinates;
-    public List<UserData> leaderboardList;
+    public ArrayList<LeaderboardEntry> leaderboardList;
+
 
     public String username;
     public String password;

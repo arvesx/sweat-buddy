@@ -3,9 +3,7 @@ package user.userdata;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import dependencies.fileprocessing.gpx.GpxResults;
-import dependencies.user.GenericData;
-import dependencies.user.GenericStats;
-import dependencies.user.UserData;
+import dependencies.user.*;
 import server.Utils;
 
 import java.io.FileReader;
@@ -25,6 +23,15 @@ public class DataExchangeHandler {
     public static final Object GENERIC_DATA_LOCK = new Object();
 
     private static final String genericDataFilePath = "src/main/java/user/userdata/genericdata_db.json";
+
+    public static ArrayList<LeaderboardEntry> fetchGenericLeaderboard() {
+        ArrayList<LeaderboardEntry> leaderboard = new ArrayList<>();
+        for (var i : userData) {
+            leaderboard.add(new LeaderboardEntry(i.username, i.points));
+        }
+        leaderboard.sort(new LeaderboardEntryComparator());
+        return leaderboard;
+    }
 
     public static void readGenericData() {
         Gson gson = new Gson();
@@ -54,11 +61,11 @@ public class DataExchangeHandler {
     }
 
     public static void populateGenericStatsObject(GenericStats obj) {
-        synchronized (GENERIC_DATA_LOCK) {
-            obj.avgTotalDistance = genericData.avgTotalDistance;
-            obj.avgTotalElevation = genericData.avgElevation;
-            obj.avgTotalTime = genericData.avgTotalTime;
-        }
+
+        obj.avgTotalDistance = genericData.avgTotalDistance;
+        obj.avgTotalElevation = genericData.avgElevation;
+        obj.avgTotalTime = genericData.avgTotalTime;
+
     }
 
     private static long calculateNewAvgTotalTime() {
