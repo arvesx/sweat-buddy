@@ -8,6 +8,7 @@ import java.util.List;
 
 import ch.qos.logback.core.joran.sanity.Pair;
 import dependencies.user.LeaderboardEntry;
+import dependencies.user.Segment;
 import dependencies.user.UserData;
 
 public class TransmissionObjectBuilder {
@@ -29,6 +30,11 @@ public class TransmissionObjectBuilder {
 
     public TransmissionObjectBuilder leaderboardList(ArrayList<LeaderboardEntry> leaderboardList) {
         to.leaderboardList = leaderboardList;
+        return this;
+    }
+
+    public TransmissionObjectBuilder segmentObject(Segment segmentObject) {
+        to.segmentObject = segmentObject;
         return this;
     }
 

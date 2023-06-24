@@ -9,5 +9,6 @@ public enum TransmissionObjectType {
     LOGOUT_REQUEST,
     USER_DATA,
     GENERIC_STATS_REQUEST,
-    LEADERBOARD
+    LEADERBOARD,
+    SEGMENT_LEADERBOARD
 }

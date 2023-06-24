@@ -20,4 +20,6 @@ sealed class Screen(val route: String) {
 
     object StatsScreen: Screen("stats_screen")
     object LeaderboardScreen : Screen("leaderboard_screen")
+    object SegmentLeaderboardScreen : Screen("segment_leaderboard_screen")
+
 }

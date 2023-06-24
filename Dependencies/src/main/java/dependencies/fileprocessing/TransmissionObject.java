@@ -7,6 +7,7 @@ import ch.qos.logback.core.joran.sanity.Pair;
 import dependencies.fileprocessing.gpx.GpxResults;
 import dependencies.user.GenericStats;
 import dependencies.user.LeaderboardEntry;
+import dependencies.user.Segment;
 import dependencies.user.UserData;
 
 public class TransmissionObject {
@@ -19,6 +20,7 @@ public class TransmissionObject {
     public int segmentId;
     public int segmentStart;
     public int segmentEnd;
+    public Segment segmentObject;
 
 
     public int routeId;

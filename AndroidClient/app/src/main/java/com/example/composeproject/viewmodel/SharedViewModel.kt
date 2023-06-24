@@ -43,6 +43,7 @@ class SharedViewModel : ViewModel() {
     var routeWaypoints = mutableStateOf(listOf<LatLng>())
     var cameraPositionState = mutableStateOf(CameraPositionState())
 
+    var newSegmentId = mutableStateOf(0)
 
     // specific segment info
     var totalDistanceS = mutableStateOf(0.0f)
@@ -61,7 +62,8 @@ class SharedViewModel : ViewModel() {
 
     var selectedSegmentLatLngList: List<LatLng> = listOf()
 
-    lateinit var userData: UserData
+    //lateinit var userData: UserData
+    var userData: UserData = UserData()
 
     fun rightExtendSegment(wp: LatLng, coordinates: List<LatLng>) {
         lastSegmentWaypoint.value = wp
@@ -229,5 +231,40 @@ class SharedViewModel : ViewModel() {
         return UserInfo(0, 0, "", 0)
     }
 
+    fun clearData()
+    {
+        userID = mutableStateOf(0)
+        username = mutableStateOf("")
+        routes = mutableStateOf(listOf())
+        segments = mutableStateOf(listOf())
+        leaderboardList = mutableStateOf(listOf())
+        mostRecentRouteKm = mutableStateOf(0.0)
+        totalNumberOfRoutes = mutableStateOf(0)
+        totalKilometeres = mutableStateOf(0.0f)
+        totalDistance = mutableStateOf(0.0f)
+        totalElevation = mutableStateOf(0.0f)
+        avgSpeed = mutableStateOf(0.0f)
+        totalTime = mutableStateOf("0m")
+        routeName = mutableStateOf("")
+        routePoints = mutableStateOf(0)
+        routeWaypoints = mutableStateOf(listOf())
+        cameraPositionState = mutableStateOf(CameraPositionState())
+        newSegmentId = mutableStateOf(0)
+        totalDistanceS = mutableStateOf(0.0f)
+        totalElevationS = mutableStateOf(0.0f)
+        avgSpeedS = mutableStateOf(0.0f)
+        totalTimeS = mutableStateOf("0m")
+        routeNameS = mutableStateOf("")
+        firstSegmentWaypoint = mutableStateOf(LatLng(0.0, 0.0))
+        lastSegmentWaypoint = mutableStateOf(LatLng(0.0, 0.0))
+        firstSegmentWaypointIndex = 0
+        lastSegmentWaypointIndex = 0
+        selectedSegmentLatLngList = listOf()
+        userData = UserData()
+    }
+
+
 }
+
+
 

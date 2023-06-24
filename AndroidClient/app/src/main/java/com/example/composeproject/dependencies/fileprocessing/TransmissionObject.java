@@ -3,6 +3,7 @@ package com.example.composeproject.dependencies.fileprocessing;
 import com.example.composeproject.dependencies.fileprocessing.gpx.GpxResults;
 import com.example.composeproject.dependencies.user.GenericStats;
 import com.example.composeproject.dependencies.user.LeaderboardEntry;
+import com.example.composeproject.dependencies.user.Segment;
 import com.example.composeproject.dependencies.user.UserData;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -19,6 +20,8 @@ public class TransmissionObject {
 
     public String segmentFile;
     public int segmentId;
+    public Segment segmentObject;
+
     public int segmentStart;
     public int segmentEnd;
 

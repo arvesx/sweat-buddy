@@ -3,6 +3,7 @@ package com.example.composeproject.dependencies.fileprocessing;
 import com.example.composeproject.dependencies.fileprocessing.gpx.GpxResults;
 import com.example.composeproject.dependencies.user.GenericStats;
 import com.example.composeproject.dependencies.user.LeaderboardEntry;
+import com.example.composeproject.dependencies.user.Segment;
 import com.example.composeproject.dependencies.user.UserData;
 
 import java.util.ArrayList;
@@ -19,6 +20,11 @@ public class TransmissionObjectBuilder {
 
     public TransmissionObjectBuilder type(TransmissionObjectType type) {
         to.type = type;
+        return this;
+    }
+
+    public TransmissionObjectBuilder segmentObject(Segment segmentObject) {
+        to.segmentObject = segmentObject;
         return this;
     }
 

@@ -1,8 +1,7 @@
-01:29:08.418 [main] INFO  server.Server - Starting Server...
-01:29:08.528 [main] INFO  server.Server - Generic data have been read from file
-01:29:08.535 [main] INFO  server.Server - Avg total distance: 15.172056, Avg total elevation: 71.63999, Avg total time: 5217000
-01:29:08.540 [main] INFO  server.Server - All existing segments and leaderboards have been read from file...
-01:29:08.542 [main] INFO  server.Server - Listening for new clients on port 1234
-01:29:08.544 [main] INFO  server.Server - Listening for new workers on port 2345
-01:30:14.869 [Thread-0] INFO  server.Server - Client#0: Connected
-01:32:26.581 [Thread-0] INFO  server.Server - Client#1: Connected
+03:33:16.045 [main] INFO  server.Server - Starting Server...
+03:33:16.098 [main] INFO  server.Server - Generic data have been read from file
+03:33:16.099 [main] INFO  server.Server - Avg total distance: 2.7957392, Avg total elevation: 8.62, Avg total time: 1101000
+03:33:16.100 [main] INFO  server.Server - All existing segments and leaderboards have been read from file...
+03:33:16.101 [main] INFO  server.Server - Listening for new clients on port 1234
+03:33:16.102 [main] INFO  server.Server - Listening for new workers on port 2345
+03:33:18.385 [Thread-1] INFO  server.Server - Worker node added

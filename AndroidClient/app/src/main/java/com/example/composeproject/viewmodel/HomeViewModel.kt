@@ -8,6 +8,7 @@ import com.example.composeproject.Screen
 import com.example.composeproject.data.UserInfo
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectBuilder
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectType
+import com.example.composeproject.dependencies.user.Route
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,21 +17,33 @@ import okhttp3.Dispatcher
 
 class HomeViewModel : ViewModel() {
 
-    fun onLogoutClick(navController: NavController) {
+    fun onLogoutClick(navController: NavController, sharedViewModel: SharedViewModel) {
 
-        val to = TransmissionObjectBuilder()
-            .type(TransmissionObjectType.LOGOUT_REQUEST)
-            .craft()
+        val scope = CoroutineScope(Dispatchers.IO)
+        scope.launch {
+            val to = TransmissionObjectBuilder()
+                .type(TransmissionObjectType.LOGOUT_REQUEST)
+                .craft()
 
-        val backendCommunicator = BackendCommunicator.getInstance()
-        val answer = backendCommunicator.sendClientInfo(to)
+            val backendCommunicator = BackendCommunicator.getInstance()
+            val answer = backendCommunicator.sendClientInfo(to)
 
-        if (answer.success == 1) {
+            if (answer.success == 1) {
 
-            navController.navigate(Screen.AuthenticationScreen.route) {
-                popUpTo(0)
+                // Clear data
+                sharedViewModel.clearData()
+
+                withContext(Dispatchers.Main)
+                {
+                    navController.navigate(Screen.AuthenticationScreen.route) {
+                        popUpTo(0)
+                    }
+                }
             }
         }
+
+
+
 
     }
 

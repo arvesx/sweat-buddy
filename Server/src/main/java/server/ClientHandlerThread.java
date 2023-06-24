@@ -174,6 +174,7 @@ public class ClientHandlerThread extends Thread {
                     try {
                         int userId = auth.handleRegistration(receivedData.username, receivedData.password);
                         UserData newUserData = handleNewAccUserData(userId);
+                        newUserData.username = receivedData.username;
                         DataExchangeHandler.userData.add(newUserData);
                         DataExchangeHandler.writeAllUserDataToJson();
 
@@ -197,7 +198,6 @@ public class ClientHandlerThread extends Thread {
                 }
                 if (loggedIn) {
                     if (receivedData.type == TransmissionObjectType.LOGOUT_REQUEST) {
-                        loggedIn = false;
                         TransmissionObject to = new TransmissionObjectBuilder()
                                 .type(TransmissionObjectType.LOGOUT_REQUEST)
                                 .message("logging out")
@@ -206,7 +206,9 @@ public class ClientHandlerThread extends Thread {
 
                         String jsonTransmissionObject = gson.toJson(to);
                         outputStream.writeObject(jsonTransmissionObject);
+                        loggedIn = false;
                         System.out.println("Logged out.");
+                        
                     }
 
                     if (receivedData.type == TransmissionObjectType.GPX_FILE) {
@@ -257,6 +259,24 @@ public class ClientHandlerThread extends Thread {
                         String jsonTransmissionObject = gson.toJson(to);
                         outputStream.writeObject(jsonTransmissionObject);
                     }
+
+                    if (receivedData.type == TransmissionObjectType.SEGMENT_LEADERBOARD) {
+
+                        try {
+                            TransmissionObject to = new TransmissionObjectBuilder()
+                                    .type(TransmissionObjectType.SEGMENT_LEADERBOARD)
+                                    .segmentObject(SegmentsHandler.allSegments.get(receivedData.segmentId))
+                                    .message("Segment Object")
+                                    .success(1)
+                                    .craft();
+
+                            String jsonTransmissionObject = gson.toJson(to);
+                            outputStream.writeObject(jsonTransmissionObject);
+                        } catch (Exception e) {
+                            /*TODO*/
+                        }
+                    }
+
                     // If a user requests to see his stats compared to average population stats, he makes
                     // a separate request to receive fresh and updated data.
                     if (receivedData.type == TransmissionObjectType.GENERIC_STATS_REQUEST) {

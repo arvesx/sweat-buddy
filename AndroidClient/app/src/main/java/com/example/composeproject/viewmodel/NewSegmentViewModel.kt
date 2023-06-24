@@ -63,6 +63,7 @@ class NewSegmentViewModel : ViewModel() {
                     answer.gpxResults.avgSpeedInKilometersPerHour,
                     answer.gpxResults.totalTimeInMillis
                 )
+                sharedViewModel.newSegmentId.value = answer.userData.segments.last().segmentId
 
                 withContext(Dispatchers.Main) {
                     navController.navigate(Screen.SegmentScreen.route) {
