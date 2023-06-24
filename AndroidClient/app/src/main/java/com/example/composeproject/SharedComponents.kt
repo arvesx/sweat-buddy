@@ -64,7 +64,7 @@ fun <T : Info> ContentCard(
             .fillMaxWidth()
             .height(100.dp)
             .padding(top = 10.dp)
-            .bounceClick { sharedViewModel.handleContentCardClick(type, navController, item.id) },
+            .bounceClick { sharedViewModel.handleContentCardClick(type, navController, item.id, sharedViewModel) },
         shape = RoundedCornerShape(25.dp),
         colors = CardDefaults.cardColors(Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp, hoveredElevation = 10.dp),

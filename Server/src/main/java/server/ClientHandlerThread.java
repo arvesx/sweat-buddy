@@ -441,7 +441,6 @@ public class ClientHandlerThread extends Thread {
                 createSegmentAttemptForUser(userData, results, segment.segmentName, sublist, segment.segmentId);
             }
         }
-
     }
 
     private void createSegmentAttemptForUser(UserData userData, GpxResults results, String segmentName, ArrayList<WaypointImpl> sublist, int segId) {

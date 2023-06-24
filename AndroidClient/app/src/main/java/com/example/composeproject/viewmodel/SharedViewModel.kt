@@ -159,7 +159,8 @@ class SharedViewModel : ViewModel() {
     fun handleContentCardClick(
         cardType: ContentCardType,
         navController: NavController,
-        itemId: Int
+        itemId: Int,
+        sharedViewModel: SharedViewModel
     ) {
 
         val scope = CoroutineScope(Dispatchers.Default)
@@ -192,6 +193,7 @@ class SharedViewModel : ViewModel() {
                     segmentAttempt.avgSpeed.toDouble(),
                     segmentAttempt.totalTime
                 )
+                sharedViewModel.newSegmentId.value = itemId
 
                 withContext(Dispatchers.Main) {
                     navController.navigate(Screen.SegmentScreen.route) {

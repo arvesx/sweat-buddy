@@ -1,28 +1,7 @@
-14:54:38.012 [main] INFO  server.Server - Starting Server...
-14:54:38.073 [main] INFO  server.Server - Generic data have been read from file
-14:54:38.074 [main] INFO  server.Server - Avg total distance: 2.7957392, Avg total elevation: 8.62, Avg total time: 1101000
-14:54:38.076 [main] INFO  server.Server - All existing segments and leaderboards have been read from file...
-14:54:38.076 [main] INFO  server.Server - Listening for new clients on port 1234
-14:54:38.077 [main] INFO  server.Server - Listening for new workers on port 2345
-14:54:39.741 [Thread-1] INFO  server.Server - Worker node added
-14:54:58.889 [Thread-0] INFO  server.Server - Client#0: Connected
-14:55:25.504 [Thread-5] INFO  server.Server - Client#0: Received GPX File
-14:55:25.590 [Thread-5] DEBUG server.Server - GPX File ID: Key[gpxFileId=1], Total Distance: 2.7957391950078954, Total Ascent: 8.619999999999997, Total Time: 18.35, Average Speed: 9.141381564058513
-
-14:55:25.591 [Thread-5] INFO  server.Server - New avg total distance: 2.7957392, New avg total elevation: 8.62, New avg total time: 1101000
-14:55:25.592 [Thread-5] INFO  server.Server - Generic data file has been updated with new data
-14:55:41.493 [Thread-5] INFO  server.Server - Client#0: Received GPX File
-14:55:41.497 [Thread-5] DEBUG server.Server - GPX File ID: Key[gpxFileId=2], Total Distance: 0.9553544185841355, Total Ascent: 4.49, Total Time: 6.233333333333333, Average Speed: 9.195924884767079
-
-14:55:41.505 [Thread-6] INFO  server.Server - All segments in memory have been written to json file...
-15:05:51.872 [Thread-0] INFO  server.Server - Client#1: Connected
-15:09:19.403 [Thread-0] INFO  server.Server - Client#2: Connected
-15:12:14.292 [Thread-0] INFO  server.Server - Client#3: Connected
-15:14:47.840 [Thread-0] INFO  server.Server - Client#4: Connected
-15:15:29.003 [Thread-0] INFO  server.Server - Client#5: Connected
-15:16:00.537 [Thread-0] INFO  server.Server - Client#6: Connected
-15:16:37.025 [Thread-0] INFO  server.Server - Client#7: Connected
-15:17:03.827 [Thread-0] INFO  server.Server - Client#8: Connected
-15:17:34.128 [Thread-0] INFO  server.Server - Client#9: Connected
-15:22:53.454 [Thread-0] INFO  server.Server - Client#10: Connected
-15:26:33.568 [Thread-0] INFO  server.Server - Client#11: Connected
+17:18:24.253 [main] INFO  server.Server - Starting Server...
+17:18:24.305 [main] INFO  server.Server - Generic data have been read from file
+17:18:24.306 [main] INFO  server.Server - Avg total distance: 2.7957392, Avg total elevation: 8.62, Avg total time: 1101000
+17:18:24.308 [main] INFO  server.Server - All existing segments and leaderboards have been read from file...
+17:18:24.308 [main] INFO  server.Server - Listening for new clients on port 1234
+17:18:24.309 [main] INFO  server.Server - Listening for new workers on port 2345
+17:18:26.189 [Thread-1] INFO  server.Server - Worker node added
