@@ -855,41 +855,45 @@ fun LeaderBoardCard(
                     }
 
                 } else if (userInfo.position == sharedViewModel.leaderboardList.value.size) {
-                    LeaderboardTextField(
-                        user = sharedViewModel.getUserDataByPosition(userInfo.position - 2),
-                        focused = false
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
 
-                    LeaderboardTextField(
-                        user = sharedViewModel.getUserDataByPosition(userInfo.position - 1),
-                        focused = false
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
-
-                    LeaderboardTextField(
-                        user = userInfo,
-                        focused = true
-                    )
-                } else {
-                    LeaderboardTextField(
-                        user = sharedViewModel.getUserDataByPosition(userInfo.position - 1),
-                        focused = false
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
-
-                    LeaderboardTextField(
-                        user = userInfo,
-                        focused = true
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
-
-                    if (userInfo.position + 1 < sharedViewModel.leaderboardList.value.size) {
+                    if (sharedViewModel.leaderboardList.value.size != 2)
+                    {
                         LeaderboardTextField(
-                            user = sharedViewModel.getUserDataByPosition(userInfo.position + 1),
+                            user = sharedViewModel.getUserDataByPosition(userInfo.position - 2),
                             focused = false
                         )
+                        Spacer(modifier = Modifier.height(3.dp))
                     }
+
+                    LeaderboardTextField(
+                        user = sharedViewModel.getUserDataByPosition(userInfo.position - 1),
+                        focused = false
+                    )
+                    Spacer(modifier = Modifier.height(3.dp))
+
+                    LeaderboardTextField(
+                        user = userInfo,
+                        focused = true
+                    )
+                }
+                else {
+                    LeaderboardTextField(
+                        user = sharedViewModel.getUserDataByPosition(userInfo.position - 1),
+                        focused = false
+                    )
+                    Spacer(modifier = Modifier.height(3.dp))
+
+                    LeaderboardTextField(
+                        user = userInfo,
+                        focused = true
+                    )
+                    Spacer(modifier = Modifier.height(3.dp))
+
+                    LeaderboardTextField(
+                        user = sharedViewModel.getUserDataByPosition(userInfo.position + 1),
+                        focused = false
+                    )
+
                 }
             }
         }

@@ -50,10 +50,7 @@ fun SegmentLeaderboardScreen(navController: NavController, sharedViewModel: Shar
 {
     val viewModel: SegmentLeaderboardViewModel = viewModel()
 
-    if (viewModel.userLead.value.isEmpty())
-    {
-        viewModel.loadSegmentLeaderboard(navController, sharedViewModel)
-    }
+    viewModel.loadSegmentLeaderboard(navController, sharedViewModel)
 
     Box(
         modifier = Modifier

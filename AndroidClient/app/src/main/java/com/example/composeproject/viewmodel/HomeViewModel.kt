@@ -11,6 +11,7 @@ import com.example.composeproject.dependencies.fileprocessing.TransmissionObject
 import com.example.composeproject.dependencies.user.Route
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Dispatcher
@@ -30,15 +31,19 @@ class HomeViewModel : ViewModel() {
 
             if (answer.success == 1) {
 
-                // Clear data
-                sharedViewModel.clearData()
-
                 withContext(Dispatchers.Main)
                 {
                     navController.navigate(Screen.AuthenticationScreen.route) {
                         popUpTo(0)
                     }
+
+
                 }
+
+                delay(500L)
+
+                // Clear data
+                sharedViewModel.clearData()
             }
         }
 
@@ -62,7 +67,7 @@ class HomeViewModel : ViewModel() {
                 var position = 1
                 val newList = mutableListOf<UserInfo>()
                 answer.leaderboardList.forEach { item ->
-                    newList.add(UserInfo(0, position, item.name, item.points))
+                    newList.add(UserInfo(item.userId, position, item.name, item.points))
                     position++
                 }
 

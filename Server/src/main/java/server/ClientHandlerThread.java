@@ -316,7 +316,7 @@ public class ClientHandlerThread extends Thread {
                         var sublist = this.userData.routes
                                 .get(receivedData.routeId)
                                 .routeWaypoints
-                                .subList(receivedData.segmentStart, receivedData.segmentEnd + 1);
+                                .subList(receivedData.segmentStart, receivedData.segmentEnd);
 
                         ArrayList<WaypointImpl> segmentWaypoints = new ArrayList<>(sublist);
 

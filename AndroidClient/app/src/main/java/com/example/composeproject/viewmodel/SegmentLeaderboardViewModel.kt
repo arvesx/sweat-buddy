@@ -44,7 +44,7 @@ class SegmentLeaderboardViewModel : ViewModel() {
                     val milliseconds: Long = item.totalTime
                     val minutes = milliseconds / 1000 / 60
                     val seconds = milliseconds / 1000 % 60
-                    newList.add(UserSegmentInfo(item.userId, position, sharedViewModel.username.value, "${minutes}m${seconds}s"))
+                    newList.add(UserSegmentInfo(item.userId, position, item.username, "${minutes}m${seconds}s"))
                     position++
                 }
 

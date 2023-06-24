@@ -30,7 +30,7 @@ public class DataExchangeHandler {
         synchronized (USER_DATA_LOCK)
         {
             for (var i : userData) {
-                leaderboard.add(new LeaderboardEntry(i.username, i.points));
+                leaderboard.add(new LeaderboardEntry(i.userId, i.username, i.points));
             }
             leaderboard.sort(new LeaderboardEntryComparator());
             return leaderboard;
