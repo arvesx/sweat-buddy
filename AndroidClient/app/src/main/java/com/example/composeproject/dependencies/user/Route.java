@@ -9,6 +9,7 @@ import java.util.List;
 import kotlin.Pair;
 
 public class Route {
+
     public int routeId;
     public String routeName;
     public int points;
@@ -25,5 +26,10 @@ public class Route {
 
     public long totalTimeInMillis;
     public int routeType;
+
+    public Route(int routeId)
+    {
+        this.routeId = routeId;
+    }
 
 }

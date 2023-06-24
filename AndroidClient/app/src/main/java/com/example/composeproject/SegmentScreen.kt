@@ -68,7 +68,7 @@ fun NewSegmentCreatedScreen(navController: NavController, sharedViewModel: Share
             )
     )
     {
-        ScreenUpperSection(SectionContent.SEGMENTS, 120.dp, navController)
+        ScreenUpperSection(SectionContent.SEGMENTS, 120.dp, navController, false, screen = Screen.AllSegmentsScreen)
         Box(
             modifier = Modifier
                 .fillMaxSize()

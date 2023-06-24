@@ -172,7 +172,7 @@ fun NewSegmentScreen(navController: NavController, sharedViewModel: SharedViewMo
                         ) {
 
                             RouteNameTextField(
-                                title = "Give your route a name",
+                                title = "Give your segment a name",
                                 viewModel.textFieldValue
                             )
 

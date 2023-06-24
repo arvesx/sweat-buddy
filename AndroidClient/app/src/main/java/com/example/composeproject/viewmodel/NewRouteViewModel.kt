@@ -73,7 +73,6 @@ class NewRouteViewModel : ViewModel() {
                         temporaryWps.add(WaypointImpl(i.longitude, i.latitude, 0.0, 0))
                     }
 
-
                     sharedViewModel.updateViewModel(answer)
                     sharedViewModel.updateRouteCoordinates(coordinatesLatLng)
                     sharedViewModel.updateSpecificRoute(

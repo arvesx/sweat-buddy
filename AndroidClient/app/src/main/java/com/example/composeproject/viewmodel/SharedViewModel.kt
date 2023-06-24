@@ -10,6 +10,7 @@ import com.example.composeproject.dependencies.fileprocessing.TransmissionObject
 import com.example.composeproject.dependencies.fileprocessing.gpx.WaypointImpl
 import com.example.composeproject.dependencies.user.Route
 import com.example.composeproject.dependencies.user.Segment
+import com.example.composeproject.dependencies.user.SegmentAttempt
 import com.example.composeproject.dependencies.user.UserData
 import com.example.composeproject.utils.calculateCameraPosition
 import com.google.android.gms.maps.model.CameraPosition
@@ -27,7 +28,7 @@ class SharedViewModel : ViewModel() {
     var userID = mutableStateOf(0)
     var username = mutableStateOf("")
     var routes = mutableStateOf(listOf<Route>())
-    var segments = mutableStateOf(listOf<Segment>())
+    var segments = mutableStateOf(listOf<SegmentAttempt>())
     var leaderboardList = mutableStateOf(listOf<UserInfo>())
     var mostRecentRouteKm = mutableStateOf(0.0)
     var totalNumberOfRoutes = mutableStateOf(0)
@@ -110,6 +111,7 @@ class SharedViewModel : ViewModel() {
         userID.value = to.userData.userId
         if (to.userData.routes.isNotEmpty()) {
             routes = mutableStateOf(to.userData.routes)
+            segments = mutableStateOf(to.userData.segments)
             mostRecentRouteKm.value = routes.value.last().totalDistanceInKm
             totalNumberOfRoutes.value = to.userData.routesDoneThisMonth
             totalKilometeres.value = to.userData.totalKmThisMonth
@@ -180,6 +182,23 @@ class SharedViewModel : ViewModel() {
                     }
                 }
             }
+            else
+            {
+                val segmentAttempt: SegmentAttempt = getSegmentByID(itemId)
+                updateSpecificSegment(
+                    segmentAttempt.segmentName,
+                    segmentAttempt.totalDistance.toDouble(),
+                    segmentAttempt.elevation.toDouble(),
+                    segmentAttempt.avgSpeed.toDouble(),
+                    segmentAttempt.totalTime
+                )
+
+                withContext(Dispatchers.Main) {
+                    navController.navigate(Screen.SegmentScreen.route) {
+                        popUpTo(0)
+                    }
+                }
+            }
         }
     }
 
@@ -206,7 +225,14 @@ class SharedViewModel : ViewModel() {
         for (route in userData.routes) {
             if (route.routeId == routeId) return route
         }
-        return Route()
+        return Route(0)
+    }
+
+    fun getSegmentByID(segmentId: Int): SegmentAttempt {
+        for (segment in userData.segments) {
+            if (segment.segmentId == segmentId) return segment
+        }
+        return SegmentAttempt()
     }
 
     fun getUserDataByID(userID: Int): UserInfo {
