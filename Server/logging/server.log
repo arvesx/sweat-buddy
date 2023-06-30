@@ -1,7 +1,56 @@
-17:18:24.253 [main] INFO  server.Server - Starting Server...
-17:18:24.305 [main] INFO  server.Server - Generic data have been read from file
-17:18:24.306 [main] INFO  server.Server - Avg total distance: 2.7957392, Avg total elevation: 8.62, Avg total time: 1101000
-17:18:24.308 [main] INFO  server.Server - All existing segments and leaderboards have been read from file...
-17:18:24.308 [main] INFO  server.Server - Listening for new clients on port 1234
-17:18:24.309 [main] INFO  server.Server - Listening for new workers on port 2345
-17:18:26.189 [Thread-1] INFO  server.Server - Worker node added
+00:34:45.567 [main] INFO  server.Server - Starting Server...
+00:34:45.643 [main] INFO  server.Server - Generic data have been read from file
+00:34:45.650 [main] INFO  server.Server - Avg total distance: 2.7957392, Avg total elevation: 8.62, Avg total time: 1101000
+00:34:45.655 [main] INFO  server.Server - All existing segments and leaderboards have been read from file...
+00:34:45.659 [main] INFO  server.Server - Listening for new clients on port 1234
+00:34:45.660 [main] INFO  server.Server - Listening for new workers on port 2345
+00:38:19.365 [Thread-0] INFO  server.Server - Client#0: Connected
+00:44:34.463 [Thread-2] INFO  server.Server - Client#0: Received GPX File
+00:44:51.043 [Thread-1] INFO  server.Server - Worker node added
+00:44:51.158 [Thread-2] DEBUG server.Server - GPX File ID: Key[gpxFileId=1], Total Distance: 5.1625573485307585, Total Ascent: 56.03000000000003, Total Time: 20.933333333333334, Average Speed: 14.797138897062682
+
+00:44:51.160 [Thread-2] INFO  server.Server - New avg total distance: 3.5846786, New avg total elevation: 24.423332, New avg total time: 1152666
+00:44:51.161 [Thread-2] INFO  server.Server - Generic data file has been updated with new data
+00:47:00.734 [Thread-2] INFO  server.Server - Client#0: Received GPX File
+00:47:00.738 [Thread-2] DEBUG server.Server - GPX File ID: Key[gpxFileId=2], Total Distance: 1.715051232660728, Total Ascent: 6.98, Total Time: 7.216666666666667, Average Speed: 14.259086460920601
+
+00:47:00.738 [Thread-2] INFO  server.Server - New avg total distance: 3.117272, New avg total elevation: 20.0625, New avg total time: 972750
+00:47:00.740 [Thread-2] INFO  server.Server - Generic data file has been updated with new data
+00:49:15.196 [Thread-2] INFO  server.Server - Client#0: Received GPX File
+00:49:15.198 [Thread-2] DEBUG server.Server - GPX File ID: Key[gpxFileId=3], Total Distance: 1.0055550311802612, Total Ascent: 2.7600000000000007, Total Time: 4.233333333333333, Average Speed: 14.251961071846223
+
+00:49:15.205 [Thread-6] INFO  server.Server - All segments in memory have been written to json file...
+00:50:29.756 [Thread-2] INFO  server.Server - Client#0: Received GPX File
+00:50:29.759 [Thread-2] DEBUG server.Server - GPX File ID: Key[gpxFileId=4], Total Distance: 1.715051232660728, Total Ascent: 6.98, Total Time: 7.216666666666667, Average Speed: 14.259086460920601
+
+00:50:29.760 [Thread-2] INFO  server.Server - Client#0: Received GPX File
+00:50:29.773 [Thread-2] DEBUG server.Server - GPX File ID: Key[gpxFileId=5], Total Distance: 1.0055550311802612, Total Ascent: 2.7600000000000007, Total Time: 4.233333333333333, Average Speed: 14.251961071846223
+
+00:50:29.775 [Thread-2] INFO  server.Server - All segments in memory have been written to json file...
+00:50:29.775 [Thread-2] INFO  server.Server - New avg total distance: 3.5460343, New avg total elevation: 21.8075, New avg total time: 1081000
+00:50:29.776 [Thread-2] INFO  server.Server - Generic data file has been updated with new data
+00:59:44.962 [Thread-0] INFO  server.Server - Client#1: Connected
+01:05:57.942 [Thread-0] INFO  server.Server - Client#2: Connected
+01:06:40.817 [Thread-8] INFO  server.Server - Client#2: Received GPX File
+01:06:40.830 [Thread-8] DEBUG server.Server - GPX File ID: Key[gpxFileId=6], Total Distance: 5.1625573485307585, Total Ascent: 56.03000000000003, Total Time: 20.933333333333334, Average Speed: 14.797138897062682
+
+01:06:40.831 [Thread-8] INFO  server.Server - New avg total distance: 4.836674, New avg total elevation: 35.815, New avg total time: 1395000
+01:06:40.832 [Thread-8] INFO  server.Server - Generic data file has been updated with new data
+01:08:53.607 [Thread-8] INFO  server.Server - Client#2: Received GPX File
+01:08:53.623 [Thread-8] DEBUG server.Server - GPX File ID: Key[gpxFileId=7], Total Distance: 2.2011792704153845, Total Ascent: 31.239999999999995, Total Time: 16.25, Average Speed: 8.12743115230296
+
+01:08:53.623 [Thread-8] INFO  server.Server - New avg total distance: 5.386969, New avg total elevation: 43.625, New avg total time: 1638750
+01:08:53.626 [Thread-8] INFO  server.Server - Generic data file has been updated with new data
+01:10:11.759 [Thread-8] INFO  server.Server - Client#2: Received GPX File
+01:10:11.761 [Thread-8] DEBUG server.Server - GPX File ID: Key[gpxFileId=8], Total Distance: 0.9723070784124738, Total Ascent: 12.439999999999998, Total Time: 7.15, Average Speed: 8.159220238426354
+
+01:10:11.765 [Thread-9] INFO  server.Server - All segments in memory have been written to json file...
+01:11:06.980 [Thread-8] INFO  server.Server - Client#2: Received GPX File
+01:11:06.987 [Thread-8] DEBUG server.Server - GPX File ID: Key[gpxFileId=9], Total Distance: 2.2011792704153845, Total Ascent: 31.239999999999995, Total Time: 16.25, Average Speed: 8.12743115230296
+
+01:11:06.987 [Thread-8] INFO  server.Server - Client#2: Received GPX File
+01:11:06.990 [Thread-8] DEBUG server.Server - GPX File ID: Key[gpxFileId=10], Total Distance: 0.9723070784124738, Total Ascent: 12.439999999999998, Total Time: 7.15, Average Speed: 8.159220238426354
+
+01:11:06.992 [Thread-8] INFO  server.Server - All segments in memory have been written to json file...
+01:11:06.994 [Thread-8] INFO  server.Server - New avg total distance: 5.937264, New avg total elevation: 51.435, New avg total time: 1882500
+01:11:06.996 [Thread-8] INFO  server.Server - Generic data file has been updated with new data

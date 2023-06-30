@@ -18,7 +18,6 @@ class NewSegmentViewModel : ViewModel() {
     var selectedRoute = mutableStateOf(Route(-1))
     var textFieldValue = mutableStateOf(TextFieldValue(""))
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun onPressItem(
         navController: NavController,
         route: Route,
@@ -26,22 +25,20 @@ class NewSegmentViewModel : ViewModel() {
     ) {
         selectedRoute.value = route
         isExpanded.value = false
-        GlobalScope.launch {
-            withContext(Dispatchers.Main) {
-                val newCoordinates: MutableList<LatLng> = mutableListOf()
-                selectedRoute.value.coordinates.forEach { item ->
-                    newCoordinates.add(LatLng(item.first, item.second))
-                }
-                onResponse(newCoordinates)
+        val scope = CoroutineScope(Dispatchers.Main)
+        scope.launch {
+            val newCoordinates: MutableList<LatLng> = mutableListOf()
+            selectedRoute.value.coordinates.forEach { item ->
+                newCoordinates.add(LatLng(item.first, item.second))
             }
+            onResponse(newCoordinates)
         }
 
     }
 
     fun onCreate(navController: NavController, sharedViewModel: SharedViewModel) {
 
-        if (this.selectedRoute.value.routeId != -1 && this.textFieldValue.value.text.isNotEmpty())
-        {
+        if (this.selectedRoute.value.routeId != -1 && this.textFieldValue.value.text.isNotEmpty()) {
             val scope = CoroutineScope(Dispatchers.IO)
             scope.launch {
                 val to = TransmissionObjectBuilder()

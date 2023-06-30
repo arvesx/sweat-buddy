@@ -9,9 +9,7 @@ import com.example.composeproject.Screen
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectBuilder
 import com.example.composeproject.dependencies.fileprocessing.TransmissionObjectType
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
