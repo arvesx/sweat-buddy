@@ -64,7 +64,7 @@ fun <T : Info> ContentCard(
             .fillMaxWidth()
             .height(100.dp)
             .padding(top = 10.dp)
-            .bounceClick { sharedViewModel.handleContentCardClick(type, navController, item.id) },
+            .bounceClick { sharedViewModel.handleContentCardClick(type, navController, item.id, sharedViewModel) },
         shape = RoundedCornerShape(25.dp),
         colors = CardDefaults.cardColors(Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp, hoveredElevation = 10.dp),
@@ -208,7 +208,7 @@ fun ContentList(
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(sharedViewModel.segments.value) { segment ->
                 val segmentInfo =
-                    SegmentInfo(segment.segmentId, segment.segmentName, segment.segmentType, 5)
+                    SegmentInfo(segment.segmentId, segment.segmentName, 2, 5)
                 ContentCard(segmentInfo, ContentCardType.SEGMENT, sharedViewModel, navController)
             }
         }
@@ -219,7 +219,9 @@ fun ContentList(
 fun ScreenUpperSection(
     content: SectionContent,
     height: Dp,
-    navController: NavController
+    navController: NavController,
+    plusIcon: Boolean = true,
+    screen: Screen = Screen.HomeScreen
 ) {
     Box(
         modifier = Modifier
@@ -243,8 +245,9 @@ fun ScreenUpperSection(
         ) {
             IconButton(
                 onClick = {
-                    navController.navigate(Screen.HomeScreen.route) {
+                        navController.navigate(screen.route) {
                     }
+
                 },
                 modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
             ) {
@@ -262,26 +265,36 @@ fun ScreenUpperSection(
                 fontFamily = ManropeFamily,
                 fontSize = 18.sp,
             )
-            IconButton(
-                onClick = {
-                    if (content == SectionContent.ROUTES) {
-                        navController.navigate(Screen.NewRouteScreen.route)
-                    } else {
-                        navController.navigate(Screen.NewSegmentScreen.route)
-                    }
-                },
-                modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.plus),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(24.dp)
+
+            if (plusIcon) {
+                IconButton(
+                    onClick = {
+                        if (content == SectionContent.ROUTES) {
+                            navController.navigate(Screen.NewRouteScreen.route)
+                        } else {
+                            navController.navigate(Screen.NewSegmentScreen.route)
+                        }
+                    },
+                    modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
+                ) {
+
+                    Image(
+                        painter = painterResource(id = R.drawable.plus),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(24.dp)
+                    )
+                }
+            }
+            else
+            {
+                Box(
+                    modifier = Modifier.width(48.dp)
                 )
             }
         }
-
     }
+
 }
 
 

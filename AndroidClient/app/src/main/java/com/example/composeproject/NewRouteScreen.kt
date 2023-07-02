@@ -213,7 +213,7 @@ fun NewRouteScreen(navController: NavController, sharedViewModel: SharedViewMode
                     ) {
                         Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
                             RouteNameTextField(
-                                title = "Give your segment a name",
+                                title = "Give your route a name",
                                 viewModel.textFieldValue
                             )
                             Spacer(modifier = Modifier.width(10.dp))

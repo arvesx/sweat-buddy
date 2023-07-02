@@ -26,11 +26,16 @@ public class DataExchangeHandler {
 
     public static ArrayList<LeaderboardEntry> fetchGenericLeaderboard() {
         ArrayList<LeaderboardEntry> leaderboard = new ArrayList<>();
-        for (var i : userData) {
-            leaderboard.add(new LeaderboardEntry(i.username, i.points));
+        
+        synchronized (USER_DATA_LOCK)
+        {
+            for (var i : userData) {
+                leaderboard.add(new LeaderboardEntry(i.userId, i.username, i.points));
+            }
+            leaderboard.sort(new LeaderboardEntryComparator());
+            return leaderboard;
         }
-        leaderboard.sort(new LeaderboardEntryComparator());
-        return leaderboard;
+        
     }
 
     public static void readGenericData() {

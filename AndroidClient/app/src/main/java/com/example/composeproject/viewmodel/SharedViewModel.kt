@@ -10,6 +10,7 @@ import com.example.composeproject.dependencies.fileprocessing.TransmissionObject
 import com.example.composeproject.dependencies.fileprocessing.gpx.WaypointImpl
 import com.example.composeproject.dependencies.user.Route
 import com.example.composeproject.dependencies.user.Segment
+import com.example.composeproject.dependencies.user.SegmentAttempt
 import com.example.composeproject.dependencies.user.UserData
 import com.example.composeproject.utils.calculateCameraPosition
 import com.google.android.gms.maps.model.CameraPosition
@@ -27,7 +28,7 @@ class SharedViewModel : ViewModel() {
     var userID = mutableStateOf(0)
     var username = mutableStateOf("")
     var routes = mutableStateOf(listOf<Route>())
-    var segments = mutableStateOf(listOf<Segment>())
+    var segments = mutableStateOf(listOf<SegmentAttempt>())
     var leaderboardList = mutableStateOf(listOf<UserInfo>())
     var mostRecentRouteKm = mutableStateOf(0.0)
     var totalNumberOfRoutes = mutableStateOf(0)
@@ -43,6 +44,7 @@ class SharedViewModel : ViewModel() {
     var routeWaypoints = mutableStateOf(listOf<LatLng>())
     var cameraPositionState = mutableStateOf(CameraPositionState())
 
+    var newSegmentId = mutableStateOf(0)
 
     // specific segment info
     var totalDistanceS = mutableStateOf(0.0f)
@@ -61,7 +63,8 @@ class SharedViewModel : ViewModel() {
 
     var selectedSegmentLatLngList: List<LatLng> = listOf()
 
-    lateinit var userData: UserData
+    //lateinit var userData: UserData
+    var userData: UserData = UserData()
 
     fun rightExtendSegment(wp: LatLng, coordinates: List<LatLng>) {
         lastSegmentWaypoint.value = wp
@@ -108,6 +111,7 @@ class SharedViewModel : ViewModel() {
         userID.value = to.userData.userId
         if (to.userData.routes.isNotEmpty()) {
             routes = mutableStateOf(to.userData.routes)
+            segments = mutableStateOf(to.userData.segments)
             mostRecentRouteKm.value = routes.value.last().totalDistanceInKm
             totalNumberOfRoutes.value = to.userData.routesDoneThisMonth
             totalKilometeres.value = to.userData.totalKmThisMonth
@@ -155,7 +159,8 @@ class SharedViewModel : ViewModel() {
     fun handleContentCardClick(
         cardType: ContentCardType,
         navController: NavController,
-        itemId: Int
+        itemId: Int,
+        sharedViewModel: SharedViewModel
     ) {
 
         val scope = CoroutineScope(Dispatchers.Default)
@@ -174,6 +179,24 @@ class SharedViewModel : ViewModel() {
 
                 withContext(Dispatchers.Main) {
                     navController.navigate(Screen.RouteScreen.route) {
+                        popUpTo(0)
+                    }
+                }
+            }
+            else
+            {
+                val segmentAttempt: SegmentAttempt = getSegmentByID(itemId)
+                updateSpecificSegment(
+                    segmentAttempt.segmentName,
+                    segmentAttempt.totalDistance.toDouble(),
+                    segmentAttempt.elevation.toDouble(),
+                    segmentAttempt.avgSpeed.toDouble(),
+                    segmentAttempt.totalTime
+                )
+                sharedViewModel.newSegmentId.value = itemId
+
+                withContext(Dispatchers.Main) {
+                    navController.navigate(Screen.SegmentScreen.route) {
                         popUpTo(0)
                     }
                 }
@@ -204,7 +227,14 @@ class SharedViewModel : ViewModel() {
         for (route in userData.routes) {
             if (route.routeId == routeId) return route
         }
-        return Route()
+        return Route(0)
+    }
+
+    fun getSegmentByID(segmentId: Int): SegmentAttempt {
+        for (segment in userData.segments) {
+            if (segment.segmentId == segmentId) return segment
+        }
+        return SegmentAttempt()
     }
 
     fun getUserDataByID(userID: Int): UserInfo {
@@ -229,5 +259,40 @@ class SharedViewModel : ViewModel() {
         return UserInfo(0, 0, "", 0)
     }
 
+    fun clearData()
+    {
+        userID = mutableStateOf(0)
+        username = mutableStateOf("")
+        routes = mutableStateOf(listOf())
+        segments = mutableStateOf(listOf())
+        leaderboardList = mutableStateOf(listOf())
+        mostRecentRouteKm = mutableStateOf(0.0)
+        totalNumberOfRoutes = mutableStateOf(0)
+        totalKilometeres = mutableStateOf(0.0f)
+        totalDistance = mutableStateOf(0.0f)
+        totalElevation = mutableStateOf(0.0f)
+        avgSpeed = mutableStateOf(0.0f)
+        totalTime = mutableStateOf("0m")
+        routeName = mutableStateOf("")
+        routePoints = mutableStateOf(0)
+        routeWaypoints = mutableStateOf(listOf())
+        cameraPositionState = mutableStateOf(CameraPositionState())
+        newSegmentId = mutableStateOf(0)
+        totalDistanceS = mutableStateOf(0.0f)
+        totalElevationS = mutableStateOf(0.0f)
+        avgSpeedS = mutableStateOf(0.0f)
+        totalTimeS = mutableStateOf("0m")
+        routeNameS = mutableStateOf("")
+        firstSegmentWaypoint = mutableStateOf(LatLng(0.0, 0.0))
+        lastSegmentWaypoint = mutableStateOf(LatLng(0.0, 0.0))
+        firstSegmentWaypointIndex = 0
+        lastSegmentWaypointIndex = 0
+        selectedSegmentLatLngList = listOf()
+        userData = UserData()
+    }
+
+
 }
+
+
 

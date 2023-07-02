@@ -68,7 +68,7 @@ fun NewSegmentCreatedScreen(navController: NavController, sharedViewModel: Share
             )
     )
     {
-        ScreenUpperSection(SectionContent.SEGMENTS, 120.dp, navController)
+        ScreenUpperSection(SectionContent.SEGMENTS, 120.dp, navController, false, screen = Screen.AllSegmentsScreen)
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -181,21 +181,11 @@ fun SegmentsLeaderBoardCard(
             .height(200.dp)
             .offset(y = (-40).dp)
             .bounceClick {
-//                viewModel.onLeaderboardClick(navController, sharedViewModel)
-                navController.navigate(Screen.LeaderboardScreen.route)
+                //viewModel.onLeaderboardClick(navController, sharedViewModel)
+                navController.navigate(Screen.SegmentLeaderboardScreen.route)
             },
         shape = RoundedCornerShape(25.dp),
         colors = CardDefaults.cardColors(Color.White),
-        /*
-        * cardElevation(
-            defaultElevation: Dp,
-            pressedElevation: Dp,
-            focusedElevation: Dp,
-            hoveredElevation: Dp,
-            draggedElevation: Dp,
-            disabledElevation: Dp
-        )
-        * */
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp, hoveredElevation = 10.dp),
     )
     {
@@ -241,72 +231,6 @@ fun SegmentsLeaderBoardCard(
                 modifier = Modifier
                     .height(8.dp)
             )
-
-            if (sharedViewModel.leaderboardList.value.isNotEmpty()) {
-
-                val userInfo: UserInfo =
-                    sharedViewModel.getUserDataByID(sharedViewModel.userID.value)
-
-                if (userInfo.position == 1) {
-                    LeaderboardTextField(
-                        user = userInfo,
-                        focused = true
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
-
-                    if (sharedViewModel.getUserDataByPosition(userInfo.position + 1).position != 0) {
-                        LeaderboardTextField(
-                            user = sharedViewModel.getUserDataByPosition(2),
-                            focused = false
-                        )
-                        Spacer(modifier = Modifier.height(3.dp))
-
-                        if (userInfo.position + 1 < sharedViewModel.leaderboardList.value.size) {
-                            LeaderboardTextField(
-                                user = sharedViewModel.getUserDataByPosition(3),
-                                focused = false
-                            )
-                        }
-                    }
-
-                } else if (userInfo.position == sharedViewModel.leaderboardList.value.size) {
-                    LeaderboardTextField(
-                        user = sharedViewModel.getUserDataByPosition(userInfo.position - 2),
-                        focused = false
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
-
-                    LeaderboardTextField(
-                        user = sharedViewModel.getUserDataByPosition(userInfo.position - 1),
-                        focused = false
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
-
-                    LeaderboardTextField(
-                        user = userInfo,
-                        focused = true
-                    )
-                } else {
-                    LeaderboardTextField(
-                        user = sharedViewModel.getUserDataByPosition(userInfo.position - 1),
-                        focused = false
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
-
-                    LeaderboardTextField(
-                        user = userInfo,
-                        focused = true
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
-
-                    if (userInfo.position + 1 < sharedViewModel.leaderboardList.value.size) {
-                        LeaderboardTextField(
-                            user = sharedViewModel.getUserDataByPosition(userInfo.position + 1),
-                            focused = false
-                        )
-                    }
-                }
-            }
         }
     }
 }
