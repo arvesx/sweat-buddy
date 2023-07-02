@@ -39,7 +39,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,7 +53,6 @@ import com.example.composeproject.ui.theme.ManropeFamily
 import com.example.composeproject.ui.theme.Purple1
 import com.example.composeproject.ui.theme.White1
 import com.example.composeproject.ui.theme.WhiteBlue1
-import com.example.composeproject.viewmodel.LoginViewModel
 import com.example.composeproject.viewmodel.SharedViewModel
 import com.example.composeproject.viewmodel.StatsScreenViewModel
 
@@ -109,22 +107,34 @@ fun StatsScreen(navController: NavController, sharedViewModel: SharedViewModel) 
                 {
                     Bars(
                         data = distanced,
+                        dataText = listOf(
+                            "${String.format("%.1f", viewModel.totalDistance.value)}km",
+                            "${String.format("%.1f", viewModel.avgTotalDistance.value)}km"
+                        ),
                         description = "Total Distance"
                     )
                 }
 
-                if (viewModel.totalDistance.value != 0f || viewModel.avgTotalDistance.value != 0f)
+                if (viewModel.totalTimeMillis.value.toFloat() != 0f || viewModel.avgTotalTimeMillis.value.toFloat() != 0f)
                 {
                     Bars(
                         data = timed,
+                        dataText = listOf(
+                            viewModel.totalTime.value,
+                            viewModel.avgTotalTime.value
+                        ),
                         description = "Total Time"
                     )
                 }
 
-                if (viewModel.totalDistance.value != 0f || viewModel.avgTotalDistance.value != 0f)
+                if (viewModel.totalElevation.value != 0f || viewModel.avgTotalElevation.value != 0f)
                 {
                     Bars(
                         data = elevationd,
+                        dataText = listOf(
+                            "${String.format("%.1f", viewModel.totalElevation.value)}m",
+                            "${String.format("%.1f", viewModel.avgTotalElevation.value)}m"
+                        ),
                         description = "Total Elevation"
                     )
                 }
@@ -230,6 +240,7 @@ fun Bars(
     animDuration: Int = 1300,
     animDelay: Int = 20,
     data: List<Bar>,
+    dataText: List<String> = emptyList(),
     description: String
 ) {
 
@@ -278,14 +289,21 @@ fun Bars(
             verticalAlignment = Alignment.Bottom
         )
         {
-            var day = 0
+            var bar = 0
             states.forEach {
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
-                    if (day == 1) {
+                    if (bar == 1) {
+                        Text(
+                            text = dataText[bar],
+                            fontFamily = ManropeFamily,
+                            fontSize = 12.sp,
+                            color = Color(0, 0, 0, 0xBF)
+                        )
+
                         Canvas(
                             modifier = Modifier
                                 .size(37.dp, it.value * maxBarSize)
@@ -302,6 +320,14 @@ fun Bars(
                             }
                         )
                     } else {
+
+                        Text(
+                            text = dataText[bar],
+                            fontFamily = ManropeFamily,
+                            fontSize = 12.sp,
+                            color = Color(0, 0, 0, 0xBF)
+                        )
+
                         Canvas(
                             modifier = Modifier
                                 .size(37.dp, it.value * maxBarSize)
@@ -318,7 +344,7 @@ fun Bars(
                             }
                         )
                     }
-                    day++
+                    bar++
                 }
                 Spacer(modifier = Modifier.width(7.dp))
             }
