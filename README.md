@@ -11,6 +11,62 @@ By providing a comprehensive distributed activity tracking solution, this projec
 
 Please note that this project is intended for educational and learning purposes and is not meant for commercial distribution.
 
+## Structure
+ - Server
+```
+📦server
+ ┣ 📂logging
+ ┃ ┗ 📜server.log
+ ┣ 📜ClientHandlerThread.java
+ ┣ 📜ClientListener.java
+ ┣ 📜Reduce.java
+ ┣ 📜Server.java
+ ┣ 📜Utils.java
+ ┣ 📜WorkerHandlerThread.java
+ ┗ 📜WorkerListener.java
+```
+ - Worker
+```
+📦worker
+ ┣ 📜ChunkProcessorThread.java
+ ┣ 📜ChunksListenerThread.java
+ ┣ 📜ResultSenderThread.java
+ ┗ 📜Worker.java
+```
+ - Dependencies
+```
+📦dependencies
+ ┣ 📂fileprocessing
+ ┃ ┣ 📂distance
+ ┃ ┃ ┗ 📜Haversine.java
+ ┃ ┣ 📂gpx
+ ┃ ┃ ┣ 📜Chunk.java
+ ┃ ┃ ┣ 📜GpxFile.java
+ ┃ ┃ ┣ 📜GpxResults.java
+ ┃ ┃ ┣ 📜WaypointImpl.java
+ ┃ ┃ ┗ 📜WaypointImplTimeComparator.java
+ ┃ ┣ 📜TransmissionObject.java
+ ┃ ┣ 📜TransmissionObjectBuilder.java
+ ┃ ┗ 📜TransmissionObjectType.java
+ ┣ 📂mapper
+ ┃ ┗ 📜Map.java
+ ┣ 📂structures
+ ┃ ┣ 📜FifoQueue.java
+ ┃ ┗ 📜RingBuffer.java
+ ┣ 📂user
+ ┃ ┣ 📜GenericData.java
+ ┃ ┣ 📜GenericStats.java
+ ┃ ┣ 📜LeaderboardEntry.java
+ ┃ ┣ 📜LeaderboardEntryComparator.java
+ ┃ ┣ 📜Route.java
+ ┃ ┣ 📜Segment.java
+ ┃ ┣ 📜SegmentAttempt.java
+ ┃ ┣ 📜SegmentLeaderboardEntry.java
+ ┃ ┣ 📜SegmentLeaderboardEntryComparator.java
+ ┃ ┗ 📜UserData.java
+ ┗ 📜Utilities.java
+```
+
 ## Android Client Demo
 (Android Studio Pixel 6 API 33)
 
