@@ -1,71 +1,7 @@
-## About
-This project is a distributed activity tracking application built with Java, utilizing the map reduce framework. The application consists of a central server and Android clients that connect to it. The server receives GPX files from clients and processes them using workers. The results are then aggregated and returned to the user.
+I built this project for a university course alongside some of my extraordinary colleagues and friends. The project basically consists of a backend server implemented from scratch in Java using sockets and threads that manages worker nodes and distributes load to them. The results come back to the main server, which then presents them to the clients It also has a frontend built with Kotlin and Jetpack Compose because we need to have fun by making things overcomplicated instead of serving plain html files.
 
-The backend of the application incorporates synchronization techniques and multithreading, enabling it to handle multiple client requests concurrently. This ensures efficient and seamless processing of activity data from a large number of users.
-
-On the frontend, the application utilizes Jetpack Compose to create a visually appealing and user-friendly interface. The design focuses on providing an intuitive and immersive experience for users, making it easy to track their activities and access relevant information.
-
-In addition to the core functionality, the application offers extra features such as a global leaderboard based on points calculated from user performance metrics (e.g., total distance run). It also includes a segment detection feature that identifies subroutes within a user's activity, allowing for segment-specific leaderboards.
-
-By providing a comprehensive distributed activity tracking solution, this project showcases the effective use of Java, the map reduce framework, synchronization techniques, and multithreading. It also demonstrates the utilization of Jetpack Compose to create a visually appealing user interface. Whether you are interested in exploring the backend implementation or experiencing the frontend design, this project serves as an excellent resource for understanding and implementing distributed activity tracking applications.
-
-Please note that this project is intended for educational and learning purposes and is not meant for commercial distribution.
-
-## Structure
- - Server
-```
-📦server
- ┣ 📂logging
- ┃ ┗ 📜server.log
- ┣ 📜ClientHandlerThread.java
- ┣ 📜ClientListener.java
- ┣ 📜Reduce.java
- ┣ 📜Server.java
- ┣ 📜Utils.java
- ┣ 📜WorkerHandlerThread.java
- ┗ 📜WorkerListener.java
-```
- - Worker
-```
-📦worker
- ┣ 📜ChunkProcessorThread.java
- ┣ 📜ChunksListenerThread.java
- ┣ 📜ResultSenderThread.java
- ┗ 📜Worker.java
-```
- - Dependencies
-```
-📦dependencies
- ┣ 📂fileprocessing
- ┃ ┣ 📂distance
- ┃ ┃ ┗ 📜Haversine.java
- ┃ ┣ 📂gpx
- ┃ ┃ ┣ 📜Chunk.java
- ┃ ┃ ┣ 📜GpxFile.java
- ┃ ┃ ┣ 📜GpxResults.java
- ┃ ┃ ┣ 📜WaypointImpl.java
- ┃ ┃ ┗ 📜WaypointImplTimeComparator.java
- ┃ ┣ 📜TransmissionObject.java
- ┃ ┣ 📜TransmissionObjectBuilder.java
- ┃ ┗ 📜TransmissionObjectType.java
- ┣ 📂mapper
- ┃ ┗ 📜Map.java
- ┣ 📂structures
- ┃ ┣ 📜FifoQueue.java
- ┃ ┗ 📜RingBuffer.java
- ┣ 📂user
- ┃ ┣ 📜GenericData.java
- ┃ ┣ 📜GenericStats.java
- ┃ ┣ 📜LeaderboardEntry.java
- ┃ ┣ 📜LeaderboardEntryComparator.java
- ┃ ┣ 📜Route.java
- ┃ ┣ 📜Segment.java
- ┃ ┣ 📜SegmentAttempt.java
- ┃ ┣ 📜SegmentLeaderboardEntry.java
- ┃ ┣ 📜SegmentLeaderboardEntryComparator.java
- ┃ ┗ 📜UserData.java
- ┗ 📜Utilities.java
-```
+This was the project that laid the foundation for my thinking in software engineering, from setting up a full-stack app from backend all the way to frontend.
+You can see the project briefly in the video that follows:
 
 ## Android Client Demo
 (Android Studio Pixel 6 API 33)
